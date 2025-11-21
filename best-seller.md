@@ -4,7 +4,7 @@ title: Best Sellers
 permalink: /best-seller/
 ---
 
-<main id="main" data-src="{{ site.baseurl }}/data/best_seller.json" data-cards="true">
+<main id="main" data-src="/data/best_seller.json" data-cards="true">
   <h1>Best Sellers</h1>
   <p>Top-selling products.</p>
 </main>
