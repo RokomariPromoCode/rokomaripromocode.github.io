@@ -3,15 +3,12 @@ layout: default
 title: Books
 permalink: /books/
 ---
-  <section class="container" style="padding:28px 0;">
-    <h1>Rokomari Promo Code For Books</h1>
-    <p>বিভাগভিত্তিক পেজ — নিচে কার্ড লোড হবে</p>
-  </section>
-<main id="main" data-src="{{ '/data/books.json' | relative_url }}">
 
-
-  <section id="cardsArea" class="cards-area container" style="padding-bottom:40px;"></section>
-  <div id="spinner" class="spinner center" hidden>লোড হচ্ছে...</div>
-  <div id="endMessage" class="end-message center" hidden>আর কিছু নেই</div>
-  <div id="sentinel" style="height:2px"></div>
+<main id="main" data-src="{{ site.baseurl }}/data/books.json" data-cards="true">
+  <h1>Books</h1>
+  <p>Books and reading materials.</p>
 </main>
+
+<script>
+  window.FORCE_LOAD_CARDS = true;
+</script>
