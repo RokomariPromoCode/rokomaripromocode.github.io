@@ -1,0 +1,69 @@
+<footer class="main-footer">
+  <div class="footer-request container">
+    <h2>কাঙ্খিত বই বা প্রমো কোড <span>খুঁজে পাচ্ছেন না?</span></h2>
+    <form id="request-form" class="request-form" action="https://formspree.io/f/YOUR_FORM_ID_HERE" method="POST">
+      <input name="name" placeholder="আপনার নাম" required>
+      <input name="contact" placeholder="মোবাইল/ইমেইল" required>
+      <input id="product-name" name="product" placeholder="বই বা পণ্যের নাম" required>
+      <button type="submit" class="f-btn">রিকোয়েস্ট পাঠান <i class="fas fa-paper-plane"></i></button>
+    </form>
+  </div>
+
+  <div class="footer-content container">
+    <div class="col about">
+      <h3>About Us</h3>
+      <img src="{{ '/assets/logo.png' | relative_url }}" alt="Logo" onerror="this.style.display='none'">
+      <p>আমরা রকমারি ডট কমের অ্যাফিলিয়েট পার্টনার — পাঠকদের জন্য সেরা বই এবং ডিসকাউন্ট সরবরাহ করা আমাদের লক্ষ্য।</p>
+      <div class="socials">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+
+    <div class="col cats">
+      <h3>Top Categories</h3>
+      <ul>
+        <li><a href="{{ '/books/' | relative_url }}">Rokomari PromoCode For Books</a></li>
+        <li><a href="{{ '/electronics/' | relative_url }}">Rokomari PromoCode For Electronics</a></li>
+        <li><a href="{{ '/foods/' | relative_url }}">Rokomari PromoCode For Foods</a></li>
+        <li><a href="{{ '/furniture/' | relative_url }}">Rokomari PromoCode For Furniture</a></li>
+        <li><a href="{{ '/beauty/' | relative_url }}">Rokomari PromoCode For Beauty</a></li>
+      </ul>
+    </div>
+
+    <div class="col links">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="{{ '/' | relative_url }}">Home</a></li>
+        <li><a href="{{ '/best-seller/' | relative_url }}">Best Seller</a></li>
+        <li><a href="{{ '/how-to/' | relative_url }}">How to Use Code</a></li>
+        <li><a href="{{ '/privacy/' | relative_url }}">Privacy Policy</a></li>
+      </ul>
+    </div>
+
+    <div class="col contact">
+      <h3>Contact Info</h3>
+      <p><i class="fas fa-map-marker-alt"></i> Dhaka, Bangladesh</p>
+      <p><i class="fas fa-envelope"></i> support@mysite.com</p>
+      <p><i class="fas fa-phone-alt"></i> +880 1234 567 890</p>
+      <div class="affiliate">Affiliate of Rokomari.com</div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container">
+      <p>&copy; {{ site.time | date: "%Y" }} <strong>YourSiteName</strong>. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // request form center submit button on mobile if needed
+  (function(){
+    const form = document.getElementById('request-form');
+    form && form.addEventListener('submit', () => {
+      // optional: analytics hook or validation
+    });
+  })();
+</script>
