@@ -4,7 +4,7 @@ title: Beauty
 permalink: /beauty/
 ---
 
-<main id="main" data-src="{{ site.baseurl }}/data/beauty.json" data-cards="true">
+<main id="main" data-src="/data/beauty.json" data-cards="true">
   <h1>Beauty</h1>
   <p>Beauty and personal care.</p>
 </main>
