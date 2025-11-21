@@ -5,14 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>{{ page.title | default: site.title }}</title>
 
-  <!-- fonts & icons -->
+  <!-- Fonts & icons -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- main css -->
+  <!-- Primary stylesheet (use Jekyll relative_url so baseurl works) -->
   <link rel="stylesheet" href="{{ '/assets/styles.css' | relative_url }}">
 
-  <!-- SITE_BASE and default JSON path (safe) -->
   <script>
     (function(){
       var rawBase = "{{ site.baseurl | default: '' }}";
@@ -23,16 +22,13 @@
         rawBase = rawBase.replace(/\/$/, "");
         window.SITE_BASE = rawBase;
       }
-      // default JSON path (page can override by setting window.JSON_DATA_PATH before assets/app.js loads)
       window.JSON_DATA_PATH = (window.SITE_BASE ? window.SITE_BASE + "/data/default.json" : "/data/default.json");
     })();
   </script>
 </head>
 <body>
-
   {% include header.html %}
 
-  <!-- main site content -->
   <main id="main-content" class="site-container">
     {{ content }}
   </main>
@@ -40,10 +36,7 @@
   {% include footer.html %}
   {% include wa.html %}
 
-  <!-- optional injector (for pages that don't use layout) -->
   <script src="{{ '/assets/inject-includes.js' | relative_url }}" defer></script>
-
-  <!-- main app (cards + search + loader) -->
   <script src="{{ '/assets/app.js' | relative_url }}" defer></script>
 </body>
 </html>
