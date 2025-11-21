@@ -423,33 +423,39 @@
     qsa('.cat-row').forEach(section=>{ if(section._track) updateButtonsVisibility(section); });
   }
 
-  document.addEventListener('DOMContentLoaded', function(){
-    setupHeader();
-    // normalize and compare path against SITE_BASE aware roots
-    const path = (location.pathname || '/').replace(/\/$/, '') || '/';
-    const base = SITE_BASE || '';
-    const isHome = (path === '' || path === base || path === base + '/' || path === '/' || path === '');
-    if(isHome) {
-      renderHome();
-      return;
-    }
+document.addEventListener('DOMContentLoaded', function(){
+  setupHeader();
 
-    // Non-home pages: only render cards when:
-    // - the page's main element has data-src, OR
-    // - there is in-memory window.rokomariData, OR
-    // - FORCE_LOAD_CARDS is true AND window.JSON_DATA_PATH is a non-empty string
-    const mainEl = qs('main') || document.body;
-    const hasSrc = !!(mainEl && mainEl.dataset && mainEl.dataset.src);
-    const hasInMemory = Array.isArray(window.rokomariData) && window.rokomariData.length;
-    const hasGlobalJson = (typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH);
-    const force = !!window.FORCE_LOAD_CARDS;
+  // normalize and compare path against SITE_BASE aware roots
+  const path = (location.pathname || '/').replace(/\/$/, '') || '/';
+  const base = SITE_BASE || '';
+  const isHome = (path === '' || path === base || path === base + '/' || path === '/' || path === '');
+  if(isHome) {
+    renderHome();
+    return;
+  }
 
-    if(hasSrc || hasInMemory || (force && hasGlobalJson)){
-      renderStandard(mainEl);
-    } else {
-      // do nothing — no cards for this page
-    }
-  });
+  // Prefer element with explicit data-src (for category pages we put <main data-src="..."> inside the page content)
+  // If no such element exists, fall back to the first <main> in the layout, then document.body.
+  const pageDataSrcEl = document.querySelector('[data-src]');
+  const mainElCandidate = pageDataSrcEl || qs('main') || document.body;
+
+  // Determine whether to render cards:
+  // - element has data-src OR
+  // - in-memory window.rokomariData exists OR
+  // - FORCE_LOAD_CARDS is true AND JSON_DATA_PATH is set
+  const hasSrc = !!(mainElCandidate && mainElCandidate.dataset && mainElCandidate.dataset.src);
+  const hasInMemory = Array.isArray(window.rokomariData) && window.rokomariData.length;
+  const hasGlobalJson = (typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH);
+  const force = !!window.FORCE_LOAD_CARDS;
+
+  if(hasSrc || hasInMemory || (force && hasGlobalJson)){
+    renderStandard(mainElCandidate);
+  } else {
+    // intentionally do nothing — no cards for this page
+  }
+});
+
 
   window.triggerRequest = function(searchTerm){
     const searchInput = qs('#header-search-input');
