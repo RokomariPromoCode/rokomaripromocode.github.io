@@ -9,15 +9,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- Primary stylesheet (use relative_url so baseurl is applied) -->
+  <!-- Primary stylesheet -->
   <link rel="stylesheet" href="{{ '/assets/styles.css' | relative_url }}">
 
-  <!-- SITE_BASE and defaults for JS (so scripts can find /trial/data/default.json) -->
+  <!-- Global JS variables -->
   <script>
     (function(){
-      // compute SITE_BASE from Jekyll baseurl (keeps leading slash, no trailing slash)
+      /* Compute SITE_BASE from Jekyll baseurl */
       var rawBase = "{{ site.baseurl | default: '' }}";
       rawBase = String(rawBase || '').trim();
+
       if (!rawBase || rawBase === "/") {
         window.SITE_BASE = "";
       } else {
@@ -25,45 +26,34 @@
         window.SITE_BASE = rawBase.replace(/\/$/, "");
       }
 
-      // NO default JSON file — pages must explicitly set window.JSON_DATA_PATH
+      /* No default JSON file — pages must explicitly set JSON_DATA_PATH */
       if (typeof window.JSON_DATA_PATH === 'undefined') {
-        window.JSON_DATA_PATH = null;  // <-- important change
+        window.JSON_DATA_PATH = null;
       }
 
-      }
-
-      // optional flag pages can set to force card loading on non-home pages
+      /* Pages must explicitly turn this ON to load cards */
       if (typeof window.FORCE_LOAD_CARDS === 'undefined') {
         window.FORCE_LOAD_CARDS = false;
       }
     })();
   </script>
 
-  <!-- favicon (optional) -->
+  <!-- favicon -->
   <link rel="icon" href="{{ '/assets/images/favicon.ico' | relative_url }}" type="image/x-icon">
 </head>
 <body>
 
-  <!-- header include (Jekyll include) -->
   {% include header.html %}
 
-  <!-- main content: your markdown/html will be rendered here -->
   <main id="main-content" class="site-container" role="main">
     {{ content }}
   </main>
 
-  <!-- request box + footer (footer include contains the request area above footer content) -->
   {% include footer.html %}
-
-  <!-- whatsapp floating button -->
   {% include wa.html %}
 
-  <!-- Optional injector for pages that do not use layout (keeps ability to inject includes client-side).
-       Keep deferred so it doesn't block rendering. -->
   <script src="{{ '/assets/inject-includes.js' | relative_url }}" defer></script>
-
-  <!-- App loader (cards + search + home special behavior).
-       Defer so DOM is ready and window.SITE_BASE / JSON_DATA_PATH are set above. -->
   <script src="{{ '/assets/app.js' | relative_url }}" defer></script>
+
 </body>
 </html>
