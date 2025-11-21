@@ -1,18 +1,16 @@
 ---
 layout: default
-title: "Rokomari PromoCode For Others"
-json: "/data/others.json"
+title: Others
+permalink: /others/
 ---
+  <section class="container" style="padding:28px 0;">
+    <h1>Rokomari Promo Code For Others</h1>
+    <p>বিভাগভিত্তিক পেজ — নিচে কার্ড লোড হবে</p>
+  </section>
+<main id="main" data-src="{{ '/data/others.json' | relative_url }}">
 
-# Rokomari PromoCode For Others
-
-অন্যান্য ক্যাটাগরির পণ্য ও অফার এখানে পাবেন।
-
----
-
-<div id="category-cards" style="margin-top:30px;"></div>
-
-<script>
-  window.JSON_DATA_PATH = window.SITE_BASE + "/data/others.json";
-  window.FORCE_LOAD_CARDS = true;
-</script>
+  <section id="cardsArea" class="cards-area container" style="padding-bottom:40px;"></section>
+  <div id="spinner" class="spinner center" hidden>লোড হচ্ছে...</div>
+  <div id="endMessage" class="end-message center" hidden>আর কিছু নেই</div>
+  <div id="sentinel" style="height:2px"></div>
+</main>
