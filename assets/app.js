@@ -1,8 +1,8 @@
-/* assets/app.js - full (paste entire content) */
+/* assets/app.js - full (category-aware, home preserved) */
 (function(){
   'use strict';
 
-  // prefer runtime SITE_BASE if set by layout, otherwise fallback to literal (keeps previous behavior)
+  // runtime SITE_BASE from layout if available otherwise default (keeps previous behavior)
   const SITE_BASE = (typeof window !== 'undefined' && window.SITE_BASE) ? window.SITE_BASE : '/trial';
 
   const qs = (s,p=document)=>p.querySelector(s);
@@ -18,6 +18,7 @@
   }
 
   async function fetchJson(path){
+    if(!path) return [];
     try {
       const url = resolveUrl(path);
       const res = await fetch(url, {cache:'no-store'});
@@ -34,21 +35,31 @@
   function cleanDesc(s){
     if(!s) return '';
     let t = String(s).replace(/<\s*br\s*\/?>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-    if(t.length <= 140) return t;
-    const cut = t.lastIndexOf(' ', 120) || 120;
+    if(t.length <= 180) return t;
+    const cut = t.lastIndexOf(' ', 140) || 140;
     return t.slice(0,cut) + '...';
   }
 
   function normalize(arr){
     if(!Array.isArray(arr)) return [];
     return arr.map(it=>({
-      title: String(it.title || '').trim(),
+      title: String(it.title || it.name || '').trim(),
       author: String(it.author || it.writer || '').trim(),
       seller: String(it.seller || '').trim(),
-      img: String(it.img || it.image || '').trim(),
-      desc: cleanDesc(it.desc || it.description || ''),
+      img: String(it.img || it.image || it.thumbnail || '').trim(),
+      desc: cleanDesc(it.desc || it.description || it.summary || ''),
       link: String(it.link || it.url || '#').trim()
     }));
+  }
+
+  // Simple Fisher-Yates shuffle (in place)
+  function shuffleArray(a){
+    const arr = a.slice();
+    for(let i=arr.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
   }
 
   function createCard(item){
@@ -61,24 +72,24 @@
 
     const article = document.createElement('article');
     article.className = 'card category-card';
-    // NOTE: CSS must set image area size and .title/.desc clamps as requested.
     article.innerHTML = `
-      <div class="card-content">
-        <div class="media">${ img ? `<img src="${escapeHtml(img)}" alt="${escapeHtml(title)}" loading="lazy">` : '<div class="no-image">No image</div>' }</div>
-        <div class="body">
-          <h4 class="title" title="${escapeHtml(title)}">${escapeHtml(title)}</h4>
-          <div class="meta">${author ? 'লেখক: '+escapeHtml(author) : ''} ${seller ? ' • বিক্রেতা: '+escapeHtml(seller) : ''}</div>
-          <p class="desc">${escapeHtml(desc)}</p>
-          <div class="card-bottom">
-            <div class="discount-text">ডিসকাউন্ট পেতে এখানে কিনুন</div>
-            <a class="btn" href="${escapeHtml(link)}" target="_blank" rel="noopener">Buy Now</a>
-          </div>
+      <div class="card-media">
+        ${ img ? `<img src="${escapeHtml(img)}" alt="${escapeHtml(title)}" loading="lazy">` : `<div class="no-image">No image</div>` }
+      </div>
+      <div class="card-body">
+        <h4 class="title">${escapeHtml(title)}</h4>
+        <div class="meta">${author ? 'লেখক: '+escapeHtml(author) : ''} ${seller ? (author ? ' • ' : '') + 'বিক্রেতা: ' + escapeHtml(seller) : ''}</div>
+        <p class="desc">${escapeHtml(desc)}</p>
+        <div class="card-bottom">
+          <div class="discount-text">ডিসকাউন্ট পেতে এখানে কিনুন</div>
+          <a class="btn" href="${escapeHtml(link)}" target="_blank" rel="noopener">Buy Now</a>
         </div>
       </div>
     `;
     return article;
   }
 
+  /* ---------- Header & Search (unchanged behavior) ---------- */
   function setupHeader(){
     const searchInput = qs('#header-search-input');
     const resultsContainer = qs('#header-search-results');
@@ -126,7 +137,7 @@
       });
     }
 
-    // build a lightweight search index by merging category files (used only for search dropdown).
+    // prefetch merged index for search (keeps previous behavior)
     let localIndex = [];
     (async ()=>{
       const files = ['/data/json_data.json','/data/best_seller.json','/data/books.json','/data/electronics.json','/data/foods.json','/data/furnitures.json','/data/beauty.json','/data/others.json'];
@@ -178,6 +189,7 @@
     }
   }
 
+  /* ---------- Home renderer: keep category rows intact, but cap each to 8 items (9th is see-more) ---------- */
   function injectPageTitle(){
     const existing = qs('.page-title');
     if(existing) return;
@@ -229,26 +241,30 @@
 
       (async function load(catDef, sec){
         const raw = await fetchJson(catDef.file);
-        const items = normalize(raw);
+        let items = normalize(raw);
+        // for home sliders: keep best-seller order, shuffle others to show variety
+        if(catDef.key !== 'best-seller') items = shuffleArray(items);
         sec._items = items;
         sec._track = track;
         sec._tx = 0;
         sec._loadedCount = 0;
 
-        const batch = Math.max(1, 4);
+        const maxInitial = Math.min(8, items.length); // show up to 8 cards
         let idx = 0;
-        const total = items.length;
-        const first = Math.min(batch, total - idx);
+        const first = Math.min(maxInitial, items.length - idx);
         appendItemsToTrack(sec, idx, first);
         idx += first;
         sec._loadedCount = idx;
+
+        // add see-more card if items remain
+        if(idx < items.length) addSeeMoreCard(sec, catDef);
 
         next.addEventListener('click', ()=> onNextClick(sec, catDef));
         prev.addEventListener('click', ()=> slideCategory(sec, -1));
         enableSwipe(wrapper, sec);
 
         sec._nextIndex = idx;
-        sec._batchSize = batch;
+        sec._batchSize = 4;
 
         setTimeout(()=>updateButtonsVisibility(sec), 160);
       })(c, section);
@@ -270,17 +286,14 @@
       wrap.appendChild(card); track.appendChild(wrap);
     });
     section._loadedCount = (section._loadedCount || 0) + slice.length;
-    if(section._loadedCount >= (section._items || []).length){
-      addSeeMoreCard(section);
-    }
     setTimeout(()=>updateButtonsVisibility(section), 120);
   }
 
-  function addSeeMoreCard(section){
+  function addSeeMoreCard(section, catDef){
     if(!section || !section._track) return;
     if(section._track.querySelector('.cat-item.see-more')) return;
     const wrap = document.createElement('div'); wrap.className='cat-item see-more';
-    const link = `/${section.dataset.key}/`;
+    const link = catDef && catDef.href ? catDef.href : `/${section.dataset.key}/`;
     const readable = section.dataset.name || section.dataset.key || 'আরও দেখুন';
     const inner = document.createElement('div');
     inner.className='see-more-card';
@@ -363,139 +376,149 @@
   function enableSwipe(wrapper, section){
     let startX=0, curX=0, isDown=false;
     wrapper.addEventListener('touchstart', e=>{ startX = e.touches[0].clientX; isDown=true; });
-    wrapper.addEventListener('touchmove', e=>{ if(!isDown) return; curX = e.touches[0].clientX; const dx = curX - startX; section._track.style.transform = `translateX(${(section._track._tx || 0) + dx}px)`; });
+    wrapper.addEventListener('touchmove', e=>{ if(!isDown) return; curX = e.touches[0].clientX; const dx = curX - startX; try{ section._track.style.transform = `translateX(${(section._track._tx || 0) + dx}px)`; }catch(e){} });
     wrapper.addEventListener('touchend', e=>{ if(!isDown) return; isDown=false; const dx = curX - startX; if(Math.abs(dx) > 40){ slideCategory(section, dx < 0 ? +1 : -1); } else { section._track.style.transform = `translateX(${section._track._tx || 0}px)`; } startX=curX=0; });
     wrapper.addEventListener('mouseleave', ()=>{ if(isDown){ isDown=false; section._track.style.transform = `translateX(${section._track._tx || 0}px)`; }});
   }
 
-  /* -------------------- CATEGORY-ONLY renderer -------------------- */
-  async function renderStandard(mainEl){
-    // prefer page-specific data-src, otherwise check explicit global JSON_DATA_PATH if allowed
+  /* ---------- Category page renderer (ONLY runs when page has an element with data-src) ---------- */
+  async function renderCategory(mainEl){
+    // data-src expected like "data/electronics.json" or "/data/electronics.json"
     const dataSrc = mainEl?.dataset?.src || null;
+    if(!dataSrc && !(Array.isArray(window.rokomariData) && window.rokomariData.length)) return;
 
-    // If no source provided and no in-memory data, do not render anything.
-    if(!dataSrc && !(Array.isArray(window.rokomariData) && window.rokomariData.length) && !(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH)){
-      return;
-    }
-
+    // fetch
     let raw = [];
     if(Array.isArray(window.rokomariData) && window.rokomariData.length) raw = window.rokomariData;
-    else if(dataSrc) raw = await fetchJson(dataSrc);
-    else if(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH) raw = await fetchJson(window.JSON_DATA_PATH);
-    else raw = [];
+    else raw = await fetchJson(dataSrc);
 
-    const all = normalize(raw);
+    let all = normalize(raw);
+
+    // If the source is best_seller, do not shuffle; otherwise randomize
+    const normalizedSrc = String(dataSrc || '').toLowerCase();
+    if(!normalizedSrc.includes('best_seller') && !normalizedSrc.includes('best-seller') && !normalizedSrc.includes('best-seller.json')){
+      all = shuffleArray(all);
+    }
+
     window._all_index = all;
 
-    // create or reuse cards container for category pages
+    // create container
     let cards = qs('#cardsArea', mainEl);
     if(!cards){
       cards = document.createElement('div');
       cards.id = 'cardsArea';
       cards.className = 'cards-area container category-cards';
+      // append after existing content of mainEl
       mainEl.appendChild(cards);
     } else {
       cards.classList.add('category-cards');
     }
 
-    // layout limits per device
-    const isMobile = (window.innerWidth || document.documentElement.clientWidth) < 600;
+    // layout limits
+    const isMobile = (window.innerWidth || document.documentElement.clientWidth) < 900;
     const initialCount = isMobile ? 10 : 20;
     const batchSize = 10;
     let shown = 0;
 
     function renderItems(count){
       const slice = all.slice(shown, shown + count);
-      slice.forEach(it => {
+      slice.forEach(it=>{
         const card = createCard(it);
         cards.appendChild(card);
       });
       shown += slice.length;
+      // update see more visibility
+      if(shown < all.length){
+        showMoreBtn.style.display = 'block';
+      } else {
+        showMoreBtn.style.display = 'none';
+      }
     }
 
     // initial render
-    renderItems(initialCount);
+    renderItems(Math.min(initialCount, all.length));
 
-    // ensure a "See more" button exists & handles further loads
-    let seeMoreBtn = cards.querySelector('.see-more-btn');
-    if(!seeMoreBtn){
-      seeMoreBtn = document.createElement('button');
-      seeMoreBtn.className = 'see-more-btn';
-      seeMoreBtn.textContent = 'See more';
-      seeMoreBtn.style.display = 'none';
-      cards.appendChild(seeMoreBtn);
+    // See more button (loads batch)
+    let showMoreBtn = qs('.category-see-more', cards);
+    if(!showMoreBtn){
+      showMoreBtn = document.createElement('button');
+      showMoreBtn.className = 'category-see-more';
+      showMoreBtn.textContent = 'See more';
+      cards.appendChild(showMoreBtn);
     }
 
-    function updateSeeMore(){
-      seeMoreBtn.style.display = (shown < all.length) ? 'block' : 'none';
-    }
-    updateSeeMore();
-
-    seeMoreBtn.addEventListener('click', ()=>{
+    showMoreBtn.addEventListener('click', ()=>{
       renderItems(batchSize);
-      updateSeeMore();
+      // fade-in new images handled by attachImageSkeletons
       attachImageSkeletons();
+      // scroll to newly appended content (gentle)
+      showMoreBtn.scrollIntoView({behavior:'smooth', block:'nearest'});
     });
 
-    // attach skeletons for images
     attachImageSkeletons();
   }
 
+  /* ---------- Image skeleton handling (YouTube-like shimmer) ---------- */
   function attachImageSkeletons(){
-    document.querySelectorAll('.card .media img').forEach(img=>{
-      if(img.dataset._attached) return;
-      img.dataset._attached = 1;
-      const wrapper = img.parentNode;
-      const sk = document.createElement('div'); sk.className = 'img-skel';
-      wrapper.insertBefore(sk, img);
+    document.querySelectorAll('.category-cards .card .card-media').forEach(wrapper=>{
+      // add skeleton only if img not loaded yet
+      if(wrapper.dataset._skel) return;
+      wrapper.dataset._skel = 1;
+      const img = wrapper.querySelector('img');
+      const sk = document.createElement('div'); sk.className = 'yt-skel';
+      wrapper.insertBefore(sk, wrapper.firstChild);
+      if(!img) { // no image: remove skeleton
+        sk.classList.add('no-img');
+        return;
+      }
       img.style.opacity = 0;
-      img.addEventListener('load', ()=>{ img.style.transition='opacity .35s'; img.style.opacity = 1; if(sk && sk.parentNode) sk.parentNode.removeChild(sk); updateAllButtons(); });
-      img.addEventListener('error', ()=>{ if(sk && sk.parentNode) sk.parentNode.removeChild(sk); updateAllButtons(); });
+      img.addEventListener('load', ()=>{ img.style.transition='opacity .35s'; img.style.opacity = 1; if(sk && sk.parentNode) sk.parentNode.removeChild(sk); });
+      img.addEventListener('error', ()=>{ if(sk && sk.parentNode) sk.parentNode.removeChild(sk); });
+      // if already complete
+      if(img.complete && img.naturalWidth){
+        if(sk && sk.parentNode) sk.parentNode.removeChild(sk);
+        img.style.opacity = 1;
+      }
     });
   }
-  setTimeout(()=>attachImageSkeletons(), 250);
+
+  // observe DOM changes to attach skeletons for dynamically added cards
   const mut = new MutationObserver(()=>attachImageSkeletons());
   mut.observe(document.body, { childList:true, subtree:true });
 
-  function updateAllButtons(){
-    qsa('.cat-row').forEach(section=>{ if(section._track) updateButtonsVisibility(section); });
-  }
-
-  // DOM ready: decide whether to render home or category/other pages
+  /* ---------- Start logic: prefer element with data-src on page for category rendering ---------- */
   document.addEventListener('DOMContentLoaded', function(){
     setupHeader();
 
-    // normalize and compare path against SITE_BASE aware roots
+    // normalized path detection (site base aware)
     const path = (location.pathname || '/').replace(/\/$/, '') || '/';
     const base = SITE_BASE || '';
     const isHome = (path === '' || path === base || path === base + '/' || path === '/' || path === '');
-    if(isHome) {
+
+    if(isHome){
       renderHome();
       return;
     }
 
-    // Prefer element with explicit data-src (for category pages we put <div data-src="..."> inside the page content)
-    // If no such element exists, fall back to the first <main> in the layout, then document.body.
+    // Prefer explicit data-src element (category pages include <main data-src="..."> or a div with data-src)
     const pageDataSrcEl = document.querySelector('[data-src]');
     const mainElCandidate = pageDataSrcEl || qs('main') || document.body;
 
     // Determine whether to render cards:
-    // - element has data-src OR
-    // - in-memory window.rokomariData exists OR
-    // - FORCE_LOAD_CARDS is true AND JSON_DATA_PATH is set
     const hasSrc = !!(mainElCandidate && mainElCandidate.dataset && mainElCandidate.dataset.src);
     const hasInMemory = Array.isArray(window.rokomariData) && window.rokomariData.length;
     const hasGlobalJson = (typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH);
     const force = !!window.FORCE_LOAD_CARDS;
 
+    // category pages: renderCategory only if element contains data-src or in-memory or forced global JSON path
     if(hasSrc || hasInMemory || (force && hasGlobalJson)){
-      renderStandard(mainElCandidate);
+      renderCategory(mainElCandidate);
     } else {
-      // intentionally do nothing — no cards for this page
+      // do nothing on other pages (no cards)
     }
   });
 
-
+  // small helper used by search/request
   window.triggerRequest = function(searchTerm){
     const searchInput = qs('#header-search-input');
     const resultsContainer = qs('#header-search-results');
