@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{ page.title | default: site.title }}</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- primary stylesheet -->
+  <link rel="stylesheet" href="{{ '/assets/styles.css' | relative_url }}">
+  <script>
+    (function(){
+      var b = "{{ site.baseurl | default: '' }}";
+      b = (b || '').toString().trim();
+      if(!b || b === "/") { window.SITE_BASE = ""; }
+      else {
+        if(b[0] !== "/") b = "/" + b;
+        window.SITE_BASE = b.replace(/\/$/, "");
+      }
+      // default path for json (can be overridden by a page with a <script> setting window.JSON_DATA_PATH)
+      window.JSON_DATA_PATH = window.SITE_BASE + "/data/default.json";
+    })();
+  </script>
+</head>
+<body>
+  {% include header.html %}
+
+  <!-- MAIN: your page content (markdown will be rendered here) -->
+  <main id="main-content" class="site-container">
+    {{ content }}
+  </main>
+
+  <!-- request box + footer (footer.html contains the request box above the footer) -->
+  {% include footer.html %}
+  {% include wa.html %}
+
+  <!-- optional injector (keeps ability to inject header/footer on raw HTML pages) -->
+  <script src="{{ '/assets/inject-includes.js' | relative_url }}" defer></script>
+
+  <!-- main app (cards, search) -->
+  <script src="{{ '/assets/app.js' | relative_url }}" defer></script>
+</body>
+</html>
