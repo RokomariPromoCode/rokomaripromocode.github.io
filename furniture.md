@@ -4,7 +4,7 @@ title: Furniture
 permalink: /furniture/
 ---
 
-<main id="main" data-src="{{ site.baseurl }}/data/furnitures.json" data-cards="true">
+<main id="main" data-src="/data/furnitures.json" data-cards="true">
   <h1>Furniture</h1>
   <p>Home & office furniture.</p>
 </main>
