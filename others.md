@@ -4,7 +4,7 @@ title: Others
 permalink: /others/
 ---
 
-<main id="main" data-src="{{ site.baseurl }}/data/others.json" data-cards="true">
+<main id="main" data-src="/data/others.json" data-cards="true">
   <h1>Others</h1>
   <p>Miscellaneous items.</p>
 </main>
