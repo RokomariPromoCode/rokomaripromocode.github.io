@@ -59,11 +59,10 @@
 </footer>
 
 <script>
-  // request form center submit button on mobile if needed
   (function(){
     const form = document.getElementById('request-form');
-    form && form.addEventListener('submit', () => {
-      // optional: analytics hook or validation
+    form && form.addEventListener('submit', (e) => {
+      // you can hook analytics or do custom validation here
     });
   })();
 </script>
