@@ -1,27 +1,3 @@
-title: "Rokomari Promo Code"
-description: "Best Rokomari Coupon Codes, Discounts, and Promo Offers"
-theme: null
-
-# REQUIRED FOR GITHUB PAGES PROJECT SITE
-baseurl: "/trial"
+title: Rokomari Promo Code
+baseurl: ""   # IMPORTANT: empty when hosting at root
 url: "https://rokomaripromocode.github.io"
-
-# Markdown settings
-markdown: kramdown
-kramdown:
-  input: GFM
-
-# Directories GitHub Pages should process
-include:
-  - _includes
-  - _layouts
-  - assets
-  - data
-
-# Remove Jekyll defaults that break JSON loading
-plugins: []
-
-# ensures .md pages render properly
-collections:
-  posts:
-    output: true
