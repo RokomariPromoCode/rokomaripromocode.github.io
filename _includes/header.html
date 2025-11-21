@@ -1,0 +1,85 @@
+<header class="modern-header">
+  <div class="header-inner container-row">
+    <a class="brand" href="{{ '/' | relative_url }}">
+      <img src="{{ '/assets/logo.png' | relative_url }}" alt="Logo" onerror="this.src='https://via.placeholder.com/120x36?text=Logo'">
+    </a>
+
+    <div class="search-area">
+      <div class="search-box">
+        <input id="header-search-input" type="search" placeholder="ক্যাটাগরি, বই বা লেখকের নাম খুঁজুন..." autocomplete="off" />
+        <button id="clear-search" class="search-clear" aria-label="clear">✕</button>
+      </div>
+      <div id="search-results" class="search-results"></div>
+    </div>
+
+    <nav class="nav-desktop">
+      <ul class="menu-links">
+        <li><a href="{{ '/' | relative_url }}">Home</a></li>
+        <li><a href="{{ '/best-seller/' | relative_url }}">Best Seller</a></li>
+        <li><a href="{{ '/books/' | relative_url }}">Books</a></li>
+        <li><a href="{{ '/electronics/' | relative_url }}">Electronics</a></li>
+        <li><a href="{{ '/foods/' | relative_url }}">Foods</a></li>
+        <li><a href="{{ '/furniture/' | relative_url }}">Furniture</a></li>
+        <li><a href="{{ '/beauty/' | relative_url }}">Beauty</a></li>
+        <li><a href="{{ '/others/' | relative_url }}">Others</a></li>
+      </ul>
+    </nav>
+
+    <button id="mobile-menu-btn" class="hamburger" aria-label="menu">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+
+  <!-- mobile slide-in menu -->
+  <div id="mobile-menu" class="mobile-menu">
+    <ul>
+      <li><a href="{{ '/' | relative_url }}">Home</a></li>
+      <li><a href="{{ '/best-seller/' | relative_url }}">Best Seller</a></li>
+      <li><a href="{{ '/books/' | relative_url }}">Books</a></li>
+      <li><a href="{{ '/electronics/' | relative_url }}">Electronics</a></li>
+      <li><a href="{{ '/foods/' | relative_url }}">Foods</a></li>
+      <li><a href="{{ '/furniture/' | relative_url }}">Furniture</a></li>
+      <li><a href="{{ '/beauty/' | relative_url }}">Beauty</a></li>
+      <li><a href="{{ '/others/' | relative_url }}">Others</a></li>
+    </ul>
+  </div>
+</header>
+
+<script>
+  // header interactivity (will run once per page)
+  (function(){
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const searchInput = document.getElementById('header-search-input');
+    const searchResults = document.getElementById('search-results');
+    const clearBtn = document.getElementById('clear-search');
+
+    mobileBtn && mobileBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('open');
+      mobileBtn.querySelector('i').classList.toggle('fa-times');
+    });
+
+    // search focus/clear
+    clearBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      searchResults.innerHTML = '';
+      searchResults.style.display = 'none';
+      searchInput.focus();
+    });
+
+    // delegate search to app.js via custom event (app.js listens to "app:search")
+    searchInput.addEventListener('input', (e)=>{
+      const q = e.target.value.trim();
+      const ev = new CustomEvent('app:search', { detail: q });
+      document.dispatchEvent(ev);
+    });
+
+    // mobile: close menu when clicking outside
+    document.addEventListener('click', (ev) => {
+      if(!mobileMenu.contains(ev.target) && !mobileBtn.contains(ev.target)) {
+        mobileMenu.classList.remove('open');
+        mobileBtn.querySelector('i').classList.remove('fa-times');
+      }
+    });
+  })();
+</script>
