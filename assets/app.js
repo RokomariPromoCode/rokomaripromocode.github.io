@@ -1,187 +1,199 @@
-/* assets/app.js */
+/* assets/app.js - minimal cards + search renderer */
 (function(){
-  // safe SITE_BASE & JSON path (if page set window.JSON_DATA_PATH earlier it will be used)
-  const SITE_BASE = (window.SITE_BASE || "").toString().trim().replace(/\/$/, "");
-  const DEFAULT_JSON = SITE_BASE ? (SITE_BASE + "/data/default.json") : "/data/default.json";
-  const jsonPath = (typeof window.JSON_DATA_PATH === "string" && window.JSON_DATA_PATH.trim()) ? window.JSON_DATA_PATH.trim() : DEFAULT_JSON;
+  const SITE_BASE = window.SITE_BASE || "";
+  const JSON_PATH = window.JSON_DATA_PATH || (SITE_BASE ? (SITE_BASE + "/data/default.json") : "/data/default.json");
+  const main = document.getElementById('main-content');
 
-  // minimal helpers
+  // categories to show on home - order matters
+  const HOME_CATEGORIES = ['best_seller','books','electronics','foods','furniture','beauty','others'];
+
+  // For search suggestions
+  let productDatabase = [];
+
+  // determine if we are home (root) - allow override
+  function getRelPath(){
+    let p = location.pathname || "/";
+    if (SITE_BASE && p.indexOf(SITE_BASE) === 0) p = p.slice(SITE_BASE.length);
+    return p || "/";
+  }
+  const relPath = getRelPath();
+  const isHome = (relPath === '/' || relPath === '/index.html' || relPath === '/index' || typeof window.FORCE_LOAD_CARDS !== 'undefined');
+
+  // small element helper
   function el(tag, cls, html){
     const e = document.createElement(tag);
-    if(cls) e.className = cls;
-    if(html !== undefined) e.innerHTML = html;
+    if (cls) e.className = cls;
+    if (html !== undefined) e.innerHTML = html;
     return e;
   }
-  function safeImage(url){
-    if(!url) return (SITE_BASE ? SITE_BASE + "/assets/images/no-image.png" : "/assets/images/no-image.png");
-    return url;
-  }
 
-  // search handling (listens to header event 'app:search')
-  const searchResultsBox = document.getElementById('header-search-results');
-  let productDatabase = window.HEADER_PRODUCT_DB || []; // built by header if any
-  // app can fetch JSON and flatten product list
-  async function loadJsonToDB(path){
-    try{
-      const res = await fetch(path, {cache:'no-store'});
-      if(!res.ok) throw new Error('fetch failed');
-      const data = await res.json();
-      // expected format: object with categories arrays or flat array
-      // flatten: if data is array -> use it; if object -> gather all values arrays
-      let items = [];
-      if(Array.isArray(data)){
-        items = data;
-      } else {
-        // gather arrays within object
-        Object.values(data).forEach(v => {
-          if(Array.isArray(v)) items = items.concat(v);
-        });
-      }
-      // normalize and push to productDatabase
-      items.forEach(it => {
-        productDatabase.push({
-          title: it.title || it.name || '',
-          author: it.author || it.writer || '',
-          seller: it.seller || it.brand || '',
-          img: it.img || it.image || '',
-          link: it.link || it.href || it.url || '#'
-        });
-      });
-      // optional debug: console.log('loaded json products=', productDatabase.length);
-    }catch(err){
-      // fetch failed — silently continue with whatever DB we have
-      console.warn('loader fetchJson error for', path, err);
-    }
-  }
-
-  // search: receives string q, shows up to 8 unique results
-  function doSearch(q){
-    q = (q||'').toString().trim().toLowerCase();
-    if(!q){
-      if(searchResultsBox) searchResultsBox.style.display = 'none';
-      return;
-    }
-    // ensure DB loaded (if not loaded yet, lazy load)
-    if(productDatabase.length < 1 && !window._APP_JSON_LOADED){
-      window._APP_JSON_LOADED = true;
-      loadJsonToDB(jsonPath);
-    }
-    const matches = [];
-    const seen = new Set();
-    for(const p of productDatabase){
-      const title = (p.title||'').toLowerCase();
-      const author = (p.author||'').toLowerCase();
-      const seller = (p.seller||'').toLowerCase();
-      if(title.includes(q) || author.includes(q) || seller.includes(q)){
-        const key = p.link || p.title;
-        if(!seen.has(key)){
-          seen.add(key); matches.push(p);
-        }
-        if(matches.length >= 10) break;
-      }
-    }
-    // render
-    if(!searchResultsBox) return;
-    searchResultsBox.innerHTML = '';
-    if(matches.length === 0){
-      searchResultsBox.style.display = 'none';
-      return;
-    }
-    matches.forEach(m => {
+  // show search results dropdown (header includes this element)
+  const searchResultsEl = document.getElementById('header-search-results');
+  function showSearchList(items){
+    if (!searchResultsEl) return;
+    searchResultsEl.innerHTML = '';
+    if (!items || items.length === 0) { searchResultsEl.style.display = 'none'; return; }
+    items.forEach(it => {
       const a = el('a','result-item');
-      a.href = m.link || '#';
-      a.innerHTML = `<img src="${safeImage(m.img)}" alt=""><div class="result-info"><h4>${(m.title||'').slice(0,70)}</h4><p>${m.author||''}</p></div>`;
-      searchResultsBox.appendChild(a);
+      a.href = it.link || '#';
+      a.innerHTML = `<img src="${it.img||''}" alt=""><div><h4>${it.title}</h4><p>${it.author||''}</p></div>`;
+      searchResultsEl.appendChild(a);
     });
-    searchResultsBox.style.display = 'block';
+    searchResultsEl.style.display = 'block';
   }
 
-  // listen for header search event
-  document.addEventListener('app:search', function(ev){
-    const q = ev && ev.detail ? ev.detail : '';
-    doSearch(q);
-  });
-
-  // Hide search dropdown when click outside
-  document.addEventListener('click', function(ev){
-    const sr = document.getElementById('header-search-results');
-    const si = document.getElementById('header-search-input');
-    if(!sr) return;
-    if(!sr.contains(ev.target) && si && !si.contains(ev.target)){
-      sr.style.display = 'none';
+  // search query handler (called by header)
+  function handleSearchQuery(q){
+    if (!q) { showSearchList([]); return; }
+    q = q.toLowerCase();
+    const matches = productDatabase.filter(p =>
+      (p.title||'').toLowerCase().includes(q) ||
+      (p.author||'').toLowerCase().includes(q) ||
+      (p.seller||'').toLowerCase().includes(q)
+    );
+    // dedupe by link
+    const seen = new Set();
+    const unique = [];
+    for (const m of matches) {
+      if (!m.link) continue;
+      if (seen.has(m.link)) continue;
+      seen.add(m.link);
+      unique.push(m);
+      if (unique.length >= 10) break;
     }
+    showSearchList(unique);
+  }
+
+  document.addEventListener('app:search', function(e){
+    handleSearchQuery(String((e && e.detail) || ''));
   });
 
-  // Home page card loader: only if path is root or index (so other pages not auto-load cards)
-  const pathname = location.pathname.replace(SITE_BASE,'') || '/';
-  const isHome = (pathname === '/' || pathname === '/index.html' || pathname === '/index' || typeof window.FORCE_LOAD_CARDS !== 'undefined' && window.FORCE_LOAD_CARDS);
+  // fetch JSON
+  async function fetchJson(){
+    try {
+      const r = await fetch(JSON_PATH, {cache:'no-store'});
+      if (!r.ok) throw new Error('fetch failed ' + r.status);
+      const data = await r.json();
+      return data;
+    } catch(err){
+      console.warn('app.js fetchJson failed for', JSON_PATH, err);
+      return null;
+    }
+  }
 
-  async function loadAndRenderHome(){
-    // fetch jsonPath and render sections (simplified)
-    try{
-      const res = await fetch(jsonPath, {cache:'no-store'});
-      if(!res.ok) throw new Error('fetch failed');
-      const data = await res.json();
-      // data may be array or object; if object we expect keys = categories
-      const categories = {};
-      if(Array.isArray(data)){
-        // default category list
-        categories['others'] = data;
-      } else {
-        Object.entries(data).forEach(([k,v])=>{
-          if(Array.isArray(v)) categories[k] = v;
-        });
-      }
-      // render sections inside #main-content at top
-      const container = document.getElementById('main-content');
-      if(!container) return;
-      // create a section wrapper element
-      const wrapper = el('div','home-sections');
-      // choose order
-      const order = ['best_seller','books','electronics','foods','furniture','beauty','others'];
-      order.forEach(catKey=>{
-        const items = categories[catKey] || [];
-        if(items.length === 0) return;
-        const sec = el('section','section');
-        const head = el('div','section-head', `<div class="title">Rokomari PromoCode For ${catKey.replace(/_/g,' ')}</div>`);
-        sec.appendChild(head);
-        const row = el('div','card-row');
-        // render up to 8 items
-        items.slice(0,8).forEach(it=>{
-          const card = el('article','card');
-          const imgWrap = el('div','img-wrap');
-          const img = el('img');
-          img.src = it.img || safeImage(it.img);
-          img.alt = it.title || '';
-          img.style.maxWidth = '100%'; img.style.maxHeight = '100%'; img.style.objectFit = 'contain';
-          imgWrap.appendChild(img);
-          card.appendChild(imgWrap);
-          card.appendChild(el('div','title', `<div>${it.title || ''}</div>`));
-          card.appendChild(el('div','meta', `${it.author ? 'লেখক: ' + it.author : ''}`));
-          card.appendChild(el('div','desc', (it.desc||'').slice(0,220)));
-          const cta = el('div','cta-row');
-          cta.innerHTML = `<div class="offer-text">ডিসকাউন্ট পেতে এখানে ক্লিক করুন</div><a class="buy-btn" href="${it.link||'#'}" target="_blank">Buy Now</a>`;
-          card.appendChild(cta);
-          row.appendChild(card);
-        });
-        head.appendChild(el('div','carousel-arrow','<i class="fas fa-chevron-right"></i>'));
-        sec.appendChild(row);
-        wrapper.appendChild(sec);
+  // Build product database flatten from JSON structure
+  function buildFlatDatabase(data){
+    productDatabase = [];
+    if(!data || !Array.isArray(data.products)) return;
+    data.products.forEach(item => {
+      // item expected: { title, author, seller, img, desc, link, category }
+      productDatabase.push({
+        title: item.title || '',
+        author: item.author || '',
+        seller: item.seller || '',
+        img: item.img || '',
+        link: item.link || '#',
+        category: item.category || ''
       });
-      // Insert wrapper BEFORE existing content (so your markdown remains in the middle)
-      container.insertBefore(wrapper, container.firstChild);
-    }catch(err){
-      console.warn('home loader failed', err);
-    }
+    });
   }
 
-  if(isHome) {
-    loadAndRenderHome();
-    // also preload DB for search
-    loadJsonToDB(jsonPath);
-  } else {
-    // for non-home pages, still load small DB if HEADER_PRODUCT_DB empty
-    if((window.HEADER_PRODUCT_DB || []).length < 1) loadJsonToDB(jsonPath);
+  // Render a section with horizontal cards
+  function renderSection(title, items){
+    const section = el('section','section');
+    const head = el('div','section-head');
+    head.innerHTML = `<div class="title">Rokomari PromoCode For ${title}</div>`;
+    section.appendChild(head);
+
+    const rowWrap = el('div','card-row');
+    // container for cards
+    items.forEach(it => {
+      const card = el('article','card');
+      const imgWrap = el('div','img-wrap');
+      const img = document.createElement('img');
+      img.src = it.img || '/assets/images/logo.png';
+      img.alt = it.title || '';
+      imgWrap.appendChild(img);
+      card.appendChild(imgWrap);
+
+      const t = el('div','title', it.title || '');
+      card.appendChild(t);
+      const meta = el('div','meta', (it.seller ? 'বিক্রেতা: ' + it.seller : '') + (it.author ? ' • লেখক: ' + it.author : ''));
+      card.appendChild(meta);
+      const desc = el('div','desc', it.desc ? it.desc : '');
+      card.appendChild(desc);
+
+      const cta = el('div','cta-row');
+      const offer = el('div','offer-text','ডিসকাউন্ট পেতে এখানে কিনুন');
+      const buy = el('a','buy-btn','Buy Now');
+      buy.href = it.link || '#';
+      cta.appendChild(offer);
+      cta.appendChild(buy);
+      card.appendChild(cta);
+
+      rowWrap.appendChild(card);
+    });
+
+    // Add "see more" half-card if more items follow on this category
+    const placeholder = el('div','see-more');
+    placeholder.innerHTML = `<div><strong>আরও দেখুন</strong><br><a class="buy-btn" href="/${title.toLowerCase()}/">See all ${title}</a></div>`;
+    rowWrap.appendChild(placeholder);
+
+    section.appendChild(rowWrap);
+    return section;
   }
+
+  // Render all home sections
+  function renderHomeSections(data){
+    if (!main) return;
+    // create wrapper to add above the footer (so user content remains where they put it)
+    const container = el('div','home-sections');
+    const grouped = {};
+    (data.products || []).forEach(p => {
+      const cat = (p.category || 'others').toLowerCase();
+      grouped[cat] = grouped[cat] || [];
+      grouped[cat].push(p);
+    });
+
+    // for each category in HOME_CATEGORIES show up to 8 items (4 visible + next)
+    HOME_CATEGORIES.forEach(catKey => {
+      const items = grouped[catKey] || [];
+      if (items.length === 0) return;
+      // keep item fields minimal
+      const processed = items.map(i => ({
+        title: i.title,
+        author: i.author,
+        seller: i.seller,
+        img: i.img,
+        desc: i.desc,
+        link: i.link,
+        category: i.category
+      }));
+      const sectionEl = renderSection(catKey.charAt(0).toUpperCase() + catKey.slice(1), processed.slice(0, 8));
+      container.appendChild(sectionEl);
+    });
+
+    // insert container BEFORE footer (main-content is page content; append container at the end of main-content)
+    main.appendChild(container);
+  }
+
+  // main init
+  (async function init(){
+    const data = await fetchJson();
+    if (!data) {
+      // fallback minimal demo
+      const fallback = {
+        products: [
+          { title: "ডেমো বই - লেখক", author:"লেখক নাম", seller:"Rokomari", img:"/assets/images/logo.png", desc:"ডেমো বর্ণনা", link:"#", category:"books" },
+          { title: "ডেমো প্রোডাক্ট", author:"", seller:"Ghorer Bazar", img:"/assets/images/logo.png", desc:"ডেমো", link:"#", category:"others" }
+        ]
+      };
+      buildFlatDatabase(fallback);
+      if (isHome) renderHomeSections(fallback);
+      return;
+    }
+    buildFlatDatabase(data);
+    if (isHome) renderHomeSections(data);
+  })();
 
 })();
