@@ -87,7 +87,7 @@
     const menuLinks = qs('.menu-links');
 
     const categories = [
-      {key:'best_seller',label:'Best Seller',href:'/best_seller/'},
+      {key:'best-seller',label:'Best Seller',href:'/best-seller/'},
       {key:'books',label:'Books',href:'/books/'},
       {key:'electronics',label:'Electronics',href:'/electronics/'},
       {key:'foods',label:'Foods',href:'/foods/'},
@@ -127,7 +127,7 @@
 
     let localIndex = [];
     (async ()=>{
-      const files = ['/data/json_data.json','/data/best_seller.json','/data/books.json','/data/electronics.json','/data/foods.json','/data/furnitures.json','/data/beauty.json','/data/others.json'];
+      const files = ['/data/json_data.json','/data/best-seller.json','/data/books.json','/data/electronics.json','/data/foods.json','/data/furnitures.json','/data/beauty.json','/data/others.json'];
       const fetched = await Promise.all(files.map(f => fetchJson(f)));
       const merged = fetched.flat();
       const normalized = normalize(merged);
@@ -192,7 +192,7 @@
 
     const root = document.createElement('div'); root.className = 'home-cats container';
     const cats = [
-      { key:'best_seller', name:'Best Seller', file:'/data/best_seller.json', href:'/best_seller/' },
+      { key:'best-seller', name:'Best Seller', file:'/data/best-seller.json', href:'/best-seller/' },
       { key:'books', name:'Books', file:'/data/books.json', href:'/books/' },
       { key:'electronics', name:'Electronics', file:'/data/electronics.json', href:'/electronics/' },
       { key:'foods', name:'Foods', file:'/data/foods.json', href:'/foods/' },
