@@ -1,18 +1,16 @@
 ---
 layout: default
-title: "Rokomari PromoCode For Foods"
-json: "/data/foods.json"
+title: Foods
+permalink: /foods/
 ---
+  <section class="container" style="padding:28px 0;">
+    <h1>Rokomari Promo Code For Foods</h1>
+    <p>বিভাগভিত্তিক পেজ — নিচে কার্ড লোড হবে</p>
+  </section>
+<main id="main" data-src="{{ '/data/foods.json' | relative_url }}">
 
-# Rokomari PromoCode For Foods
-
-খাবার, মশলা ও ঘরের বাজারের ক্যাটাগরি এখানে রয়েছে।
-
----
-
-<div id="category-cards" style="margin-top:30px;"></div>
-
-<script>
-  window.JSON_DATA_PATH = window.SITE_BASE + "/data/foods.json";
-  window.FORCE_LOAD_CARDS = true;
-</script>
+  <section id="cardsArea" class="cards-area container" style="padding-bottom:40px;"></section>
+  <div id="spinner" class="spinner center" hidden>লোড হচ্ছে...</div>
+  <div id="endMessage" class="end-message center" hidden>আর কিছু নেই</div>
+  <div id="sentinel" style="height:2px"></div>
+</main>
