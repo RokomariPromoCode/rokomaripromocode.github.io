@@ -1,5 +1,5 @@
-<footer class="main-footer">
-  <div class="footer-request container">
+<footer class="main-footer" id="footer">
+  <div class="footer-request container" id="request-area" aria-label="Request area">
     <h2>কাঙ্খিত বই বা প্রমো কোড <span>খুঁজে পাচ্ছেন না?</span></h2>
     <form id="request-form" class="request-form" action="https://formspree.io/f/YOUR_FORM_ID_HERE" method="POST">
       <input name="name" placeholder="আপনার নাম" required>
@@ -9,10 +9,10 @@
     </form>
   </div>
 
-  <div class="footer-content container">
+  <div class="footer-content container" role="contentinfo">
     <div class="col about">
       <h3>About Us</h3>
-      <img src="{{ '/assets/logo.png' | relative_url }}" alt="Logo" onerror="this.style.display='none'">
+      <img src="{{ '/assets/images/logo.png' | relative_url }}" alt="Logo" onerror="this.style.display='none'">
       <p>আমরা রকমারি ডট কমের অ্যাফিলিয়েট পার্টনার — পাঠকদের জন্য সেরা বই এবং ডিসকাউন্ট সরবরাহ করা আমাদের লক্ষ্য।</p>
       <div class="socials">
         <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -57,12 +57,3 @@
     </div>
   </div>
 </footer>
-
-<script>
-  (function(){
-    const form = document.getElementById('request-form');
-    form && form.addEventListener('submit', (e) => {
-      // you can hook analytics or do custom validation here
-    });
-  })();
-</script>
