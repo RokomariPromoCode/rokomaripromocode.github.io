@@ -91,7 +91,7 @@
       {key:'books',label:'Books',href:'/books/'},
       {key:'electronics',label:'Electronics',href:'/electronics/'},
       {key:'foods',label:'Foods',href:'/foods/'},
-      {key:'furnitures',label:'Furniture',href:'/furnitures/'},
+      {key:'furniture',label:'Furniture',href:'/furniture/'},
       {key:'beauty',label:'Beauty',href:'/beauty/'},
       {key:'others',label:'Others',href:'/others/'},
     ];
@@ -196,7 +196,7 @@
       { key:'books', name:'Books', file:'/data/books.json', href:'/books/' },
       { key:'electronics', name:'Electronics', file:'/data/electronics.json', href:'/electronics/' },
       { key:'foods', name:'Foods', file:'/data/foods.json', href:'/foods/' },
-      { key:'furnitures', name:'Furniture', file:'/data/furnitures.json', href:'/furnitures/' },
+      { key:'furniture', name:'Furniture', file:'/data/furnitures.json', href:'/furniture/' },
       { key:'beauty', name:'Beauty', file:'/data/beauty.json', href:'/beauty/' },
       { key:'others', name:'Others', file:'/data/others.json', href:'/others/' }
     ];
