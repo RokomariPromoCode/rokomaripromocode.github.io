@@ -1,17 +1,19 @@
-/* assets/inject-includes.js - small injector for pages without Jekyll layout
-   If a page has <div id="inject-header"></div> etc., this script will fetch includes.
-   NOTE: This is optional if you use the _layouts/default.html system.
-*/
-(function(){
-  // only run on non-Jekyll environments (pages that have no header)
-  function fetchAndInsert(path, selector){
-    fetch(path, {cache:'no-store'}).then(r=> r.text()).then(html => {
-      const container = document.querySelector(selector);
-      if(container) container.innerHTML = html;
-    }).catch(()=>{});
-  }
+// inject-includes.js — fetches includes/header.html footer.html wa.html and inserts into DOM
+(async function(){
+  function insertHTMLAtTop(html){ const div = document.createElement('div'); div.innerHTML = html; document.body.insertBefore(div, document.body.firstChild); }
+  function insertHTMLAtBottom(html){ const div = document.createElement('div'); div.innerHTML = html; document.body.appendChild(div); }
 
-  // try injecting common placeholders
-  if(document.getElementById('inject-header')) fetchAndInsert('/_includes/header.html', '#inject-header');
-  if(document.getElementById('inject-footer')) fetchAndInsert('/_includes/footer.html', '#inject-footer');
+  const base = (window.SITE_BASE || '') || '';
+  try {
+    const [h, f, w] = await Promise.all([
+      fetch(base + '/includes/header.html').then(r => r.ok ? r.text() : ''),
+      fetch(base + '/includes/footer.html').then(r => r.ok ? r.text() : ''),
+      fetch(base + '/includes/wa.html').then(r => r.ok ? r.text() : '')
+    ]);
+    if (h) insertHTMLAtTop(h);
+    if (f) insertHTMLAtBottom(f);
+    if (w) insertHTMLAtBottom(w);
+  } catch(e) {
+    console.warn('inject-includes failed', e);
+  }
 })();

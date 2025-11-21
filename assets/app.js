@@ -1,199 +1,439 @@
-/* assets/app.js - minimal cards + search renderer */
+/* assets/app.js - full (paste entire content) */
 (function(){
-  const SITE_BASE = window.SITE_BASE || "";
-  const JSON_PATH = window.JSON_DATA_PATH || (SITE_BASE ? (SITE_BASE + "/data/default.json") : "/data/default.json");
-  const main = document.getElementById('main-content');
+  'use strict';
 
-  // categories to show on home - order matters
-  const HOME_CATEGORIES = ['best_seller','books','electronics','foods','furniture','beauty','others'];
+  // Set SITE_BASE to your repo base path on GitHub Pages
+  const SITE_BASE = '/trial';
 
-  // For search suggestions
-  let productDatabase = [];
+  const qs = (s,p=document)=>p.querySelector(s);
+  const qsa = (s,p=document)=>Array.from((p||document).querySelectorAll(s));
 
-  // determine if we are home (root) - allow override
-  function getRelPath(){
-    let p = location.pathname || "/";
-    if (SITE_BASE && p.indexOf(SITE_BASE) === 0) p = p.slice(SITE_BASE.length);
-    return p || "/";
-  }
-  const relPath = getRelPath();
-  const isHome = (relPath === '/' || relPath === '/index.html' || relPath === '/index' || typeof window.FORCE_LOAD_CARDS !== 'undefined');
-
-  // small element helper
-  function el(tag, cls, html){
-    const e = document.createElement(tag);
-    if (cls) e.className = cls;
-    if (html !== undefined) e.innerHTML = html;
-    return e;
+  function resolveUrl(u){
+    if(!u) return u;
+    u = String(u).trim();
+    if(/^https?:\/\//i.test(u)) return u;
+    if(!u.startsWith('/')) u = '/' + u;
+    if(!SITE_BASE) return u;
+    return (SITE_BASE + u).replace(/\/{2,}/g,'/');
   }
 
-  // show search results dropdown (header includes this element)
-  const searchResultsEl = document.getElementById('header-search-results');
-  function showSearchList(items){
-    if (!searchResultsEl) return;
-    searchResultsEl.innerHTML = '';
-    if (!items || items.length === 0) { searchResultsEl.style.display = 'none'; return; }
-    items.forEach(it => {
-      const a = el('a','result-item');
-      a.href = it.link || '#';
-      a.innerHTML = `<img src="${it.img||''}" alt=""><div><h4>${it.title}</h4><p>${it.author||''}</p></div>`;
-      searchResultsEl.appendChild(a);
-    });
-    searchResultsEl.style.display = 'block';
-  }
-
-  // search query handler (called by header)
-  function handleSearchQuery(q){
-    if (!q) { showSearchList([]); return; }
-    q = q.toLowerCase();
-    const matches = productDatabase.filter(p =>
-      (p.title||'').toLowerCase().includes(q) ||
-      (p.author||'').toLowerCase().includes(q) ||
-      (p.seller||'').toLowerCase().includes(q)
-    );
-    // dedupe by link
-    const seen = new Set();
-    const unique = [];
-    for (const m of matches) {
-      if (!m.link) continue;
-      if (seen.has(m.link)) continue;
-      seen.add(m.link);
-      unique.push(m);
-      if (unique.length >= 10) break;
-    }
-    showSearchList(unique);
-  }
-
-  document.addEventListener('app:search', function(e){
-    handleSearchQuery(String((e && e.detail) || ''));
-  });
-
-  // fetch JSON
-  async function fetchJson(){
+  async function fetchJson(path){
     try {
-      const r = await fetch(JSON_PATH, {cache:'no-store'});
-      if (!r.ok) throw new Error('fetch failed ' + r.status);
-      const data = await r.json();
-      return data;
+      const url = resolveUrl(path);
+      const res = await fetch(url, {cache:'no-store'});
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      return await res.json();
     } catch(err){
-      console.warn('app.js fetchJson failed for', JSON_PATH, err);
-      return null;
+      console.warn('fetchJson', err, path);
+      return [];
     }
   }
 
-  // Build product database flatten from JSON structure
-  function buildFlatDatabase(data){
-    productDatabase = [];
-    if(!data || !Array.isArray(data.products)) return;
-    data.products.forEach(item => {
-      // item expected: { title, author, seller, img, desc, link, category }
-      productDatabase.push({
-        title: item.title || '',
-        author: item.author || '',
-        seller: item.seller || '',
-        img: item.img || '',
-        link: item.link || '#',
-        category: item.category || ''
+  function escapeHtml(str){ return String(str||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function safe(x){ return x==null ? '' : x; }
+  function cleanDesc(s){
+    if(!s) return '';
+    let t = String(s).replace(/<\s*br\s*\/?>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+    if(t.length <= 140) return t;
+    const cut = t.lastIndexOf(' ', 120) || 120;
+    return t.slice(0,cut) + '...';
+  }
+
+  function normalize(arr){
+    if(!Array.isArray(arr)) return [];
+    return arr.map(it=>({
+      title: String(it.title || '').trim(),
+      author: String(it.author || it.writer || '').trim(),
+      seller: String(it.seller || '').trim(),
+      img: String(it.img || it.image || '').trim(),
+      desc: cleanDesc(it.desc || it.description || ''),
+      link: String(it.link || it.url || '#').trim()
+    }));
+  }
+
+  function createCard(item){
+    const title = safe(item.title);
+    const author = safe(item.author || '');
+    const seller = safe(item.seller || '');
+    const desc = safe(item.desc || '');
+    const img = safe(item.img);
+    const link = safe(item.link || '#');
+
+    const article = document.createElement('article');
+    article.className = 'card';
+    article.innerHTML = `
+      <div class="card-content">
+        <div class="media">${ img ? `<img src="${escapeHtml(img)}" alt="${escapeHtml(title)}" loading="lazy">` : '<div class="no-image">No image</div>' }</div>
+        <div class="body">
+          <h4 class="title">${escapeHtml(title)}</h4>
+          <div class="meta">${author ? 'লেখক: '+escapeHtml(author) : ''} ${seller ? ' • বিক্রেতা: '+escapeHtml(seller) : ''}</div>
+          <p class="desc">${escapeHtml(desc)}</p>
+          <div class="card-bottom">
+            <div class="discount-text">ডিসকাউন্ট পেতে এখানে কিনুন</div>
+            <a class="btn" href="${escapeHtml(link)}" target="_blank" rel="noopener">Buy Now</a>
+          </div>
+        </div>
+      </div>
+    `;
+    return article;
+  }
+
+  function setupHeader(){
+    const searchInput = qs('#header-search-input');
+    const resultsContainer = qs('#header-search-results');
+    const clearBtn = qs('#search-clear');
+    const lens = qs('#search-lens');
+    const hamburger = qs('.hamburger');
+    const menuLinks = qs('.menu-links');
+
+    const categories = [
+      {key:'best_seller',label:'Best Seller',href:'/best_seller/'},
+      {key:'books',label:'Books',href:'/books/'},
+      {key:'electronics',label:'Electronics',href:'/electronics/'},
+      {key:'foods',label:'Foods',href:'/foods/'},
+      {key:'furnitures',label:'Furniture',href:'/furnitures/'},
+      {key:'beauty',label:'Beauty',href:'/beauty/'},
+      {key:'others',label:'Others',href:'/others/'},
+    ];
+
+    if(menuLinks){
+      menuLinks.innerHTML = '';
+      const homeLi = document.createElement('li');
+      homeLi.innerHTML = `<a href="${resolveUrl('/')}">Home</a>`;
+      menuLinks.appendChild(homeLi);
+      categories.forEach(c=>{
+        const li = document.createElement('li');
+        li.innerHTML = `<a href="${resolveUrl(c.href)}">${escapeHtml(c.label)}</a>`;
+        menuLinks.appendChild(li);
       });
-    });
+    }
+
+    if(hamburger && menuLinks){
+      hamburger.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        menuLinks.classList.toggle('active');
+        const icon = hamburger.querySelector('i');
+        if(menuLinks.classList.contains('active')){ icon.classList.remove('fa-bars'); icon.classList.add('fa-times'); }
+        else { icon.classList.remove('fa-times'); icon.classList.add('fa-bars'); }
+      });
+      document.addEventListener('click', (e)=>{
+        if(menuLinks.classList.contains('active') && !e.target.closest('.menu-links') && !e.target.closest('.hamburger')){
+          menuLinks.classList.remove('active');
+          const icon = hamburger.querySelector('i');
+          if(icon){ icon.classList.remove('fa-times'); icon.classList.add('fa-bars'); }
+        }
+      });
+    }
+
+    let localIndex = [];
+    (async ()=>{
+      const files = ['/data/json_data.json','/data/best_seller.json','/data/books.json','/data/electronics.json','/data/foods.json','/data/furnitures.json','/data/beauty.json','/data/others.json'];
+      const fetched = await Promise.all(files.map(f => fetchJson(f)));
+      const merged = fetched.flat();
+      const normalized = normalize(merged);
+      const map = new Map();
+      normalized.forEach(item=>{
+        const key = (item.link || item.title).toString();
+        if(!map.has(key)) map.set(key, item);
+      });
+      localIndex = Array.from(map.values());
+    })();
+
+    let timer;
+    if(searchInput){
+      searchInput.addEventListener('input', function(){
+        clearTimeout(timer);
+        const q = this.value.trim();
+        if(!q){ if(resultsContainer) resultsContainer.style.display='none'; if(clearBtn) clearBtn.style.display='none'; if(lens) lens.style.display='block'; return; }
+        if(clearBtn) clearBtn.style.display='block'; if(lens) lens.style.display='none';
+        timer = setTimeout(()=>{
+          const matches = localIndex.length ? localIndex.filter(it => (it.title + ' ' + (it.author||'') + ' ' + (it.seller||'')).toLowerCase().includes(q.toLowerCase())) : [];
+          const seen = new Set();
+          const unique = [];
+          matches.forEach(m=>{
+            const id = m.link || m.title;
+            if(!seen.has(id)){ seen.add(id); unique.push(m); }
+          });
+          resultsContainer.innerHTML = '';
+          if(!unique.length){
+            resultsContainer.innerHTML = `<div class="no-result-box" style="padding:16px;text-align:center;color:#6b7280"><p>কোনো প্রোডাক্ট পাওয়া যায়নি!</p><button class="request-btn-small" onclick="triggerRequest('${escapeHtml(q)}')">ডিসকাউন্ট রিকুয়েস্ট পাঠান</button></div>`;
+          } else {
+            unique.slice(0,10).forEach(m=>{
+              const a = document.createElement('a'); a.className='result-item'; a.href = m.link || '#';
+              const thumb = m.img ? `<img src="${escapeHtml(m.img)}" alt="">` : `<div style="width:64px;height:64px;background:#f4f6f7;border-radius:6px"></div>`;
+              const meta = (m.author || m.seller) ? `<p>${escapeHtml(m.author || '')} ${m.author && m.seller ? ' • ' : ''}${escapeHtml(m.seller||'')}</p>` : '';
+              a.innerHTML = `${thumb}<div class="result-info"><h4>${escapeHtml(m.title)}</h4>${meta}</div>`;
+              a.target = '_blank'; a.rel = 'noopener';
+              resultsContainer.appendChild(a);
+            });
+          }
+          resultsContainer.style.display = 'block';
+        }, 160);
+      });
+
+      if(clearBtn) clearBtn.addEventListener('click', ()=>{ searchInput.value=''; resultsContainer.style.display='none'; clearBtn.style.display='none'; if(lens) lens.style.display='block'; searchInput.focus(); });
+      document.addEventListener('click', (e)=>{ if(!e.target.closest('.search-box') && resultsContainer) resultsContainer.style.display='none'; });
+    }
   }
 
-  // Render a section with horizontal cards
-  function renderSection(title, items){
-    const section = el('section','section');
-    const head = el('div','section-head');
-    head.innerHTML = `<div class="title">Rokomari PromoCode For ${title}</div>`;
-    section.appendChild(head);
-
-    const rowWrap = el('div','card-row');
-    // container for cards
-    items.forEach(it => {
-      const card = el('article','card');
-      const imgWrap = el('div','img-wrap');
-      const img = document.createElement('img');
-      img.src = it.img || '/assets/images/logo.png';
-      img.alt = it.title || '';
-      imgWrap.appendChild(img);
-      card.appendChild(imgWrap);
-
-      const t = el('div','title', it.title || '');
-      card.appendChild(t);
-      const meta = el('div','meta', (it.seller ? 'বিক্রেতা: ' + it.seller : '') + (it.author ? ' • লেখক: ' + it.author : ''));
-      card.appendChild(meta);
-      const desc = el('div','desc', it.desc ? it.desc : '');
-      card.appendChild(desc);
-
-      const cta = el('div','cta-row');
-      const offer = el('div','offer-text','ডিসকাউন্ট পেতে এখানে কিনুন');
-      const buy = el('a','buy-btn','Buy Now');
-      buy.href = it.link || '#';
-      cta.appendChild(offer);
-      cta.appendChild(buy);
-      card.appendChild(cta);
-
-      rowWrap.appendChild(card);
-    });
-
-    // Add "see more" half-card if more items follow on this category
-    const placeholder = el('div','see-more');
-    placeholder.innerHTML = `<div><strong>আরও দেখুন</strong><br><a class="buy-btn" href="/${title.toLowerCase()}/">See all ${title}</a></div>`;
-    rowWrap.appendChild(placeholder);
-
-    section.appendChild(rowWrap);
-    return section;
+  function injectPageTitle(){
+    const existing = qs('.page-title');
+    if(existing) return;
+    const headerNode = qs('.modern-header');
+    const el = document.createElement('div');
+    el.className = 'page-title';
+    el.innerHTML = `<h1>Rokomari Promo Code</h1>`;
+    if(headerNode && headerNode.parentNode) headerNode.parentNode.insertBefore(el, headerNode.nextSibling);
+    else document.body.insertBefore(el, document.body.firstChild);
   }
 
-  // Render all home sections
-  function renderHomeSections(data){
-    if (!main) return;
-    // create wrapper to add above the footer (so user content remains where they put it)
-    const container = el('div','home-sections');
-    const grouped = {};
-    (data.products || []).forEach(p => {
-      const cat = (p.category || 'others').toLowerCase();
-      grouped[cat] = grouped[cat] || [];
-      grouped[cat].push(p);
-    });
+  async function renderHome(){
+    injectPageTitle();
 
-    // for each category in HOME_CATEGORIES show up to 8 items (4 visible + next)
-    HOME_CATEGORIES.forEach(catKey => {
-      const items = grouped[catKey] || [];
-      if (items.length === 0) return;
-      // keep item fields minimal
-      const processed = items.map(i => ({
-        title: i.title,
-        author: i.author,
-        seller: i.seller,
-        img: i.img,
-        desc: i.desc,
-        link: i.link,
-        category: i.category
-      }));
-      const sectionEl = renderSection(catKey.charAt(0).toUpperCase() + catKey.slice(1), processed.slice(0, 8));
-      container.appendChild(sectionEl);
-    });
+    const root = document.createElement('div'); root.className = 'home-cats container';
+    const cats = [
+      { key:'best_seller', name:'Best Seller', file:'/data/best_seller.json', href:'/best_seller/' },
+      { key:'books', name:'Books', file:'/data/books.json', href:'/books/' },
+      { key:'electronics', name:'Electronics', file:'/data/electronics.json', href:'/electronics/' },
+      { key:'foods', name:'Foods', file:'/data/foods.json', href:'/foods/' },
+      { key:'furnitures', name:'Furniture', file:'/data/furnitures.json', href:'/furnitures/' },
+      { key:'beauty', name:'Beauty', file:'/data/beauty.json', href:'/beauty/' },
+      { key:'others', name:'Others', file:'/data/others.json', href:'/others/' }
+    ];
 
-    // insert container BEFORE footer (main-content is page content; append container at the end of main-content)
-    main.appendChild(container);
+    for(const c of cats){
+      const section = document.createElement('section'); 
+      section.className='cat-row'; 
+      section.dataset.key=c.key; 
+      section.dataset.name=c.name;
+
+      const header = document.createElement('div'); header.className='cat-header';
+      const nameText = `Rokomari Promocode For ${c.name}`;
+      const titleEl = document.createElement('h3'); titleEl.innerHTML = `<span class="cat-name">${escapeHtml(nameText)}</span>`;
+      header.appendChild(titleEl);
+
+      const actions = document.createElement('div'); actions.className='cat-actions';
+      const prev = document.createElement('button'); prev.className='cat-btn prev'; prev.innerHTML='&#x25C0;';
+      const next = document.createElement('button'); next.className='cat-btn next'; next.innerHTML='&#x25B6;';
+      actions.appendChild(prev); actions.appendChild(next);
+      header.appendChild(actions);
+      section.appendChild(header);
+
+      const wrapper = document.createElement('div'); wrapper.className='cat-track-wrapper';
+      const track = document.createElement('div'); track.className='cat-track';
+      wrapper.appendChild(track);
+      section.appendChild(wrapper);
+      root.appendChild(section);
+
+      (async function load(catDef, sec){
+        const raw = await fetchJson(catDef.file);
+        const items = normalize(raw);
+        sec._items = items;
+        sec._track = track;
+        sec._tx = 0;
+        sec._loadedCount = 0;
+
+        const batch = Math.max(1, 4);
+        let idx = 0;
+        const total = items.length;
+        const first = Math.min(batch, total - idx);
+        appendItemsToTrack(sec, idx, first);
+        idx += first;
+        sec._loadedCount = idx;
+
+        next.addEventListener('click', ()=> onNextClick(sec, catDef));
+        prev.addEventListener('click', ()=> slideCategory(sec, -1));
+        enableSwipe(wrapper, sec);
+
+        sec._nextIndex = idx;
+        sec._batchSize = batch;
+
+        setTimeout(()=>updateButtonsVisibility(sec), 160);
+      })(c, section);
+    }
+
+    const headerNode = qs('.modern-header');
+    if(headerNode && headerNode.parentNode) headerNode.parentNode.insertBefore(root, headerNode.nextSibling?.nextSibling || headerNode.nextSibling);
+    else document.body.insertBefore(root, document.body.firstChild);
   }
 
-  // main init
-  (async function init(){
-    const data = await fetchJson();
-    if (!data) {
-      // fallback minimal demo
-      const fallback = {
-        products: [
-          { title: "ডেমো বই - লেখক", author:"লেখক নাম", seller:"Rokomari", img:"/assets/images/logo.png", desc:"ডেমো বর্ণনা", link:"#", category:"books" },
-          { title: "ডেমো প্রোডাক্ট", author:"", seller:"Ghorer Bazar", img:"/assets/images/logo.png", desc:"ডেমো", link:"#", category:"others" }
-        ]
-      };
-      buildFlatDatabase(fallback);
-      if (isHome) renderHomeSections(fallback);
+  function appendItemsToTrack(section, startIndex, count){
+    const track = section._track;
+    const items = section._items || [];
+    const slice = items.slice(startIndex, startIndex + count);
+    slice.forEach((it, idx)=>{
+      const wrap = document.createElement('div'); wrap.className='cat-item';
+      const card = createCard(it);
+      card.style.animationDelay = String((startIndex + idx) * 40) + 'ms';
+      wrap.appendChild(card); track.appendChild(wrap);
+    });
+    section._loadedCount = (section._loadedCount || 0) + slice.length;
+    if(section._loadedCount >= (section._items || []).length){
+      addSeeMoreCard(section);
+    }
+    setTimeout(()=>updateButtonsVisibility(section), 120);
+  }
+
+  function addSeeMoreCard(section){
+    if(!section || !section._track) return;
+    if(section._track.querySelector('.cat-item.see-more')) return;
+    const wrap = document.createElement('div'); wrap.className='cat-item see-more';
+    const link = `/${section.dataset.key}/`;
+    const readable = section.dataset.name || section.dataset.key || 'আরও দেখুন';
+    const inner = document.createElement('div');
+    inner.className='see-more-card';
+    inner.innerHTML = `<div>আরও দেখুন — ${escapeHtml(readable)}</div><a href="${resolveUrl(link)}">See all ${escapeHtml(readable)}</a>`;
+    wrap.appendChild(inner);
+    section._track.appendChild(wrap);
+  }
+
+  function onNextClick(section, catDef){
+    const items = section._items || [];
+    if(!items.length) return;
+    const nextIdx = section._nextIndex || section._loadedCount || 0;
+    if(nextIdx < items.length){
+      const toAdd = Math.min(section._batchSize || 4, items.length - nextIdx);
+      appendItemsToTrack(section, nextIdx, toAdd);
+      section._nextIndex = nextIdx + toAdd;
+      setTimeout(()=> slideCategory(section, +1), 80);
       return;
     }
-    buildFlatDatabase(data);
-    if (isHome) renderHomeSections(data);
-  })();
+    slideCategory(section, +1);
+  }
+
+  function getItemFullWidth(track){
+    const gap = parseFloat(getComputedStyle(track).gap || 16);
+    const first = track.children[0];
+    if(!first) return 300 + gap;
+    const w = first.getBoundingClientRect().width;
+    return w + gap;
+  }
+
+  function getVisibleWidth(track){
+    const wrapper = track.parentElement;
+    return wrapper.getBoundingClientRect().width;
+  }
+
+  function computeVisibleCount(){
+    const w = Math.max(window.innerWidth || 1024, 320);
+    if (w < 600) return 1;
+    if (w < 880) return 2;
+    if (w < 1100) return 3;
+    return 4;
+  }
+
+  function updateButtonsVisibility(section){
+    if(!section || !section._track) return;
+    const track = section._track;
+    const items = Array.from(track.children);
+    if(!items.length) return;
+    const itemW = getItemFullWidth(track);
+    const totalWidth = items.length * itemW;
+    const visWidth = getVisibleWidth(track);
+    const prevBtn = section.querySelector('.cat-btn.prev');
+    const nextBtn = section.querySelector('.cat-btn.next');
+    const curTx = track._tx || 0;
+    const maxLeft = Math.max(0, totalWidth - visWidth);
+    if(prevBtn) prevBtn.style.display = (Math.abs(curTx) > 0) ? 'flex' : 'none';
+    if(nextBtn) nextBtn.style.display = (totalWidth > visWidth && Math.abs(curTx) < maxLeft) ? 'flex' : 'none';
+  }
+
+  function slideCategory(section, direction){
+    const track = section._track;
+    if(!track) return;
+    const items = Array.from(track.children);
+    if(!items.length) return;
+    const itemW = getItemFullWidth(track);
+    const visible = computeVisibleCount();
+    const totalWidth = items.length * itemW;
+    const visibleWidth = visible * itemW;
+    const maxLeft = Math.max(0, totalWidth - visibleWidth);
+    const curTx = track._tx || 0;
+    const moveBy = itemW * Math.max(1, visible);
+    let newTx = curTx - direction * moveBy;
+    if(Math.abs(newTx) > maxLeft) newTx = -maxLeft;
+    if(newTx > 0) newTx = 0;
+    track.style.transform = `translateX(${newTx}px)`;
+    track._tx = newTx;
+    updateButtonsVisibility(section);
+  }
+
+  function enableSwipe(wrapper, section){
+    let startX=0, curX=0, isDown=false;
+    wrapper.addEventListener('touchstart', e=>{ startX = e.touches[0].clientX; isDown=true; });
+    wrapper.addEventListener('touchmove', e=>{ if(!isDown) return; curX = e.touches[0].clientX; const dx = curX - startX; section._track.style.transform = `translateX(${(section._track._tx || 0) + dx}px)`; });
+    wrapper.addEventListener('touchend', e=>{ if(!isDown) return; isDown=false; const dx = curX - startX; if(Math.abs(dx) > 40){ slideCategory(section, dx < 0 ? +1 : -1); } else { section._track.style.transform = `translateX(${section._track._tx || 0}px)`; } startX=curX=0; });
+    wrapper.addEventListener('mouseleave', ()=>{ if(isDown){ isDown=false; section._track.style.transform = `translateX(${section._track._tx || 0}px)`; }});
+  }
+
+  async function renderStandard(mainEl){
+    const dataSrc = mainEl?.dataset?.src || '/data/json_data.json';
+    let raw = [];
+    if(Array.isArray(window.rokomariData) && window.rokomariData.length) raw = window.rokomariData;
+    else raw = await fetchJson(dataSrc);
+    const all = normalize(raw);
+    window._all_index = all;
+
+    let cards = qs('#cardsArea', mainEl);
+    if(!cards){ cards = document.createElement('div'); cards.id='cardsArea'; cards.className='cards-area container'; mainEl.appendChild(cards); }
+    cards.className = 'cards-area container';
+
+    let idx = 0;
+    function appendBatch(){
+      const slice = all.slice(idx, idx + (4 * 2));
+      slice.forEach(it => cards.appendChild(createCard(it)));
+      idx += slice.length;
+    }
+    appendBatch();
+
+    const sentinel = document.createElement('div'); sentinel.id='sentinel'; sentinel.style.height='2px'; mainEl.appendChild(sentinel);
+    const obs = new IntersectionObserver(entries=>{
+      entries.forEach(en=>{ if(en.isIntersecting) appendBatch(); });
+    }, { rootMargin:'400px' });
+    obs.observe(sentinel);
+  }
+
+  function attachImageSkeletons(){
+    document.querySelectorAll('.card .media img').forEach(img=>{
+      if(img.dataset._attached) return;
+      img.dataset._attached = 1;
+      const wrapper = img.parentNode;
+      const sk = document.createElement('div'); sk.className = 'img-skel';
+      wrapper.insertBefore(sk, img);
+      img.style.opacity = 0;
+      img.addEventListener('load', ()=>{ img.style.transition='opacity .35s'; img.style.opacity = 1; if(sk && sk.parentNode) sk.parentNode.removeChild(sk); updateAllButtons(); });
+      img.addEventListener('error', ()=>{ if(sk && sk.parentNode) sk.parentNode.removeChild(sk); updateAllButtons(); });
+    });
+  }
+  setTimeout(()=>attachImageSkeletons(), 250);
+  const mut = new MutationObserver(()=>attachImageSkeletons());
+  mut.observe(document.body, { childList:true, subtree:true });
+
+  function updateAllButtons(){
+    qsa('.cat-row').forEach(section=>{ if(section._track) updateButtonsVisibility(section); });
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    setupHeader();
+    const path = (location.pathname || '/').replace(/\/$/, '') || '/';
+    const base = SITE_BASE || '';
+    const isHome = (path === '' || path === base || path === base + '/' || path === '/' || path === '');
+    if(isHome) renderHome();
+    else {
+      const mainEl = qs('main') || document.body;
+      renderStandard(mainEl);
+    }
+  });
+
+  window.triggerRequest = function(searchTerm){
+    const searchInput = qs('#header-search-input');
+    const resultsContainer = qs('#header-search-results');
+    if(resultsContainer) resultsContainer.style.display='none';
+    if(searchInput){ searchInput.value=''; searchInput.blur(); }
+    const requestArea = qs('#request-area') || qs('#footer') || null;
+    const productInput = qs('#product-name');
+    if(requestArea){ requestArea.scrollIntoView({behavior:'smooth'}); if(productInput){ productInput.value = searchTerm; setTimeout(()=>productInput.focus(), 600); } }
+    else alert('রিকোয়েস্ট ফর্মের জন্য পেজের নিচে যান।');
+  };
 
 })();

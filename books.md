@@ -1,8 +1,17 @@
 ---
 layout: default
 title: Books
+permalink: /books/
 ---
+  <section class="container" style="padding:28px 0;">
+    <h1>Rokomari Promo Code For Books</h1>
+    <p>বিভাগভিত্তিক পেজ — নিচে কার্ড লোড হবে</p>
+  </section>
+<main id="main" data-src="{{ '/data/books.json' | relative_url }}">
 
-# Books
 
-এই পাতায় কাস্টম কনটেন্ট লিখুন। হেডার/ফুটার/WA বোতাম তখনও স্বয়ংক্রিয়ভাবে লোড হবে।
+  <section id="cardsArea" class="cards-area container" style="padding-bottom:40px;"></section>
+  <div id="spinner" class="spinner center" hidden>লোড হচ্ছে...</div>
+  <div id="endMessage" class="end-message center" hidden>আর কিছু নেই</div>
+  <div id="sentinel" style="height:2px"></div>
+</main>

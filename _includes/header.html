@@ -1,83 +1,22 @@
-<header class="modern-header" role="banner" aria-label="Main header">
-  <div class="header-container">
+<!-- _includes/header.html -->
+<header class="modern-header">
+  <div class="header-container container">
     <div class="header-logo">
-      <a href="{{ '/' | relative_url }}">
-        <img src="{{ '/assets/images/logo.png' | relative_url }}" alt="{{ site.title | default: 'Site' }}">
-      </a>
+      <a href="/trial/"><img src="/trial/assets/logo.png" alt="Logo" style="height:42px"></a>
     </div>
 
     <div class="header-search-wrapper">
       <div class="search-box">
-        <input type="text" id="header-search-input" placeholder="ক্যাটাগরি, বই বা লেখকের নাম খুঁজুন..." autocomplete="off" aria-label="Search">
-        <i class="fas fa-search search-icon-btn" id="search-lens" aria-hidden="true"></i>
-        <i class="fas fa-times clear-btn" id="search-clear" aria-hidden="true" title="Clear search"></i>
+        <input id="header-search-input" placeholder="ক্যাটাগরি, বই বা লেখকের নাম খুঁজুন..." autocomplete="off">
+        <i id="search-lens" class="fas fa-search search-icon-btn"></i>
+        <i id="search-clear" class="fas fa-times clear-btn"></i>
       </div>
-      <div class="search-results-dropdown" id="header-search-results" aria-live="polite" role="listbox"></div>
+      <div id="header-search-results" class="search-results-dropdown"></div>
     </div>
 
-    <div class="header-menu" role="navigation" aria-label="Main menu">
-      <ul class="menu-links" id="menu-links">
-        <li><a href="{{ '/' | relative_url }}">Home</a></li>
-        <li><a href="{{ '/best-seller/' | relative_url }}">Best Seller</a></li>
-        <li><a href="{{ '/books/' | relative_url }}">Books</a></li>
-        <li><a href="{{ '/electronics/' | relative_url }}">Electronics</a></li>
-        <li><a href="{{ '/foods/' | relative_url }}">Foods</a></li>
-        <li><a href="{{ '/furniture/' | relative_url }}">Furniture</a></li>
-        <li><a href="{{ '/beauty/' | relative_url }}">Beauty</a></li>
-        <li><a href="{{ '/others/' | relative_url }}">Others</a></li>
-      </ul>
-      <div class="hamburger" id="hamburger" aria-label="Open mobile menu" role="button" tabindex="0">
-        <i class="fas fa-bars" aria-hidden="true"></i>
-      </div>
-    </div>
+    <nav class="header-menu">
+      <ul class="menu-links"></ul>
+      <div class="hamburger"><i class="fas fa-bars"></i></div>
+    </nav>
   </div>
 </header>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const searchInput = document.getElementById('header-search-input');
-  const resultsContainer = document.getElementById('header-search-results');
-  const clearBtn = document.getElementById('search-clear');
-  const searchLens = document.getElementById('search-lens');
-  const hamburger = document.getElementById('hamburger');
-  const menuLinks = document.getElementById('menu-links');
-
-  if (hamburger && menuLinks) {
-    hamburger.addEventListener('click', () => {
-      menuLinks.classList.toggle('active');
-      const icon = hamburger.querySelector('i');
-      if (menuLinks.classList.contains('active')) {
-        icon.classList.remove('fa-bars'); icon.classList.add('fa-times');
-        hamburger.setAttribute('aria-expanded','true');
-      } else {
-        icon.classList.remove('fa-times'); icon.classList.add('fa-bars');
-        hamburger.setAttribute('aria-expanded','false');
-      }
-    });
-    document.addEventListener('click', (e) => {
-      if (!hamburger.contains(e.target) && !menuLinks.contains(e.target) && menuLinks.classList.contains('active')) {
-        menuLinks.classList.remove('active');
-        const icon = hamburger.querySelector('i');
-        icon.classList.remove('fa-times'); icon.classList.add('fa-bars');
-      }
-    });
-  }
-
-  // Search input event: dispatch app-wide custom event (app.js listens to it)
-  searchInput && searchInput.addEventListener('input', function(e) {
-    const q = String(e.target.value || '').trim();
-    document.dispatchEvent(new CustomEvent('app:search', { detail: q }));
-    if (q.length) { searchLens && (searchLens.style.display='none'); clearBtn && (clearBtn.style.display='block'); }
-    else { searchLens && (searchLens.style.display='block'); clearBtn && (clearBtn.style.display='none'); resultsContainer && (resultsContainer.style.display='none'); }
-  });
-
-  clearBtn && clearBtn.addEventListener('click', function() {
-    searchInput.value = '';
-    document.dispatchEvent(new CustomEvent('app:search', { detail: '' }));
-    resultsContainer && (resultsContainer.style.display='none');
-    clearBtn.style.display='none';
-    searchLens && (searchLens.style.display='block');
-    searchInput.focus();
-  });
-});
-</script>

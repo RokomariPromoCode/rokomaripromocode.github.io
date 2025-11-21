@@ -1,6 +1,12 @@
 ---
 layout: default
-title: Rokomari Promo Code
+title: Home
+permalink: /
 ---
 
-# Rokomari Promo Code
+<!-- <section class="hero container">
+  <h1 class="title">স্বাগতম — Rokomari Coupon Code</h1>
+  <p class="subtitle">হোম পেজে বিভিন্ন ক্যাটাগরি দেখানো হবে — সার্চ ও মোবাইল মেনু ব্যবহার করে ব্রাউজ করুন।</p>
+</section> -->
+
+<!-- The category rows will be injected by app.js (home special) -->
