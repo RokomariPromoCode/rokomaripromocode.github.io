@@ -12,3 +12,4 @@ permalink: /books/
 <script>
   window.FORCE_LOAD_CARDS = true;
 </script>
+
