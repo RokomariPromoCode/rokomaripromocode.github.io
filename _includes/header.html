@@ -31,7 +31,7 @@
   </div>
 
   <!-- mobile slide-in menu -->
-  <div id="mobile-menu" class="mobile-menu">
+  <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
     <ul>
       <li><a href="{{ '/' | relative_url }}">Home</a></li>
       <li><a href="{{ '/best-seller/' | relative_url }}">Best Seller</a></li>
@@ -46,7 +46,6 @@
 </header>
 
 <script>
-  // header interactivity (will run once per page)
   (function(){
     const mobileBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -54,31 +53,34 @@
     const searchResults = document.getElementById('search-results');
     const clearBtn = document.getElementById('clear-search');
 
-    mobileBtn && mobileBtn.addEventListener('click', () => {
+    mobileBtn && mobileBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       mobileMenu.classList.toggle('open');
+      mobileMenu.setAttribute('aria-hidden', !mobileMenu.classList.contains('open'));
       mobileBtn.querySelector('i').classList.toggle('fa-times');
     });
 
-    // search focus/clear
-    clearBtn.addEventListener('click', () => {
-      searchInput.value = '';
-      searchResults.innerHTML = '';
-      searchResults.style.display = 'none';
-      searchInput.focus();
+    clearBtn && clearBtn.addEventListener('click', () => {
+      if (searchInput) {
+        searchInput.value = '';
+        if (searchResults) { searchResults.innerHTML = ''; searchResults.style.display = 'none'; }
+        searchInput.focus();
+      }
     });
 
-    // delegate search to app.js via custom event (app.js listens to "app:search")
-    searchInput.addEventListener('input', (e)=>{
+    // send search input into app via custom event
+    searchInput && searchInput.addEventListener('input', (e) => {
       const q = e.target.value.trim();
       const ev = new CustomEvent('app:search', { detail: q });
       document.dispatchEvent(ev);
     });
 
-    // mobile: close menu when clicking outside
+    // close mobile when clicking outside
     document.addEventListener('click', (ev) => {
-      if(!mobileMenu.contains(ev.target) && !mobileBtn.contains(ev.target)) {
+      if (!mobileMenu.contains(ev.target) && !mobileBtn.contains(ev.target)) {
         mobileMenu.classList.remove('open');
         mobileBtn.querySelector('i').classList.remove('fa-times');
+        mobileMenu.setAttribute('aria-hidden', 'true');
       }
     });
   })();
