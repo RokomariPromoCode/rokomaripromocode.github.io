@@ -1,19 +1,14 @@
 ---
 layout: default
-title: "Rokomari PromoCode For Best Seller"
-json: "/data/best_seller.json"
+title: Best Sellers
+permalink: /best-seller/
 ---
 
-# Rokomari PromoCode For Best Seller
-
-এখানে বেস্ট সেলার ক্যাটাগরির প্রোডাক্ট ও প্রোমো দেখুন।
-
----
-
-<div id="category-cards" style="margin-top:30px;"></div>
+<main id="main" data-src="{{ site.baseurl }}/data/best_seller.json" data-cards="true">
+  <h1>Best Sellers</h1>
+  <p>Top-selling products.</p>
+</main>
 
 <script>
-  // load best_seller JSON for this page
-  window.JSON_DATA_PATH = window.SITE_BASE + "/data/best_seller.json";
   window.FORCE_LOAD_CARDS = true;
 </script>
