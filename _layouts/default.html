@@ -25,9 +25,11 @@
         window.SITE_BASE = rawBase.replace(/\/$/, "");
       }
 
-      // default JSON data path (pages/scripts can override window.JSON_DATA_PATH if needed)
+      // NO default JSON file — pages must explicitly set window.JSON_DATA_PATH
       if (typeof window.JSON_DATA_PATH === 'undefined') {
-        window.JSON_DATA_PATH = (window.SITE_BASE || "") + "/data/default.json";
+        window.JSON_DATA_PATH = null;  // <-- important change
+      }
+
       }
 
       // optional flag pages can set to force card loading on non-home pages
