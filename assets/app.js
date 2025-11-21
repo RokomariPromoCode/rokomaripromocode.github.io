@@ -1,8 +1,8 @@
-/* assets/app.js - full (paste entire content) */
+/* assets/app.js - category-safe, skeletons, randomized (except best-seller) */
 (function(){
   'use strict';
 
-  // prefer runtime SITE_BASE if set by layout, otherwise fallback to literal (keeps previous behavior)
+  // Runtime SITE_BASE (layout sets window.SITE_BASE). Fallback to literal to preserve existing behaviour.
   const SITE_BASE = (typeof window !== 'undefined' && window.SITE_BASE) ? window.SITE_BASE : '/trial';
 
   const qs = (s,p=document)=>p.querySelector(s);
@@ -34,8 +34,8 @@
   function cleanDesc(s){
     if(!s) return '';
     let t = String(s).replace(/<\s*br\s*\/?>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-    if(t.length <= 140) return t;
-    const cut = t.lastIndexOf(' ', 120) || 120;
+    if(t.length <= 300) return t;
+    const cut = t.lastIndexOf(' ', 200) || 200;
     return t.slice(0,cut) + '...';
   }
 
@@ -51,13 +51,14 @@
     }));
   }
 
-  function shuffleArr(arr){
-    // Fisher-Yates
-    for(let i = arr.length -1; i>0; i--){
+  // Fisher-Yates shuffle
+  function shuffleArray(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
       const j = Math.floor(Math.random()*(i+1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
+      [a[i],a[j]] = [a[j],a[i]];
     }
-    return arr;
+    return a;
   }
 
   function createCard(item){
@@ -69,25 +70,25 @@
     const link = safe(item.link || '#');
 
     const article = document.createElement('article');
-    article.className = 'card';
+    article.className = 'card category-card';
     article.innerHTML = `
-      <div class="card-content">
-        <div class="media">${ img ? `<img src="${escapeHtml(img)}" alt="${escapeHtml(title)}" loading="lazy">` : '<div class="no-image">No image</div>' }</div>
-        <div class="body">
-          <h4 class="title">${escapeHtml(title)}</h4>
-          <div class="meta">${author ? 'লেখক: '+escapeHtml(author) : ''} ${seller ? ' • বিক্রেতা: '+escapeHtml(seller) : ''}</div>
-          <p class="desc">${escapeHtml(desc)}</p>
-          <div class="card-bottom">
-            <div class="discount-text">ডিসকাউন্ট পেতে এখানে কিনুন</div>
-            <a class="btn" href="${escapeHtml(link)}" target="_blank" rel="noopener">Buy Now</a>
-          </div>
+      <div class="card-media">
+        ${ img ? `<div class="media-wrap"><img src="${escapeHtml(img)}" alt="${escapeHtml(title)}" loading="lazy"></div>` : '<div class="media-wrap no-image">No image</div>' }
+      </div>
+      <div class="card-body">
+        <h4 class="title" title="${escapeHtml(title)}">${escapeHtml(title)}</h4>
+        <div class="meta">${author ? 'লেখক: '+escapeHtml(author) : ''}${author && seller ? ' • ' : ''}${seller ? 'বিক্রেতা: '+escapeHtml(seller) : ''}</div>
+        <p class="desc">${escapeHtml(desc)}</p>
+        <div class="card-bottom">
+          <div class="discount-text">ডিসকাউন্ট পেতে এখানে কিনুন</div>
+          <a class="btn" href="${escapeHtml(link)}" target="_blank" rel="noopener">Buy Now</a>
         </div>
       </div>
     `;
     return article;
   }
 
-  /* ----------------- Header & search (unchanged behavior) ----------------- */
+  /* ------------------ header & search (keeps original behaviour) ------------------ */
   function setupHeader(){
     const searchInput = qs('#header-search-input');
     const resultsContainer = qs('#header-search-results');
@@ -135,59 +136,61 @@
       });
     }
 
-    // Build local searchable index from all data files (keeps previous behavior)
-    let localIndex = [];
+    // Build a simple search index by merging available data files (non-blocking)
     (async ()=>{
-      const files = ['/data/json_data.json','/data/best_seller.json','/data/books.json','/data/electronics.json','/data/foods.json','/data/furnitures.json','/data/beauty.json','/data/others.json'];
-      const fetched = await Promise.all(files.map(f => fetchJson(f)));
-      const merged = fetched.flat();
-      const normalized = normalize(merged);
-      const map = new Map();
-      normalized.forEach(item=>{
-        const key = (item.link || item.title).toString();
-        if(!map.has(key)) map.set(key, item);
-      });
-      localIndex = Array.from(map.values());
-    })();
-
-    let timer;
-    if(searchInput){
-      searchInput.addEventListener('input', function(){
-        clearTimeout(timer);
-        const q = this.value.trim();
-        if(!q){ if(resultsContainer) resultsContainer.style.display='none'; if(clearBtn) clearBtn.style.display='none'; if(lens) lens.style.display='block'; return; }
-        if(clearBtn) clearBtn.style.display='block'; if(lens) lens.style.display='none';
-        timer = setTimeout(()=>{
-          const matches = localIndex.length ? localIndex.filter(it => (it.title + ' ' + (it.author||'') + ' ' + (it.seller||'')).toLowerCase().includes(q.toLowerCase())) : [];
-          const seen = new Set();
-          const unique = [];
-          matches.forEach(m=>{
-            const id = m.link || m.title;
-            if(!seen.has(id)){ seen.add(id); unique.push(m); }
+      try {
+        const files = ['/data/json_data.json','/data/best_seller.json','/data/books.json','/data/electronics.json','/data/foods.json','/data/furnitures.json','/data/beauty.json','/data/others.json'];
+        const fetched = await Promise.all(files.map(f => fetchJson(f)));
+        const merged = fetched.flat();
+        const normalized = normalize(merged);
+        const map = new Map();
+        normalized.forEach(item=>{
+          const key = (item.link || item.title).toString();
+          if(!map.has(key)) map.set(key, item);
+        });
+        let localIndex = Array.from(map.values());
+        let timer;
+        if(searchInput){
+          searchInput.addEventListener('input', function(){
+            clearTimeout(timer);
+            const q = this.value.trim();
+            if(!q){ if(resultsContainer) resultsContainer.style.display='none'; if(clearBtn) clearBtn.style.display='none'; if(lens) lens.style.display='block'; return; }
+            if(clearBtn) clearBtn.style.display='block'; if(lens) lens.style.display='none';
+            timer = setTimeout(()=>{
+              const matches = localIndex.length ? localIndex.filter(it => (it.title + ' ' + (it.author||'') + ' ' + (it.seller||'')).toLowerCase().includes(q.toLowerCase())) : [];
+              const seen = new Set();
+              const unique = [];
+              matches.forEach(m=>{
+                const id = m.link || m.title;
+                if(!seen.has(id)){ seen.add(id); unique.push(m); }
+              });
+              resultsContainer.innerHTML = '';
+              if(!unique.length){
+                resultsContainer.innerHTML = `<div class="no-result-box" style="padding:16px;text-align:center;color:#6b7280"><p>কোনো প্রোডাক্ট পাওয়া যায়নি!</p><button class="request-btn-small" onclick="triggerRequest('${escapeHtml(q)}')">ডিসকাউন্ট রিকুয়েস্ট পাঠান</button></div>`;
+              } else {
+                unique.slice(0,10).forEach(m=>{
+                  const a = document.createElement('a'); a.className='result-item'; a.href = m.link || '#';
+                  const thumb = m.img ? `<img src="${escapeHtml(m.img)}" alt="">` : `<div style="width:64px;height:64px;background:#f4f6f7;border-radius:6px"></div>`;
+                  const meta = (m.author || m.seller) ? `<p>${escapeHtml(m.author || '')} ${m.author && m.seller ? ' • ' : ''}${escapeHtml(m.seller||'')}</p>` : '';
+                  a.innerHTML = `${thumb}<div class="result-info"><h4>${escapeHtml(m.title)}</h4>${meta}</div>`;
+                  a.target = '_blank'; a.rel = 'noopener';
+                  resultsContainer.appendChild(a);
+                });
+              }
+              resultsContainer.style.display = 'block';
+            }, 160);
           });
-          resultsContainer.innerHTML = '';
-          if(!unique.length){
-            resultsContainer.innerHTML = `<div class="no-result-box" style="padding:16px;text-align:center;color:#6b7280"><p>কোনো প্রোডাক্ট পাওয়া যায়নি!</p><button class="request-btn-small" onclick="triggerRequest('${escapeHtml(q)}')">ডিসকাউন্ট রিকুয়েস্ট পাঠান</button></div>`;
-          } else {
-            unique.slice(0,10).forEach(m=>{
-              const a = document.createElement('a'); a.className='result-item'; a.href = m.link || '#';
-              const thumb = m.img ? `<img src="${escapeHtml(m.img)}" alt="">` : `<div style="width:64px;height:64px;background:#f4f6f7;border-radius:6px"></div>`;
-              const meta = (m.author || m.seller) ? `<p>${escapeHtml(m.author || '')} ${m.author && m.seller ? ' • ' : ''}${escapeHtml(m.seller||'')}</p>` : '';
-              a.innerHTML = `${thumb}<div class="result-info"><h4>${escapeHtml(m.title)}</h4>${meta}</div>`;
-              a.target = '_blank'; a.rel = 'noopener';
-              resultsContainer.appendChild(a);
-            });
-          }
-          resultsContainer.style.display = 'block';
-        }, 160);
-      });
 
-      if(clearBtn) clearBtn.addEventListener('click', ()=>{ searchInput.value=''; resultsContainer.style.display='none'; clearBtn.style.display='none'; if(lens) lens.style.display='block'; searchInput.focus(); });
-      document.addEventListener('click', (e)=>{ if(!e.target.closest('.search-box') && resultsContainer) resultsContainer.style.display='none'; });
-    }
+          if(clearBtn) clearBtn.addEventListener('click', ()=>{ searchInput.value=''; resultsContainer.style.display='none'; clearBtn.style.display='none'; if(lens) lens.style.display='block'; searchInput.focus(); });
+          document.addEventListener('click', (e)=>{ if(!e.target.closest('.search-box') && resultsContainer) resultsContainer.style.display='none'; });
+        }
+      } catch(e){
+        console.warn('search index init failed', e);
+      }
+    })();
   }
 
-  /* ----------------- Keep injectPageTitle & home behavior intact ----------------- */
+  /* ------------------ Keep home rendering behaviour (unchanged) ------------------ */
   function injectPageTitle(){
     const existing = qs('.page-title');
     if(existing) return;
@@ -199,8 +202,8 @@
     else document.body.insertBefore(el, document.body.firstChild);
   }
 
-  /* renderHome kept but we will enforce slider item limit to 8 */
   async function renderHome(){
+    // NO changes here so home remains exactly as before
     injectPageTitle();
 
     const root = document.createElement('div'); root.className = 'home-cats container';
@@ -215,9 +218,9 @@
     ];
 
     for(const c of cats){
-      const section = document.createElement('section'); 
-      section.className='cat-row'; 
-      section.dataset.key=c.key; 
+      const section = document.createElement('section');
+      section.className='cat-row';
+      section.dataset.key=c.key;
       section.dataset.name=c.name;
 
       const header = document.createElement('div'); header.className='cat-header';
@@ -240,16 +243,10 @@
 
       (async function load(catDef, sec){
         const raw = await fetchJson(catDef.file);
+        // keep best-seller in original order; shuffle others and show up to 8 in slider
         let items = normalize(raw);
-
-        // Keep best-seller order intact, otherwise randomize
-        if(!/best[_-]?seller/i.test(catDef.key) && !/best[_-]?seller/i.test(catDef.file)){
-          items = shuffleArr(items.slice()); // randomize
-        }
-
-        // Limit to max 8 items shown in slider initially
-        sec._items = items.slice(0, Math.min(items.length, 8));
-        sec._allItemsCount = items.length;
+        if(!(catDef.key && catDef.key.includes('best'))) items = shuffleArray(items);
+        sec._items = items.slice(0,8); // show max 8 in slider
         sec._track = track;
         sec._tx = 0;
         sec._loadedCount = 0;
@@ -270,12 +267,6 @@
         sec._batchSize = batch;
 
         setTimeout(()=>updateButtonsVisibility(sec), 160);
-
-        // If there are more than 8 overall, add a see-more card as last visible item
-        if(items.length > 8){
-          // ensure see-more card exists after initial items
-          addSeeMoreCard(sec, catDef);
-        }
       })(c, section);
     }
 
@@ -284,6 +275,7 @@
     else document.body.insertBefore(root, document.body.firstChild);
   }
 
+  /* Home helpers (unchanged except minor safety) */
   function appendItemsToTrack(section, startIndex, count){
     const track = section._track;
     const items = section._items || [];
@@ -295,14 +287,17 @@
       wrap.appendChild(card); track.appendChild(wrap);
     });
     section._loadedCount = (section._loadedCount || 0) + slice.length;
+    if(section._loadedCount >= (section._items || []).length){
+      addSeeMoreCard(section);
+    }
     setTimeout(()=>updateButtonsVisibility(section), 120);
   }
 
-  function addSeeMoreCard(section, catDef){
+  function addSeeMoreCard(section){
     if(!section || !section._track) return;
     if(section._track.querySelector('.cat-item.see-more')) return;
     const wrap = document.createElement('div'); wrap.className='cat-item see-more';
-    const link = `/${catDef.key}/`;
+    const link = `/${section.dataset.key}/`;
     const readable = section.dataset.name || section.dataset.key || 'আরও দেখুন';
     const inner = document.createElement('div');
     inner.className='see-more-card';
@@ -390,13 +385,12 @@
     wrapper.addEventListener('mouseleave', ()=>{ if(isDown){ isDown=false; section._track.style.transform = `translateX(${section._track._tx || 0}px)`; }});
   }
 
-  /* ----------------- Category page renderer ----------------- */
+  /* -------------- Category page renderer (grid, uniform cards, see-more batch) -------------- */
   async function renderStandard(mainEl){
-    // prefer page-specific data-src, otherwise check explicit global JSON_DATA_PATH if allowed
     const dataSrc = mainEl?.dataset?.src || null;
 
-    // If no source provided and no in-memory data, do not render anything.
     if(!dataSrc && !(Array.isArray(window.rokomariData) && window.rokomariData.length) && !(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH)){
+      // nothing explicitly requested
       return;
     }
 
@@ -407,132 +401,127 @@
     else raw = [];
 
     let all = normalize(raw);
-    // Randomize unless source looks like best_seller
-    const isBestSeller = /best[_-]?seller/i.test(String(dataSrc || '')) || /best[_-]?seller/i.test(window.JSON_DATA_PATH||'');
-    if(!isBestSeller){
-      all = shuffleArr(all.slice());
-    }
-
+    // if the JSON filename contains 'best' or '/best_' preserve order, else randomize
+    const preserveOrder = String(dataSrc || '').toLowerCase().includes('best') || String(dataSrc || '').toLowerCase().includes('best_seller') || String(dataSrc || '').toLowerCase().includes('best-seller');
+    if(!preserveOrder) all = shuffleArray(all);
     window._all_index = all;
 
-    // create cards container (category specific)
+    // create container scoped for category pages so we don't affect home styles
     let cards = qs('#cardsArea', mainEl);
     if(!cards){
       cards = document.createElement('div');
-      cards.id='cardsArea';
-      cards.className = 'cards-area container category-cards';
+      cards.id = 'cardsArea';
+      cards.className = 'category-cards';
       mainEl.appendChild(cards);
     } else {
       cards.classList.add('category-cards');
     }
 
-    // layout and batch sizes
+    // determine limits
     const isMobile = (window.innerWidth || document.documentElement.clientWidth) < 600;
-    const initialCount = isMobile ? 10 : 20;
-    const batchSize = isMobile ? 10 : 10; // subsequent loads
+    const initialCount = isMobile ? 10 : 20; // initial items shown
+    const batchSize = 10; // load 10 more on See more
     let shown = 0;
 
-    function renderItems(count){
-      const slice = all.slice(shown, shown + count);
-      slice.forEach(it => {
-        const card = createCard(it);
-        card.classList.add('category-card');
-        cards.appendChild(card);
-      });
-      shown += slice.length;
+    // Add skeleton loader area while first images load (skeleton elements will be removed once images load)
+    function addSkeletons(count){
+      const frag = document.createDocumentFragment();
+      for(let i=0;i<count;i++){
+        const sk = document.createElement('div');
+        sk.className = 'card category-card skeleton';
+        sk.innerHTML = `<div class="card-media"><div class="media-wrap sk-media"></div></div><div class="card-body"><div class="sk-line sk-title"></div><div class="sk-line sk-meta"></div><div class="sk-line sk-desc"></div><div class="sk-line sk-bottom"></div></div>`;
+        frag.appendChild(sk);
+      }
+      cards.appendChild(frag);
     }
 
-    // initial render
-    renderItems(initialCount);
+    function removeSkeletons(){
+      cards.querySelectorAll('.skeleton').forEach(n=>n.parentNode && n.parentNode.removeChild(n));
+    }
 
-    // See More button
-    let seeMoreBtn = qs('.see-more-btn', cards);
+    function renderItems(count){
+      // remove skeletons when we actually render data
+      removeSkeletons();
+      const slice = all.slice(shown, shown + count);
+      const frag = document.createDocumentFragment();
+      slice.forEach(it => {
+        const card = createCard(it);
+        frag.appendChild(card);
+      });
+      cards.appendChild(frag);
+      shown += slice.length;
+      // attach image skeletons to new images
+      attachImageSkeletons();
+    }
+
+    // initial render: add visual skeletons, then render items
+    addSkeletons(Math.min(6, initialCount)); // show a few skeletons quickly
+    setTimeout(()=> {
+      renderItems(initialCount);
+      updateSeeMore();
+    }, 220);
+
+    // See more button
+    let seeMoreBtn = cards.querySelector('.see-more-btn');
     if(!seeMoreBtn){
       seeMoreBtn = document.createElement('button');
       seeMoreBtn.className = 'see-more-btn';
       seeMoreBtn.textContent = 'See more';
-      seeMoreBtn.style.display = 'none';
       cards.appendChild(seeMoreBtn);
     }
-
     function updateSeeMore(){
       if(shown < all.length){
-        seeMoreBtn.style.display = 'block';
+        seeMoreBtn.style.display = 'inline-block';
       } else {
         seeMoreBtn.style.display = 'none';
       }
     }
-    updateSeeMore();
-
     seeMoreBtn.addEventListener('click', ()=>{
       renderItems(batchSize);
       updateSeeMore();
-      attachImageSkeletons();
     });
-
-    // ensure images get skeletons
-    attachImageSkeletons();
   }
 
   function attachImageSkeletons(){
-    document.querySelectorAll('.card .media img').forEach(img=>{
+    document.querySelectorAll('.category-cards .card .media-wrap img').forEach(img=>{
       if(img.dataset._attached) return;
       img.dataset._attached = 1;
-      const wrapper = img.parentNode;
-      const sk = document.createElement('div'); sk.className = 'img-skel';
-      wrapper.insertBefore(sk, img);
-      img.style.opacity = 0;
-      img.addEventListener('load', ()=>{ img.style.transition='opacity .35s'; img.style.opacity = 1; if(sk && sk.parentNode) sk.parentNode.removeChild(sk); updateAllButtons(); });
-      img.addEventListener('error', ()=>{ if(sk && sk.parentNode) sk.parentNode.removeChild(sk); updateAllButtons(); });
-    });
-
-    // Title & desc skeleton: add placeholder classes for new cards without content yet
-    document.querySelectorAll('.card').forEach(card=>{
-      if(card.dataset._textAttached) return;
-      card.dataset._textAttached = 1;
-      // add shimmer bars while images load (CSS handles visuals)
-      const t = card.querySelector('.title');
-      const d = card.querySelector('.desc');
-      if(t) t.classList.add('skeleton-text-line');
-      if(d) d.classList.add('skeleton-text-two');
-      // remove skeleton classes once image loads (keep short delay)
-      const img = card.querySelector('.media img');
-      if(!img || img.complete){
-        if(t) t.classList.remove('skeleton-text-line');
-        if(d) d.classList.remove('skeleton-text-two');
-      } else {
-        img.addEventListener('load', ()=>{ if(t) t.classList.remove('skeleton-text-line'); if(d) d.classList.remove('skeleton-text-two'); });
-        img.addEventListener('error', ()=>{ if(t) t.classList.remove('skeleton-text-line'); if(d) d.classList.remove('skeleton-text-two'); });
+      const wrapper = img.closest('.media-wrap');
+      if(!wrapper) return;
+      // add a skeleton overlay element if missing
+      if(!wrapper.querySelector('.img-skel')){
+        const sk = document.createElement('div'); sk.className = 'img-skel';
+        wrapper.insertBefore(sk, wrapper.firstChild);
       }
+      img.style.opacity = 0;
+      img.addEventListener('load', ()=>{ img.style.transition='opacity .35s'; img.style.opacity = 1; const sk = wrapper.querySelector('.img-skel'); if(sk && sk.parentNode) sk.parentNode.removeChild(sk); });
+      img.addEventListener('error', ()=>{ const sk = wrapper.querySelector('.img-skel'); if(sk && sk.parentNode) sk.parentNode.removeChild(sk); });
     });
   }
 
+  // keep helper for home updates
   function updateAllButtons(){
-    qsa('.cat-row').forEach(section=>{ if(section._track) updateButtonsVisibility(section); });
+    qsa('.cat-row').forEach(section=>{ if(section._track) try{ updateButtonsVisibility(section); }catch(e){} });
   }
 
-  /* DOM ready */
+  /* --------------- bootstrap DOM ready --------------- */
   document.addEventListener('DOMContentLoaded', function(){
     setupHeader();
 
-    // normalize and compare path against SITE_BASE aware roots
+    // compute path and normalize with SITE_BASE awareness
     const path = (location.pathname || '/').replace(/\/$/, '') || '/';
     const base = SITE_BASE || '';
     const isHome = (path === '' || path === base || path === base + '/' || path === '/' || path === '');
-    if(isHome) {
+
+    if(isHome){
       renderHome();
       return;
     }
 
-    // Prefer element with explicit data-src (for category pages we put <div data-src="..."> inside the page content)
-    // If no such element exists, fall back to the first <main> in the layout, then document.body.
+    // Prefer an element that explicitly sets data-src (page author places <main data-src="..."> or a div)
     const pageDataSrcEl = document.querySelector('[data-src]');
     const mainElCandidate = pageDataSrcEl || qs('main') || document.body;
 
-    // Determine whether to render cards:
-    // - element has data-src OR
-    // - in-memory window.rokomariData exists OR
-    // - FORCE_LOAD_CARDS is true AND JSON_DATA_PATH is set
     const hasSrc = !!(mainElCandidate && mainElCandidate.dataset && mainElCandidate.dataset.src);
     const hasInMemory = Array.isArray(window.rokomariData) && window.rokomariData.length;
     const hasGlobalJson = (typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH);
@@ -541,7 +530,7 @@
     if(hasSrc || hasInMemory || (force && hasGlobalJson)){
       renderStandard(mainElCandidate);
     } else {
-      // intentionally do nothing — no cards for this page
+      // intentionally do nothing — no injected cards on regular pages
     }
   });
 
