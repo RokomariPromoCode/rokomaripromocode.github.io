@@ -1,0 +1,46 @@
+<!-- ========== UNIFIED LAYOUT FILE ========== -->
+<!-- header + footer + whatsapp in one file -->
+
+<!-- ======= HEADER ======= -->
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="logo-link">
+      <img src="/assets/logo.png" alt="logo" class="logo" />
+    </a>
+
+    <nav class="main-nav">
+      <a href="/index.html">Home</a>
+      <a href="/books.html">Books</a>
+      <a href="/electronics.html">Electronics</a>
+      <a href="/foods.html">Foods</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+
+<!-- ======= FOOTER ======= -->
+<footer class="site-footer">
+  <div class="container">
+    <p>© <span id="current-year"></span> Rokomari — All rights reserved.</p>
+  </div>
+</footer>
+
+
+<!-- ======= WHATSAPP FLOATING BUTTON ======= -->
+<div class="wa-float">
+  <a href="https://wa.me/8801XXXXXXXXX" target="_blank" rel="noopener noreferrer">
+    <img src="/assets/whatsapp-icon.png" alt="WhatsApp" />
+  </a>
+</div>
+
+
+<!-- ======= SMALL JS FOR FOOTER YEAR ======= -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const el = document.getElementById("current-year");
+  if (el) el.textContent = new Date().getFullYear();
+});
+</script>
+
+<!-- ========== END OF UNIFIED LAYOUT FILE ========== -->
