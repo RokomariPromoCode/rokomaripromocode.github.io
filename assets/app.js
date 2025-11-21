@@ -1,45 +1,22 @@
 /* assets/app.js
-   Main site loader: search, card rendering (home), per-section carousel.
-   - Normalizes SITE_BASE and JSON path to avoid duplicated segments.
-   - Only injects home sections when on root (or when FORCE_LOAD_CARDS is true).
+   Main site behavior: JSON load, site-wide search, home sections carousel, card rendering.
 */
 
 (function () {
   'use strict';
 
-  /* -------------------------
-     Utilities
-     ------------------------- */
-  function normBase(raw) {
-    raw = (raw || '').toString().trim();
-    if (!raw || raw === '/') return '';
-    if (raw[0] !== '/') raw = '/' + raw;
-    return raw.replace(/\/+$/, '');
-  }
+  // Config from layout (set by _layouts/default.html)
+  const SITE_BASE = window.SITE_BASE || '';
+  const jsonPath = window.JSON_DATA_PATH || (SITE_BASE + '/data/default.json');
 
-  function normPath(base, path) {
-    // ensure no double slashes and path starts with single slash if base present
-    base = normBase(base);
-    path = (path || '').toString().trim();
-    // if path already absolute (starts with http), return unchanged
-    if (/^https?:\/\//i.test(path)) return path;
-    if (!path) return base || '/';
-    if (path[0] !== '/') path = '/' + path;
-    // remove repeated segments like '/trial/trial/data/...'
-    // We'll collapse any repeated adjacent directory names
-    const full = (base + path).replace(/\/+/g, '/');
-    // remove duplicated directory names (naive approach: if base contains same last segment as following)
-    // This handles the common 'trial/trial' case:
-    const parts = full.split('/').filter(Boolean);
-    for (let i = 1; i < parts.length; i++) {
-      if (parts[i] === parts[i - 1]) {
-        parts.splice(i, 1);
-        i--; // recheck
-      }
-    }
-    return '/' + parts.join('/');
-  }
+  // Main content node (layout places content in #main-content)
+  const main = document.getElementById('main-content') || document.querySelector('main') || document.body;
 
+  // Determine whether we should render home-like sections
+  const relPath = (location.pathname || '').replace(SITE_BASE, '') || '/';
+  const isHome = (relPath === '/' || relPath === '/index.html' || relPath === '/index' || !!window.FORCE_LOAD_CARDS);
+
+  // Utility to create elements quickly
   function el(tag, cls, html) {
     const e = document.createElement(tag);
     if (cls) e.className = cls;
@@ -47,37 +24,27 @@
     return e;
   }
 
-  function isRootPath(path, base) {
-    // consider root if path === '/' or '/index.html' or '/index'
-    const rel = (path || location.pathname || '').replace(base || '', '') || '/';
-    const clean = rel.split('?')[0].split('#')[0];
-    return clean === '/' || clean === '/index.html' || clean === '/index';
+  // ---- Search system ----
+  let productDatabase = []; // array of normalized products used for suggestions
+
+  // Listen for header search custom events (header dispatches 'app:search')
+  document.addEventListener('app:search', function (ev) {
+    const q = String((ev && ev.detail) || '').trim().toLowerCase();
+    doSearch(q);
+  });
+
+  // Also wire direct input (fallback)
+  const searchInput = document.getElementById('header-search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', function (e) {
+      const q = String(e.target.value || '').trim().toLowerCase();
+      doSearch(q);
+    });
   }
 
-  /* -------------------------
-     Config & environment
-     ------------------------- */
-  const rawBase = (window.SITE_BASE !== undefined) ? window.SITE_BASE : '';
-  const SITE_BASE = normBase(rawBase);
-  // default JSON path can be overridden by pages (window.JSON_DATA_PATH)
-  const defaultJson = '/data/default.json';
-  const jsonRaw = (window.JSON_DATA_PATH !== undefined) ? window.JSON_DATA_PATH : (SITE_BASE + defaultJson);
-  const JSON_PATH = normPath(SITE_BASE, jsonRaw);
-
-  const FORCE_LOAD = !!window.FORCE_LOAD_CARDS; // if true, treat any page like home for card injection
-
-  // DOM references
-  const mainEl = document.getElementById('main-content') || document.querySelector('main') || document.body;
   const searchResultsEl = document.getElementById('search-results');
-  const searchInputEl = document.getElementById('header-search-input');
 
-  // product DB for search suggestions
-  let productDatabase = [];
-
-  /* -------------------------
-     Search handling
-     ------------------------- */
-  function showSearchResults(items) {
+  function renderSearchResults(items) {
     if (!searchResultsEl) return;
     searchResultsEl.innerHTML = '';
     if (!items || items.length === 0) {
@@ -93,8 +60,7 @@
     searchResultsEl.style.display = 'block';
   }
 
-  function searchQuery(q) {
-    q = (q || '').toString().trim().toLowerCase();
+  function doSearch(q) {
     if (!q) {
       if (searchResultsEl) searchResultsEl.style.display = 'none';
       return;
@@ -103,81 +69,63 @@
     const seen = new Set();
     for (let i = 0; i < productDatabase.length && matches.length < 12; i++) {
       const p = productDatabase[i];
-      const title = (p.title || '').toString().toLowerCase();
-      const author = (p.author || '').toString().toLowerCase();
-      const seller = (p.seller || '').toString().toLowerCase();
+      const title = (p.title || '').toLowerCase();
+      const author = (p.author || '').toLowerCase();
+      const seller = (p.seller || '').toLowerCase();
       if (title.includes(q) || author.includes(q) || seller.includes(q)) {
-        const key = (p.link || p.title || i).toString();
+        const key = p.link || (p.title || i);
         if (!seen.has(key)) {
           seen.add(key);
           matches.push(p);
         }
       }
     }
-    showSearchResults(matches);
+    renderSearchResults(matches);
   }
 
-  // listen to header dispatch (header includes dispatching app:search when input changes)
-  document.addEventListener('app:search', (ev) => {
-    const q = ev && ev.detail ? ev.detail : '';
-    searchQuery(q);
-  });
-
-  // also fallback to direct input events if header not using app:search
-  if (searchInputEl) {
-    searchInputEl.addEventListener('input', (e) => {
-      const v = e.target.value || '';
-      // dispatch event for unify
-      const ev = new CustomEvent('app:search', { detail: v });
-      document.dispatchEvent(ev);
-    });
-  }
-
-  /* click outside -> hide search results */
-  document.addEventListener('click', (ev) => {
-    if (!searchResultsEl) return;
-    if (!searchResultsEl.contains(ev.target) && !searchInputEl.contains(ev.target)) {
+  // hide suggestions on outside click
+  document.addEventListener('click', function (ev) {
+    if (!searchResultsEl || !searchInput) return;
+    if (!searchResultsEl.contains(ev.target) && !searchInput.contains(ev.target)) {
       searchResultsEl.style.display = 'none';
     }
   });
 
-  /* -------------------------
-     Fetch JSON + prepare productDatabase
-     ------------------------- */
+  // ---- Fetch JSON helper ----
   async function fetchJson(path) {
     try {
-      const resp = await fetch(path, { cache: 'no-store' });
-      if (!resp.ok) {
-        console.warn('JSON fetch failed', path, resp.status);
+      const r = await fetch(path, { cache: 'no-store' });
+      if (!r.ok) {
+        console.warn('app.js: fetch failed', path, r.status);
         return [];
       }
-      const json = await resp.json();
-      if (!Array.isArray(json)) {
-        console.warn('JSON is not an array', path);
+      const data = await r.json();
+      if (!Array.isArray(data)) {
+        console.warn('app.js: JSON not array', path);
         return [];
       }
-      return json;
+      return data;
     } catch (err) {
-      console.error('fetchJson error', err, path);
+      console.error('app.js: fetch error', path, err);
       return [];
     }
   }
 
+  // Normalize shapes and dedupe by link or title
   function normalizeProducts(list) {
-    // ensure fields exist and create minimal normalized product objects
     const out = [];
     const seen = new Set();
-    for (const it of list) {
+    for (const it of (list || [])) {
       const link = (it.link || it.url || '').toString();
       const key = link || (it.title || '').toString().slice(0, 80);
       if (seen.has(key)) continue;
       seen.add(key);
       out.push({
-        title: it.title || '',
+        title: it.title || it.name || '',
         author: it.author || '',
-        seller: it.seller || (it.brand || '') || '',
-        img: it.img || (it.image || '') || '',
-        desc: it.desc || it.summary || '',
+        seller: it.seller || it.brand || '',
+        img: it.img || it.image || '',
+        desc: (it.desc || it.summary || '').replace(/<br\s*\/?>/gi, ' '),
         link: link || '#',
         category: (it.category || it.cat || it.group || 'others').toString().toLowerCase(),
         best_seller: !!it.best_seller
@@ -186,30 +134,40 @@
     return out;
   }
 
-  /* -------------------------
-     Card building and sections
-     ------------------------- */
+  // ---- Card creation ----
   function makeCard(product) {
     const c = el('div', 'card');
+
     const wrap = el('div', 'img-wrap');
-    const img = el('img'); img.src = product.img || ''; img.alt = product.title || '';
+    const img = el('img');
+    img.src = product.img || '';
+    img.alt = product.title || '';
     wrap.appendChild(img);
     c.appendChild(wrap);
 
-    const title = el('div', 'title', product.title || '');
+    const title = el('div', 'title');
+    title.textContent = product.title || '';
     c.appendChild(title);
 
-    const meta = el('div', 'meta', ((product.author ? 'লেখক: ' + product.author : '') + (product.seller ? ' • বিক্রেতা: ' + product.seller : '')).trim());
+    const meta = el('div', 'meta');
+    const metaParts = [];
+    if (product.author) metaParts.push('লেখক: ' + product.author);
+    if (product.seller) metaParts.push('বিক্রেতা: ' + product.seller);
+    meta.textContent = metaParts.join(' • ');
     c.appendChild(meta);
 
-    const desc = el('div', 'desc', product.desc || '');
+    const desc = el('div', 'desc');
+    desc.textContent = product.desc || '';
     c.appendChild(desc);
 
     const cta = el('div', 'cta-row');
-    const offer = el('div', 'offer-text', 'ডিসকাউন্ট পেতে এখানে কিনুন');
-    const buy = el('a', 'buy-btn', 'Buy Now');
+    const offer = el('div', 'offer-text');
+    offer.textContent = 'ডিসকাউন্ট পেতে এখানে কিনুন';
+    const buy = el('a', 'buy-btn');
     buy.href = product.link || '#';
     buy.target = '_blank';
+    buy.rel = 'noopener noreferrer';
+    buy.textContent = 'Buy Now';
     cta.appendChild(offer);
     cta.appendChild(buy);
     c.appendChild(cta);
@@ -217,14 +175,17 @@
     return c;
   }
 
-  function makeSeeMoreButton(name, href) {
-    const s = el('div', 'see-more');
-    s.innerHTML = `<div><button class="see-more-btn">See all ${name}</button></div>`;
-    const btn = s.querySelector('.see-more-btn');
-    if (href) btn.addEventListener('click', () => { location.href = href; });
-    return s;
+  function makeSeeMore(name, href) {
+    const sm = el('div', 'see-more');
+    const btn = el('button', 'see-more-btn', `See all ${name}`);
+    btn.addEventListener('click', () => {
+      if (href) location.href = href;
+    });
+    sm.appendChild(btn);
+    return sm;
   }
 
+  // perView logic by viewport width
   function perViewForWidth(w) {
     if (w <= 540) return 1;
     if (w <= 880) return 2;
@@ -232,174 +193,162 @@
     return 4;
   }
 
-  function createSection(title, products, options) {
-    options = options || {};
-    const sec = el('section', 'section');
+  // Create a carousel-style section
+  function createSection(title, items, opts) {
+    opts = opts || {};
+    const section = el('section', 'section');
     const head = el('div', 'section-head');
     head.innerHTML = `<div class="title">${title}</div>`;
-    sec.appendChild(head);
+    section.appendChild(head);
 
-    const rowWrap = el('div', 'row-wrap');
+    const wrap = el('div', 'row-wrap');
+    wrap.style.position = 'relative';
     const row = el('div', 'card-row');
     row.style.transition = 'transform .45s cubic-bezier(.22,.9,.18,1)';
-    rowWrap.appendChild(row);
-    sec.appendChild(rowWrap);
+    wrap.appendChild(row);
+    section.appendChild(wrap);
 
-    // populate cards
-    products.forEach(p => row.appendChild(makeCard(p)));
+    // append cards
+    items.forEach(p => row.appendChild(makeCard(p)));
 
-    // see more placeholder (half-card)
-    const seeMore = makeSeeMoreButton(title, options.moreHref || '#');
-    row.appendChild(seeMore);
+    // append see-more placeholder as last element
+    row.appendChild(makeSeeMore(title, opts.moreHref || '#'));
 
-    // arrows
-    const left = el('button', 'carousel-arrow prev', '<i class="fas fa-chevron-left"></i>');
-    const right = el('button', 'carousel-arrow next', '<i class="fas fa-chevron-right"></i>');
-    left.style.left = '6px'; left.style.right = 'auto'; left.style.display = 'none';
-    sec.appendChild(left); sec.appendChild(right);
+    // add arrows
+    const prev = el('button', 'carousel-arrow prev', `<i class="fas fa-chevron-left"></i>`);
+    const next = el('button', 'carousel-arrow next', `<i class="fas fa-chevron-right"></i>`);
+    prev.style.display = 'none';
+    section.appendChild(prev);
+    section.appendChild(next);
 
-    // carousel state
+    // state
     let perView = perViewForWidth(window.innerWidth);
-    let idx = 0; // index of first visible card
+    let idx = 0;
 
-    function updatePerView() {
-      perView = perViewForWidth(window.innerWidth);
-      // clamp idx
-      if (idx > Math.max(0, products.length - perView)) {
-        idx = Math.max(0, products.length - perView);
-      }
-      repaint();
+    function computeCardWidth() {
+      const first = row.children[0];
+      if (!first) return 260 + 18;
+      const gap = 18;
+      const w = first.offsetWidth || first.getBoundingClientRect().width || 260;
+      return w + gap;
     }
 
     function repaint() {
-      // compute card width including gap (assume first child width)
-      const child = row.children[0];
-      if (!child) return;
-      const style = getComputedStyle(child);
-      const gap = 18; // matches CSS gap used
-      const cardW = child.getBoundingClientRect().width + gap;
+      const cardW = computeCardWidth();
       row.style.transform = `translateX(-${idx * cardW}px)`;
-      // arrow visibility
-      left.style.display = idx <= 0 ? 'none' : '';
-      // right arrow hidden when we've reached or exceeded last-full-screen (allow see-more)
-      if (idx + perView >= products.length) {
-        right.style.display = 'none';
-      } else {
-        right.style.display = '';
-      }
+      prev.style.display = idx <= 0 ? 'none' : '';
+      // hide next arrow if we've pushed to show see-more
+      if (idx + perView >= (items.length)) next.style.display = 'none';
+      else next.style.display = '';
     }
 
-    left.addEventListener('click', () => {
+    function onResize() {
+      perView = perViewForWidth(window.innerWidth);
+      const maxIdx = Math.max(0, items.length - perView);
+      if (idx > maxIdx) idx = maxIdx;
+      setTimeout(repaint, 60);
+    }
+
+    prev.addEventListener('click', () => {
       idx = Math.max(0, idx - perView);
       repaint();
     });
-    right.addEventListener('click', () => {
-      idx = Math.min(products.length, idx + perView);
+    next.addEventListener('click', () => {
+      idx = Math.min(items.length, idx + perView);
       repaint();
     });
 
-    window.addEventListener('resize', () => {
-      updatePerView();
-    });
+    window.addEventListener('resize', onResize);
 
-    // initial paint after images load (slight delay)
+    // initial paint after images may load
     setTimeout(() => {
-      updatePerView();
+      onResize();
       repaint();
-    }, 120);
+    }, 220);
 
-    return sec;
+    return section;
   }
 
-  /* -------------------------
-     Render home (only if root or force)
-     ------------------------- */
-  async function renderHomeSections(jsonList) {
-    // normalize and group by category
-    const normalized = normalizeProducts(jsonList);
-    // fill global productDatabase for search dedupe
-    productDatabase = normalized.slice(); // it's already deduped by normalizeProducts
-
+  // group normalized products by category
+  function groupByCategory(list) {
     const groups = {};
-    normalized.forEach(it => {
-      const cat = (it.category || 'others').toString().toLowerCase();
+    for (const p of list) {
+      const cat = (p.category || 'others').toString().toLowerCase();
       groups[cat] = groups[cat] || [];
-      groups[cat].push(it);
-    });
-
-    // create 'best seller' from flagged or first items
-    let best = normalized.filter(x => x.best_seller).slice(0, 8);
-    if (best.length < 6) {
-      best = normalized.slice(0, 8);
+      groups[cat].push(p);
     }
+    return groups;
+  }
 
-    // Only inject sections if allowed (is root or forced)
-    const path = location.pathname || '/';
-    const isRoot = isRootPath(path, SITE_BASE);
-    if (!isRoot && !FORCE_LOAD) return;
+  // render home sections (best seller + categories)
+  async function renderHomeSections(jsonList) {
+    const normalized = normalizeProducts(jsonList);
+    productDatabase = normalized.slice(); // fill db for search
 
-    // Clear main content to show homepage layout (Option A: as requested)
-    if (mainEl) {
-      mainEl.innerHTML = '';
-    }
+    const groups = groupByCategory(normalized);
 
-    // Site title + subtitle
-    const titleWrap = el('div', 'site-title', '<h1>Rokomari Promo Code</h1><p style="color:#666;margin-top:6px">হোম পেজে বিভিন্ন ক্যাটাগরি দেখানো হবে — সার্চ ও মোবাইল মেনু ব্যবহার করে ব্রাউজ করুন।</p>');
-    mainEl.appendChild(titleWrap);
+    // best sellers
+    let best = normalized.filter(x => x.best_seller).slice(0, 12);
+    if (best.length < 6) best = normalized.slice(0, 8);
 
-    // Best seller
+    // clear main and inject title + sections
+    if (main) main.innerHTML = '';
+
+    const titleWrap = el('div', 'site-title');
+    titleWrap.innerHTML = `<h1>Rokomari Promo Code</h1><p style="color:#666;margin-top:6px">বিভিন্ন ক্যাটাগরি দেখুন — সার্চ ও মোবাইল মেনু ব্যবহার করে ব্রাউজ করুন।</p>`;
+    main.appendChild(titleWrap);
+
     if (best && best.length) {
-      const secBest = createSection('Best Seller', best, { moreHref: SITE_BASE + '/best-seller/' });
-      mainEl.appendChild(secBest);
+      main.appendChild(createSection('Best Seller', best, { moreHref: SITE_BASE + '/best-seller/' }));
     }
 
-    // desired order
     const order = ['books', 'electronics', 'foods', 'furniture', 'beauty', 'others'];
     order.forEach(cat => {
-      const list = (groups[cat] || []).slice(0, 12);
-      if (list.length) {
-        const pretty = 'Rokomari PromoCode For ' + (cat.charAt(0).toUpperCase() + cat.slice(1));
-        const sec = createSection(pretty, list, { moreHref: SITE_BASE + '/' + cat + '/' });
-        mainEl.appendChild(sec);
-      }
+      const items = (groups[cat] || []).slice(0, 12);
+      if (!items.length) return;
+      const pretty = `Rokomari PromoCode For ${cat.charAt(0).toUpperCase() + cat.slice(1)}`;
+      main.appendChild(createSection(pretty, items, { moreHref: SITE_BASE + '/' + cat + '/' }));
     });
   }
 
-  /* -------------------------
-     Initialization flow
-     ------------------------- */
+  // ----- initialization flow -----
   (async function init() {
-    // Fetch default JSON (will set productDatabase for search), but don't crash site on 404
-    const attemptedPath = JSON_PATH;
-    let jsonList = [];
-    try {
-      jsonList = await fetchJson(attemptedPath);
-      if (!Array.isArray(jsonList)) jsonList = [];
-    } catch (err) {
-      jsonList = [];
-    }
+    // Always try to load JSON to populate productDatabase (for search)
+    const list = await fetchJson(jsonPath);
 
-    // If fetch returned empty and the path looked like '/trial/trial/...' try a second normalized attempt:
-    if ((!jsonList || jsonList.length === 0) && attemptedPath) {
-      // try to recover: remove duplicated segments if any
-      const alt = attemptedPath.replace(/\/([^\/]+)\/\1\//, '/$1/'); // simple replace trial/trial
-      if (alt !== attemptedPath) {
-        const altList = await fetchJson(alt);
-        if (Array.isArray(altList) && altList.length) {
-          jsonList = altList;
-          console.info('Recovered JSON from alt path', alt);
+    // If home (or forced), render sections. If JSON empty, attempt simple alt path recovery.
+    if (isHome) {
+      if ((!list || list.length === 0) && jsonPath) {
+        // Try to recover if path contains a duplicated dir like /trial/trial/
+        const alt = jsonPath.replace(/\/([^\/]+)\/\1\//, '/$1/');
+        if (alt !== jsonPath) {
+          const altList = await fetchJson(alt);
+          if (Array.isArray(altList) && altList.length) {
+            await renderHomeSections(altList);
+            return;
+          }
         }
       }
+      await renderHomeSections(list || []);
+    } else {
+      // not home: just fill productDatabase for search
+      productDatabase = normalizeProducts(list);
     }
 
-    // populate productDatabase even if not injecting home (so search works on other pages)
-    productDatabase = normalizeProducts(jsonList);
-
-    // render home sections only on root (or when forced)
-    await renderHomeSections(jsonList);
-
-    // good to go
-    console.info('app.js initialized. SITE_BASE=', SITE_BASE, 'JSON_PATH=', JSON_PATH);
+    // debug log
+    console.info('app.js loaded. isHome=', isHome, 'jsonPath=', jsonPath, 'products=', productDatabase.length);
   })();
+
+  // Expose some helpers globally (for debugging)
+  window._app = {
+    productDatabase,
+    reloadJson: async function (path) {
+      const p = path || jsonPath;
+      const data = await fetchJson(p);
+      productDatabase = normalizeProducts(data);
+      console.info('app.js reloadJson done', p, productDatabase.length);
+      return productDatabase;
+    }
+  };
 
 })();
