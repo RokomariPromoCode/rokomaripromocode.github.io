@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- Primary stylesheet (use Jekyll relative_url so baseurl works) -->
+  <!-- Primary stylesheet: use relative_url so baseurl is handled -->
   <link rel="stylesheet" href="{{ '/assets/styles.css' | relative_url }}">
 
   <script>
@@ -22,6 +22,7 @@
         rawBase = rawBase.replace(/\/$/, "");
         window.SITE_BASE = rawBase;
       }
+      // default JSON path (page can override window.JSON_DATA_PATH if needed)
       window.JSON_DATA_PATH = (window.SITE_BASE ? window.SITE_BASE + "/data/default.json" : "/data/default.json");
     })();
   </script>
@@ -36,7 +37,9 @@
   {% include footer.html %}
   {% include wa.html %}
 
+  <!-- inject includes (optional) -->
   <script src="{{ '/assets/inject-includes.js' | relative_url }}" defer></script>
+  <!-- app -->
   <script src="{{ '/assets/app.js' | relative_url }}" defer></script>
 </body>
 </html>
