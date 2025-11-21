@@ -1,9 +1,9 @@
-/* assets/app.js - full (paste entire content) */
+/* assets/app.js - fixed */
 (function(){
   'use strict';
 
-  // Set SITE_BASE to your repo base path on GitHub Pages
-  const SITE_BASE = '/trial';
+  // prefer runtime SITE_BASE if set by layout, otherwise fallback to literal (keeps previous behavior)
+  const SITE_BASE = (typeof window !== 'undefined' && window.SITE_BASE) ? window.SITE_BASE : '/trial';
 
   const qs = (s,p=document)=>p.querySelector(s);
   const qsa = (s,p=document)=>Array.from((p||document).querySelectorAll(s));
@@ -202,9 +202,9 @@
     ];
 
     for(const c of cats){
-      const section = document.createElement('section'); 
-      section.className='cat-row'; 
-      section.dataset.key=c.key; 
+      const section = document.createElement('section');
+      section.className='cat-row';
+      section.dataset.key=c.key;
       section.dataset.name=c.name;
 
       const header = document.createElement('div'); header.className='cat-header';
@@ -367,10 +367,20 @@
   }
 
   async function renderStandard(mainEl){
-    const dataSrc = mainEl?.dataset?.src || '/data/json_data.json';
+    // prefer page-specific data-src, otherwise check explicit global JSON_DATA_PATH if allowed
+    const dataSrc = mainEl?.dataset?.src || null;
+
+    // If no source provided and no in-memory data, do not render anything.
+    if(!dataSrc && !(Array.isArray(window.rokomariData) && window.rokomariData.length) && !(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH)){
+      return;
+    }
+
     let raw = [];
     if(Array.isArray(window.rokomariData) && window.rokomariData.length) raw = window.rokomariData;
-    else raw = await fetchJson(dataSrc);
+    else if(dataSrc) raw = await fetchJson(dataSrc);
+    else if(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH) raw = await fetchJson(window.JSON_DATA_PATH);
+    else raw = [];
+
     const all = normalize(raw);
     window._all_index = all;
 
@@ -415,13 +425,29 @@
 
   document.addEventListener('DOMContentLoaded', function(){
     setupHeader();
+    // normalize and compare path against SITE_BASE aware roots
     const path = (location.pathname || '/').replace(/\/$/, '') || '/';
     const base = SITE_BASE || '';
     const isHome = (path === '' || path === base || path === base + '/' || path === '/' || path === '');
-    if(isHome) renderHome();
-    else {
-      const mainEl = qs('main') || document.body;
+    if(isHome) {
+      renderHome();
+      return;
+    }
+
+    // Non-home pages: only render cards when:
+    // - the page's main element has data-src, OR
+    // - there is in-memory window.rokomariData, OR
+    // - FORCE_LOAD_CARDS is true AND window.JSON_DATA_PATH is a non-empty string
+    const mainEl = qs('main') || document.body;
+    const hasSrc = !!(mainEl && mainEl.dataset && mainEl.dataset.src);
+    const hasInMemory = Array.isArray(window.rokomariData) && window.rokomariData.length;
+    const hasGlobalJson = (typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH);
+    const force = !!window.FORCE_LOAD_CARDS;
+
+    if(hasSrc || hasInMemory || (force && hasGlobalJson)){
       renderStandard(mainEl);
+    } else {
+      // do nothing — no cards for this page
     }
   });
 
