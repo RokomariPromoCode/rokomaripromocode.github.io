@@ -1,4 +1,3 @@
-<!-- _includes/header.html -->
 <header class="modern-header" role="banner" aria-label="Main header">
   <div class="header-container">
     <div class="header-logo">
@@ -19,10 +18,13 @@
     <div class="header-menu" role="navigation" aria-label="Main menu">
       <ul class="menu-links" id="menu-links">
         <li><a href="{{ '/' | relative_url }}">Home</a></li>
-        <li><a href="{{ '/books' | relative_url }}">Books</a></li>
-        <li><a href="{{ '/electronics' | relative_url }}">Electronics</a></li>
-        <li><a href="{{ '/groceries' | relative_url }}">Groceries</a></li>
-        <li><a href="{{ '/ghorer_bazar' | relative_url }}">Ghorer Bazar</a></li>
+        <li><a href="{{ '/best-seller/' | relative_url }}">Best Seller</a></li>
+        <li><a href="{{ '/books/' | relative_url }}">Books</a></li>
+        <li><a href="{{ '/electronics/' | relative_url }}">Electronics</a></li>
+        <li><a href="{{ '/foods/' | relative_url }}">Foods</a></li>
+        <li><a href="{{ '/furniture/' | relative_url }}">Furniture</a></li>
+        <li><a href="{{ '/beauty/' | relative_url }}">Beauty</a></li>
+        <li><a href="{{ '/others/' | relative_url }}">Others</a></li>
       </ul>
       <div class="hamburger" id="hamburger" aria-label="Open mobile menu" role="button" tabindex="0">
         <i class="fas fa-bars" aria-hidden="true"></i>
@@ -33,7 +35,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // header script (search + mobile menu)
   const searchInput = document.getElementById('header-search-input');
   const resultsContainer = document.getElementById('header-search-results');
   const clearBtn = document.getElementById('search-clear');
@@ -41,14 +42,16 @@ document.addEventListener('DOMContentLoaded', function() {
   const hamburger = document.getElementById('hamburger');
   const menuLinks = document.getElementById('menu-links');
 
-  if(hamburger && menuLinks){
+  if (hamburger && menuLinks) {
     hamburger.addEventListener('click', () => {
       menuLinks.classList.toggle('active');
       const icon = hamburger.querySelector('i');
       if (menuLinks.classList.contains('active')) {
         icon.classList.remove('fa-bars'); icon.classList.add('fa-times');
+        hamburger.setAttribute('aria-expanded','true');
       } else {
         icon.classList.remove('fa-times'); icon.classList.add('fa-bars');
+        hamburger.setAttribute('aria-expanded','false');
       }
     });
     document.addEventListener('click', (e) => {
@@ -60,6 +63,21 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // productDatabase will be filled by app.js (header search only shows items if app.js sets productDatabase)
+  // Search input event: dispatch app-wide custom event (app.js listens to it)
+  searchInput && searchInput.addEventListener('input', function(e) {
+    const q = String(e.target.value || '').trim();
+    document.dispatchEvent(new CustomEvent('app:search', { detail: q }));
+    if (q.length) { searchLens && (searchLens.style.display='none'); clearBtn && (clearBtn.style.display='block'); }
+    else { searchLens && (searchLens.style.display='block'); clearBtn && (clearBtn.style.display='none'); resultsContainer && (resultsContainer.style.display='none'); }
+  });
+
+  clearBtn && clearBtn.addEventListener('click', function() {
+    searchInput.value = '';
+    document.dispatchEvent(new CustomEvent('app:search', { detail: '' }));
+    resultsContainer && (resultsContainer.style.display='none');
+    clearBtn.style.display='none';
+    searchLens && (searchLens.style.display='block');
+    searchInput.focus();
+  });
 });
 </script>
