@@ -4,7 +4,7 @@ title: Electronics
 permalink: /electronics/
 ---
 
-<main id="main" data-src="{{ site.baseurl }}/data/electronics.json" data-cards="true">
+<main id="main" data-src="/data/electronics.json" data-cards="true">
   <h1>Electronics</h1>
   <p>Browse the latest electronics.</p>
 </main>
