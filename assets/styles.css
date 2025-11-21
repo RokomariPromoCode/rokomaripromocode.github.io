@@ -1,95 +1,93 @@
-/* ---------- Category-specific styles & skeleton (paste into assets/styles.css) ---------- */
-
-/* Category cards grid (only applied when .category-cards exists) */
-.category-cards {
+/* ========== category page styles (cards) ========== */
+/* container for category pages */
+.cards-area.category-cards {
   display: grid;
-  grid-template-columns: 1fr;
   gap: 16px;
   margin-top: 18px;
-  align-items: stretch;
-  padding-bottom: 8px;
+  align-items: start;
+  grid-auto-rows: 1fr;
+  padding-bottom: 12px;
 }
 
-/* Desktop: 2 columns */
+/* mobile: 1 column */
+@media (max-width: 899px) {
+  .cards-area.category-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* desktop: 2 columns */
 @media (min-width: 900px) {
-  .category-cards { grid-template-columns: repeat(2, 1fr); }
+  .cards-area.category-cards {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
-/* Card uniform box */
-.category-cards .card {
+/* uniform card box */
+.cards-area.category-cards .card {
   display: flex;
-  flex-direction: row;
   gap: 12px;
-  align-items: stretch;
-  background: #ffffff;
-  border-radius: 10px;
   padding: 12px;
-  box-shadow: 0 6px 18px rgba(12, 23, 36, 0.04);
-  height: 180px; /* fixed height to keep consistent */
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-/* For very narrow phones, allow slightly taller cards */
-@media (max-width: 420px){
-  .category-cards .card { height: 200px; padding: 10px; }
-  .category-cards { gap: 12px; }
-}
-
-/* Image container: fixed width, center, contain (no crop) */
-.category-cards .card-media {
-  flex: 0 0 180px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background: #fafafa;
+  background: #fff;
   border-radius: 8px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  align-items: stretch;
+  height: 180px; /* fixed height so all cards look same */
   overflow: hidden;
-  min-width: 120px;
-  max-width: 220px;
   box-sizing: border-box;
-  padding: 6px;
 }
 
-/* images: contain, not cropped */
-.category-cards .card-media img {
+/* media image area */
+.cards-area.category-cards .card .media {
+  flex: 0 0 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+  border-radius: 6px;
+  padding: 6px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ensure large images scale down, not cropped */
+.cards-area.category-cards .card .media img {
   max-width: 100%;
   max-height: 100%;
   width: auto;
   height: auto;
   object-fit: contain;
-  display:block;
+  display: block;
 }
 
-/* Body area */
-.category-cards .card-body {
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-start;
+/* card body */
+.cards-area.category-cards .card .body {
   flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
 }
 
-/* Title single line ellipsis */
-.category-cards .card .title {
+/* title: single line ellipsis */
+.cards-area.category-cards .card .title {
   font-size: 16px;
-  font-weight: 600;
+  line-height: 1.2;
   margin: 0 0 6px 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.2;
 }
 
 /* meta small text */
-.category-cards .card .meta {
+.cards-area.category-cards .card .meta {
   font-size: 12px;
   color: #6b7280;
   margin-bottom: 6px;
 }
 
-/* description: clamp to 2 lines */
-.category-cards .card .desc {
+/* description: max 2 lines */
+.cards-area.category-cards .card .desc {
   font-size: 13px;
   color: #374151;
   margin: 0 0 8px 0;
@@ -100,37 +98,38 @@
   text-overflow: ellipsis;
 }
 
-/* bottom row: align discount text and button */
-.category-cards .card-bottom {
+/* bottom align discount and button */
+.cards-area.category-cards .card .card-bottom {
   margin-top: auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px;
 }
 
-/* discount text (left) */
-.category-cards .discount-text {
-  color: #ef4444;
+/* discount text */
+.cards-area.category-cards .card .discount-text {
   font-size: 13px;
+  color: #ef4444;
+  flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 /* buy button */
-.category-cards .card .btn {
-  background: #0ea5a4;
-  color: #fff;
-  text-decoration:none;
+.cards-area.category-cards .card .btn {
+  flex: 0 0 auto;
   padding: 8px 12px;
-  border-radius: 8px;
-  font-weight:600;
-  display:inline-block;
+  border-radius: 6px;
+  background: #0ea5a4;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
 }
 
-/* See more button for category page */
-.category-cards .category-see-more {
+/* See more button */
+.cards-area.category-cards .see-more-btn {
   grid-column: 1 / -1;
   justify-self: center;
   padding: 10px 16px;
@@ -142,65 +141,85 @@
   cursor: pointer;
 }
 
-/* Keep home sliders unaffected */
-.home-cats .card { height:auto; box-shadow:none; }
+/* ensure home sliders unaffected */
+.home-cats .card { height: auto; }
 
-/* -------- YouTube-like skeleton (shimmer) ---------- */
-.yt-skel {
-  position: relative;
+/* ========== skeleton shimmer for modern loading ========== */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.img-skel {
+  position: absolute;
+  left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.06) 100%);
-  overflow: hidden;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
+  animation: shimmer 1.1s linear infinite;
+  pointer-events: none;
 }
 
-/* shimmer stripe */
-.yt-skel::after{
-  content: '';
+/* title skeleton (single line) */
+.skeleton-text-line {
+  position: relative;
+  color: transparent !important;
+}
+.skeleton-text-line::after {
+  content: "";
   position: absolute;
+  left: 0;
   top: 0;
-  left: -150%;
-  width: 150%;
+  height: 1.2em;
+  width: 60%;
+  background: linear-gradient(90deg, rgba(246,246,246,1) 0%, rgba(230,230,230,1) 50%, rgba(246,246,246,1) 100%);
+  animation: shimmer 1.1s linear infinite;
+}
+
+/* desc skeleton (two lines) */
+.skeleton-text-two {
+  position: relative;
+  color: transparent !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.skeleton-text-two::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 2.6em;
+  width: 100%;
+  background: linear-gradient(90deg, rgba(246,246,246,1) 0%, rgba(230,230,230,1) 50%, rgba(246,246,246,1) 100%);
+  animation: shimmer 1.1s linear infinite;
+}
+
+/* ensure long images don't overflow layout on narrow screens */
+@media (max-width: 480px) {
+  .cards-area.category-cards .card { height: 220px; }
+  .cards-area.category-cards .card .media { flex: 0 0 140px; }
+}
+
+/* small helper for "no-image" fallback */
+.cards-area.category-cards .card .no-image {
+  width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100%);
-  transform: skewX(-15deg);
-  animation: skel-shimmer 1.4s infinite;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#9ca3af;
+  font-size:13px;
 }
 
-@keyframes skel-shimmer {
-  0% { left: -150%; }
-  100% { left: 150%; }
+/* make sure category see-more-card for home looks decent */
+.cat-item.see-more .see-more-card {
+  padding: 12px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
 }
-
-/* small variant when no image available */
-.yt-skel.no-img { display:flex; align-items:center; justify-content:center; color:#9ca3af; font-size:13px; }
-
-/* make sure category-card markup (if reused) uses proper structure */
-.category-cards .no-image { width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:#9ca3af; }
-
-/* Cat slider styles (home) - keep small and consistent */
-.cat-track-wrapper { overflow:hidden; position:relative; }
-.cat-track { display:flex; gap:16px; transition: transform 350ms cubic-bezier(.22,.9,.23,1); padding:8px 0; }
-.cat-item { flex:0 0 auto; width:260px; }
-.cat-item .card { height: 320px; display:block; } /* home card larger */
-
-/* prev/next small buttons */
-.cat-actions .cat-btn { background:#111827;color:#fff;border-radius:8px;padding:6px 10px;border:none;cursor:pointer; display:flex; align-items:center; }
-
-/* See-more card visual in slider */
-.cat-item.see-more .see-more-card{
-  display:flex;align-items:center;justify-content:center;height:100%;background:#f8fafc;border-radius:8px;padding:12px;text-align:center;
-}
-
-/* small responsive tweaks */
-@media (max-width: 900px){
-  .category-cards .card { height: auto; flex-direction: row; }
-  .category-cards .card-media { flex: 0 0 140px; }
-}
-
-/* Accessibility / focus */
-.category-cards .btn:focus, .category-see-more:focus { outline: 2px solid rgba(14,165,164,0.35); outline-offset: 2px; }
-
-/* small animation for newly appended cards */
-.category-cards .card { transform-origin: left top; animation: card-pop .28s ease both; }
-@keyframes card-pop { from{opacity:0; transform: translateY(6px) scale(.995)} to{opacity:1; transform: translateY(0) scale(1)} }
