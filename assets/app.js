@@ -1,4 +1,4 @@
-/* assets/app.js - fixed */
+/* assets/app.js - full (paste entire content) */
 (function(){
   'use strict';
 
@@ -60,12 +60,13 @@
     const link = safe(item.link || '#');
 
     const article = document.createElement('article');
-    article.className = 'card';
+    article.className = 'card category-card';
+    // NOTE: CSS must set image area size and .title/.desc clamps as requested.
     article.innerHTML = `
       <div class="card-content">
         <div class="media">${ img ? `<img src="${escapeHtml(img)}" alt="${escapeHtml(title)}" loading="lazy">` : '<div class="no-image">No image</div>' }</div>
         <div class="body">
-          <h4 class="title">${escapeHtml(title)}</h4>
+          <h4 class="title" title="${escapeHtml(title)}">${escapeHtml(title)}</h4>
           <div class="meta">${author ? 'লেখক: '+escapeHtml(author) : ''} ${seller ? ' • বিক্রেতা: '+escapeHtml(seller) : ''}</div>
           <p class="desc">${escapeHtml(desc)}</p>
           <div class="card-bottom">
@@ -125,6 +126,7 @@
       });
     }
 
+    // build a lightweight search index by merging category files (used only for search dropdown).
     let localIndex = [];
     (async ()=>{
       const files = ['/data/json_data.json','/data/best_seller.json','/data/books.json','/data/electronics.json','/data/foods.json','/data/furnitures.json','/data/beauty.json','/data/others.json'];
@@ -366,6 +368,7 @@
     wrapper.addEventListener('mouseleave', ()=>{ if(isDown){ isDown=false; section._track.style.transform = `translateX(${section._track._tx || 0}px)`; }});
   }
 
+  /* -------------------- CATEGORY-ONLY renderer -------------------- */
   async function renderStandard(mainEl){
     // prefer page-specific data-src, otherwise check explicit global JSON_DATA_PATH if allowed
     const dataSrc = mainEl?.dataset?.src || null;
@@ -384,23 +387,58 @@
     const all = normalize(raw);
     window._all_index = all;
 
+    // create or reuse cards container for category pages
     let cards = qs('#cardsArea', mainEl);
-    if(!cards){ cards = document.createElement('div'); cards.id='cardsArea'; cards.className='cards-area container'; mainEl.appendChild(cards); }
-    cards.className = 'cards-area container';
-
-    let idx = 0;
-    function appendBatch(){
-      const slice = all.slice(idx, idx + (4 * 2));
-      slice.forEach(it => cards.appendChild(createCard(it)));
-      idx += slice.length;
+    if(!cards){
+      cards = document.createElement('div');
+      cards.id = 'cardsArea';
+      cards.className = 'cards-area container category-cards';
+      mainEl.appendChild(cards);
+    } else {
+      cards.classList.add('category-cards');
     }
-    appendBatch();
 
-    const sentinel = document.createElement('div'); sentinel.id='sentinel'; sentinel.style.height='2px'; mainEl.appendChild(sentinel);
-    const obs = new IntersectionObserver(entries=>{
-      entries.forEach(en=>{ if(en.isIntersecting) appendBatch(); });
-    }, { rootMargin:'400px' });
-    obs.observe(sentinel);
+    // layout limits per device
+    const isMobile = (window.innerWidth || document.documentElement.clientWidth) < 600;
+    const initialCount = isMobile ? 10 : 20;
+    const batchSize = 10;
+    let shown = 0;
+
+    function renderItems(count){
+      const slice = all.slice(shown, shown + count);
+      slice.forEach(it => {
+        const card = createCard(it);
+        cards.appendChild(card);
+      });
+      shown += slice.length;
+    }
+
+    // initial render
+    renderItems(initialCount);
+
+    // ensure a "See more" button exists & handles further loads
+    let seeMoreBtn = cards.querySelector('.see-more-btn');
+    if(!seeMoreBtn){
+      seeMoreBtn = document.createElement('button');
+      seeMoreBtn.className = 'see-more-btn';
+      seeMoreBtn.textContent = 'See more';
+      seeMoreBtn.style.display = 'none';
+      cards.appendChild(seeMoreBtn);
+    }
+
+    function updateSeeMore(){
+      seeMoreBtn.style.display = (shown < all.length) ? 'block' : 'none';
+    }
+    updateSeeMore();
+
+    seeMoreBtn.addEventListener('click', ()=>{
+      renderItems(batchSize);
+      updateSeeMore();
+      attachImageSkeletons();
+    });
+
+    // attach skeletons for images
+    attachImageSkeletons();
   }
 
   function attachImageSkeletons(){
@@ -423,38 +461,39 @@
     qsa('.cat-row').forEach(section=>{ if(section._track) updateButtonsVisibility(section); });
   }
 
-document.addEventListener('DOMContentLoaded', function(){
-  setupHeader();
+  // DOM ready: decide whether to render home or category/other pages
+  document.addEventListener('DOMContentLoaded', function(){
+    setupHeader();
 
-  // normalize and compare path against SITE_BASE aware roots
-  const path = (location.pathname || '/').replace(/\/$/, '') || '/';
-  const base = SITE_BASE || '';
-  const isHome = (path === '' || path === base || path === base + '/' || path === '/' || path === '');
-  if(isHome) {
-    renderHome();
-    return;
-  }
+    // normalize and compare path against SITE_BASE aware roots
+    const path = (location.pathname || '/').replace(/\/$/, '') || '/';
+    const base = SITE_BASE || '';
+    const isHome = (path === '' || path === base || path === base + '/' || path === '/' || path === '');
+    if(isHome) {
+      renderHome();
+      return;
+    }
 
-  // Prefer element with explicit data-src (for category pages we put <main data-src="..."> inside the page content)
-  // If no such element exists, fall back to the first <main> in the layout, then document.body.
-  const pageDataSrcEl = document.querySelector('[data-src]');
-  const mainElCandidate = pageDataSrcEl || qs('main') || document.body;
+    // Prefer element with explicit data-src (for category pages we put <div data-src="..."> inside the page content)
+    // If no such element exists, fall back to the first <main> in the layout, then document.body.
+    const pageDataSrcEl = document.querySelector('[data-src]');
+    const mainElCandidate = pageDataSrcEl || qs('main') || document.body;
 
-  // Determine whether to render cards:
-  // - element has data-src OR
-  // - in-memory window.rokomariData exists OR
-  // - FORCE_LOAD_CARDS is true AND JSON_DATA_PATH is set
-  const hasSrc = !!(mainElCandidate && mainElCandidate.dataset && mainElCandidate.dataset.src);
-  const hasInMemory = Array.isArray(window.rokomariData) && window.rokomariData.length;
-  const hasGlobalJson = (typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH);
-  const force = !!window.FORCE_LOAD_CARDS;
+    // Determine whether to render cards:
+    // - element has data-src OR
+    // - in-memory window.rokomariData exists OR
+    // - FORCE_LOAD_CARDS is true AND JSON_DATA_PATH is set
+    const hasSrc = !!(mainElCandidate && mainElCandidate.dataset && mainElCandidate.dataset.src);
+    const hasInMemory = Array.isArray(window.rokomariData) && window.rokomariData.length;
+    const hasGlobalJson = (typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH);
+    const force = !!window.FORCE_LOAD_CARDS;
 
-  if(hasSrc || hasInMemory || (force && hasGlobalJson)){
-    renderStandard(mainElCandidate);
-  } else {
-    // intentionally do nothing — no cards for this page
-  }
-});
+    if(hasSrc || hasInMemory || (force && hasGlobalJson)){
+      renderStandard(mainElCandidate);
+    } else {
+      // intentionally do nothing — no cards for this page
+    }
+  });
 
 
   window.triggerRequest = function(searchTerm){
