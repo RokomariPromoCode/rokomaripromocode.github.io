@@ -1,8 +1,8 @@
-/* assets/app.js - category-safe, skeletons, randomized (except best-seller) */
+/* assets/app.js - category-focused version (paste whole file) */
 (function(){
   'use strict';
 
-  // Runtime SITE_BASE (layout sets window.SITE_BASE). Fallback to literal to preserve existing behaviour.
+  // Use runtime SITE_BASE if layout provided it (Jekyll sets window.SITE_BASE in layout).
   const SITE_BASE = (typeof window !== 'undefined' && window.SITE_BASE) ? window.SITE_BASE : '/trial';
 
   const qs = (s,p=document)=>p.querySelector(s);
@@ -34,9 +34,7 @@
   function cleanDesc(s){
     if(!s) return '';
     let t = String(s).replace(/<\s*br\s*\/?>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-    if(t.length <= 300) return t;
-    const cut = t.lastIndexOf(' ', 200) || 200;
-    return t.slice(0,cut) + '...';
+    return t;
   }
 
   function normalize(arr){
@@ -52,13 +50,13 @@
   }
 
   // Fisher-Yates shuffle
-  function shuffleArray(arr){
-    const a = arr.slice();
-    for(let i=a.length-1;i>0;i--){
-      const j = Math.floor(Math.random()*(i+1));
-      [a[i],a[j]] = [a[j],a[i]];
+  function shuffleArray(a){
+    const arr = a.slice();
+    for(let i = arr.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
     }
-    return a;
+    return arr;
   }
 
   function createCard(item){
@@ -72,12 +70,12 @@
     const article = document.createElement('article');
     article.className = 'card category-card';
     article.innerHTML = `
-      <div class="card-media">
-        ${ img ? `<div class="media-wrap"><img src="${escapeHtml(img)}" alt="${escapeHtml(title)}" loading="lazy"></div>` : '<div class="media-wrap no-image">No image</div>' }
+      <div class="media">
+        ${ img ? `<img src="${escapeHtml(img)}" alt="${escapeHtml(title)}" loading="lazy">` : '<div class="no-image">No image</div>' }
       </div>
-      <div class="card-body">
-        <h4 class="title" title="${escapeHtml(title)}">${escapeHtml(title)}</h4>
-        <div class="meta">${author ? 'লেখক: '+escapeHtml(author) : ''}${author && seller ? ' • ' : ''}${seller ? 'বিক্রেতা: '+escapeHtml(seller) : ''}</div>
+      <div class="body">
+        <h4 class="title">${escapeHtml(title)}</h4>
+        <div class="meta">${author ? 'লেখক: '+escapeHtml(author) : ''} ${seller ? ' • বিক্রেতা: '+escapeHtml(seller) : ''}</div>
         <p class="desc">${escapeHtml(desc)}</p>
         <div class="card-bottom">
           <div class="discount-text">ডিসকাউন্ট পেতে এখানে কিনুন</div>
@@ -88,7 +86,7 @@
     return article;
   }
 
-  /* ------------------ header & search (keeps original behaviour) ------------------ */
+  // Setup header/search/menu (kept similar to original)
   function setupHeader(){
     const searchInput = qs('#header-search-input');
     const resultsContainer = qs('#header-search-results');
@@ -108,6 +106,7 @@
     ];
 
     if(menuLinks){
+      // keep menu population as before
       menuLinks.innerHTML = '';
       const homeLi = document.createElement('li');
       homeLi.innerHTML = `<a href="${resolveUrl('/')}">Home</a>`;
@@ -136,10 +135,10 @@
       });
     }
 
-    // Build a simple search index by merging available data files (non-blocking)
+    // build search index from all category JSONs (non-blocking)
     (async ()=>{
-      try {
-        const files = ['/data/json_data.json','/data/best_seller.json','/data/books.json','/data/electronics.json','/data/foods.json','/data/furnitures.json','/data/beauty.json','/data/others.json'];
+      const files = ['/data/json_data.json','/data/best_seller.json','/data/books.json','/data/electronics.json','/data/foods.json','/data/furnitures.json','/data/beauty.json','/data/others.json'];
+      try{
         const fetched = await Promise.all(files.map(f => fetchJson(f)));
         const merged = fetched.flat();
         const normalized = normalize(merged);
@@ -148,9 +147,9 @@
           const key = (item.link || item.title).toString();
           if(!map.has(key)) map.set(key, item);
         });
-        let localIndex = Array.from(map.values());
-        let timer;
+        const localIndex = Array.from(map.values());
         if(searchInput){
+          let timer;
           searchInput.addEventListener('input', function(){
             clearTimeout(timer);
             const q = this.value.trim();
@@ -178,19 +177,15 @@
                 });
               }
               resultsContainer.style.display = 'block';
-            }, 160);
+            }, 150);
           });
-
           if(clearBtn) clearBtn.addEventListener('click', ()=>{ searchInput.value=''; resultsContainer.style.display='none'; clearBtn.style.display='none'; if(lens) lens.style.display='block'; searchInput.focus(); });
           document.addEventListener('click', (e)=>{ if(!e.target.closest('.search-box') && resultsContainer) resultsContainer.style.display='none'; });
         }
-      } catch(e){
-        console.warn('search index init failed', e);
-      }
+      }catch(e){ console.warn(e); }
     })();
   }
 
-  /* ------------------ Keep home rendering behaviour (unchanged) ------------------ */
   function injectPageTitle(){
     const existing = qs('.page-title');
     if(existing) return;
@@ -203,7 +198,7 @@
   }
 
   async function renderHome(){
-    // NO changes here so home remains exactly as before
+    // Keep original home behavior (category rows with sliders)
     injectPageTitle();
 
     const root = document.createElement('div'); root.className = 'home-cats container';
@@ -218,9 +213,9 @@
     ];
 
     for(const c of cats){
-      const section = document.createElement('section');
-      section.className='cat-row';
-      section.dataset.key=c.key;
+      const section = document.createElement('section'); 
+      section.className='cat-row'; 
+      section.dataset.key=c.key; 
       section.dataset.name=c.name;
 
       const header = document.createElement('div'); header.className='cat-header';
@@ -243,10 +238,11 @@
 
       (async function load(catDef, sec){
         const raw = await fetchJson(catDef.file);
-        // keep best-seller in original order; shuffle others and show up to 8 in slider
         let items = normalize(raw);
-        if(!(catDef.key && catDef.key.includes('best'))) items = shuffleArray(items);
-        sec._items = items.slice(0,8); // show max 8 in slider
+
+        // For home rows: keep original order for best-seller, for others we randomize but limit to 8 visible (max 8)
+        if(catDef.key !== 'best-seller') items = shuffleArray(items);
+        sec._items = items.slice(0, 8); // show max 8
         sec._track = track;
         sec._tx = 0;
         sec._loadedCount = 0;
@@ -275,7 +271,6 @@
     else document.body.insertBefore(root, document.body.firstChild);
   }
 
-  /* Home helpers (unchanged except minor safety) */
   function appendItemsToTrack(section, startIndex, count){
     const track = section._track;
     const items = section._items || [];
@@ -385,12 +380,11 @@
     wrapper.addEventListener('mouseleave', ()=>{ if(isDown){ isDown=false; section._track.style.transform = `translateX(${section._track._tx || 0}px)`; }});
   }
 
-  /* -------------- Category page renderer (grid, uniform cards, see-more batch) -------------- */
+  // Category page renderer: grid, uniform cards, skeleton, batching, shuffle except best-seller
   async function renderStandard(mainEl){
+    // prefer page-specific data-src, otherwise check explicit global JSON_DATA_PATH if allowed
     const dataSrc = mainEl?.dataset?.src || null;
-
     if(!dataSrc && !(Array.isArray(window.rokomariData) && window.rokomariData.length) && !(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH)){
-      // nothing explicitly requested
       return;
     }
 
@@ -401,124 +395,122 @@
     else raw = [];
 
     let all = normalize(raw);
-    // if the JSON filename contains 'best' or '/best_' preserve order, else randomize
-    const preserveOrder = String(dataSrc || '').toLowerCase().includes('best') || String(dataSrc || '').toLowerCase().includes('best_seller') || String(dataSrc || '').toLowerCase().includes('best-seller');
-    if(!preserveOrder) all = shuffleArray(all);
+    // if this page's data path contains 'best_seller' do not shuffle, else randomize
+    const lowerSrc = (String(dataSrc||'') || '').toLowerCase();
+    if(!/best[_-]?seller/i.test(lowerSrc)) all = shuffleArray(all);
+
     window._all_index = all;
 
-    // create container scoped for category pages so we don't affect home styles
+    // create cards container
     let cards = qs('#cardsArea', mainEl);
     if(!cards){
       cards = document.createElement('div');
       cards.id = 'cardsArea';
-      cards.className = 'category-cards';
+      cards.className = 'cards-area container category-cards';
       mainEl.appendChild(cards);
     } else {
       cards.classList.add('category-cards');
     }
 
-    // determine limits
-    const isMobile = (window.innerWidth || document.documentElement.clientWidth) < 600;
-    const initialCount = isMobile ? 10 : 20; // initial items shown
-    const batchSize = 10; // load 10 more on See more
-    let shown = 0;
-
-    // Add skeleton loader area while first images load (skeleton elements will be removed once images load)
-    function addSkeletons(count){
-      const frag = document.createDocumentFragment();
+    // skeleton loader helper
+    function showSkeletons(count){
       for(let i=0;i<count;i++){
         const sk = document.createElement('div');
         sk.className = 'card category-card skeleton';
-        sk.innerHTML = `<div class="card-media"><div class="media-wrap sk-media"></div></div><div class="card-body"><div class="sk-line sk-title"></div><div class="sk-line sk-meta"></div><div class="sk-line sk-desc"></div><div class="sk-line sk-bottom"></div></div>`;
-        frag.appendChild(sk);
+        sk.innerHTML = `
+          <div class="media"><div class="shimmer"></div></div>
+          <div class="body">
+            <div class="s-line s-title"></div>
+            <div class="s-line s-meta"></div>
+            <div class="s-line s-desc"></div>
+            <div class="s-line s-desc s-desc-2"></div>
+            <div class="s-bottom"><div class="s-line s-discount"></div><div class="s-line s-btn"></div></div>
+          </div>`;
+        cards.appendChild(sk);
       }
-      cards.appendChild(frag);
     }
+    function removeSkeletons(){ qsa('#cardsArea .skeleton').forEach(s=>s.parentNode && s.parentNode.removeChild(s)); }
 
-    function removeSkeletons(){
-      cards.querySelectorAll('.skeleton').forEach(n=>n.parentNode && n.parentNode.removeChild(n));
-    }
+    // layout limits and batching
+    const isMobile = (window.innerWidth || document.documentElement.clientWidth) < 600;
+    const initialCount = isMobile ? 10 : 20;
+    const batchSize = 10;
+    let shown = 0;
 
-    function renderItems(count){
-      // remove skeletons when we actually render data
+    // initial skeletons
+    showSkeletons(Math.min(initialCount, all.length));
+
+    // fetch/render actual items with slight delay so skeleton visible
+    setTimeout(()=>{
       removeSkeletons();
-      const slice = all.slice(shown, shown + count);
-      const frag = document.createDocumentFragment();
-      slice.forEach(it => {
-        const card = createCard(it);
-        frag.appendChild(card);
-      });
-      cards.appendChild(frag);
-      shown += slice.length;
-      // attach image skeletons to new images
-      attachImageSkeletons();
-    }
-
-    // initial render: add visual skeletons, then render items
-    addSkeletons(Math.min(6, initialCount)); // show a few skeletons quickly
-    setTimeout(()=> {
-      renderItems(initialCount);
-      updateSeeMore();
-    }, 220);
-
-    // See more button
-    let seeMoreBtn = cards.querySelector('.see-more-btn');
-    if(!seeMoreBtn){
-      seeMoreBtn = document.createElement('button');
-      seeMoreBtn.className = 'see-more-btn';
-      seeMoreBtn.textContent = 'See more';
-      cards.appendChild(seeMoreBtn);
-    }
-    function updateSeeMore(){
-      if(shown < all.length){
-        seeMoreBtn.style.display = 'inline-block';
-      } else {
-        seeMoreBtn.style.display = 'none';
+      function renderItems(count){
+        const slice = all.slice(shown, shown + count);
+        slice.forEach(it => {
+          const card = createCard(it);
+          cards.appendChild(card);
+        });
+        shown += slice.length;
       }
-    }
-    seeMoreBtn.addEventListener('click', ()=>{
-      renderItems(batchSize);
+      renderItems(initialCount);
+
+      // See more button
+      let seeMoreBtn = qs('.see-more-btn', cards);
+      if(!seeMoreBtn){
+        seeMoreBtn = document.createElement('button');
+        seeMoreBtn.className = 'see-more-btn';
+        seeMoreBtn.textContent = 'See more';
+        cards.appendChild(seeMoreBtn);
+      }
+      function updateSeeMore(){
+        if(shown < all.length) seeMoreBtn.style.display = 'block';
+        else seeMoreBtn.style.display = 'none';
+      }
       updateSeeMore();
-    });
+
+      seeMoreBtn.addEventListener('click', ()=>{
+        renderItems(batchSize);
+        updateSeeMore();
+        attachImageSkeletons(); // ensure images handled
+      });
+
+      attachImageSkeletons();
+
+    }, 380); // ~youtube-style small delay for shimmer look
   }
 
   function attachImageSkeletons(){
-    document.querySelectorAll('.category-cards .card .media-wrap img').forEach(img=>{
+    document.querySelectorAll('.card .media img').forEach(img=>{
       if(img.dataset._attached) return;
       img.dataset._attached = 1;
-      const wrapper = img.closest('.media-wrap');
-      if(!wrapper) return;
-      // add a skeleton overlay element if missing
-      if(!wrapper.querySelector('.img-skel')){
-        const sk = document.createElement('div'); sk.className = 'img-skel';
-        wrapper.insertBefore(sk, wrapper.firstChild);
-      }
+      const wrapper = img.parentNode;
+      const sk = document.createElement('div'); sk.className = 'img-skel';
+      wrapper.insertBefore(sk, img);
       img.style.opacity = 0;
-      img.addEventListener('load', ()=>{ img.style.transition='opacity .35s'; img.style.opacity = 1; const sk = wrapper.querySelector('.img-skel'); if(sk && sk.parentNode) sk.parentNode.removeChild(sk); });
-      img.addEventListener('error', ()=>{ const sk = wrapper.querySelector('.img-skel'); if(sk && sk.parentNode) sk.parentNode.removeChild(sk); });
+      img.addEventListener('load', ()=>{ img.style.transition='opacity .35s'; img.style.opacity = 1; if(sk && sk.parentNode) sk.parentNode.removeChild(sk); updateAllButtons(); });
+      img.addEventListener('error', ()=>{ if(sk && sk.parentNode) sk.parentNode.removeChild(sk); updateAllButtons(); });
     });
   }
+  setTimeout(()=>attachImageSkeletons(), 250);
+  const mut = new MutationObserver(()=>attachImageSkeletons());
+  mut.observe(document.body, { childList:true, subtree:true });
 
-  // keep helper for home updates
   function updateAllButtons(){
-    qsa('.cat-row').forEach(section=>{ if(section._track) try{ updateButtonsVisibility(section); }catch(e){} });
+    qsa('.cat-row').forEach(section=>{ if(section._track) updateButtonsVisibility(section); });
   }
 
-  /* --------------- bootstrap DOM ready --------------- */
+  // DOM ready logic - prefer element with data-src for category pages
   document.addEventListener('DOMContentLoaded', function(){
     setupHeader();
 
-    // compute path and normalize with SITE_BASE awareness
     const path = (location.pathname || '/').replace(/\/$/, '') || '/';
     const base = SITE_BASE || '';
     const isHome = (path === '' || path === base || path === base + '/' || path === '/' || path === '');
-
     if(isHome){
       renderHome();
       return;
     }
 
-    // Prefer an element that explicitly sets data-src (page author places <main data-src="..."> or a div)
+    // Prefer element with explicit data-src
     const pageDataSrcEl = document.querySelector('[data-src]');
     const mainElCandidate = pageDataSrcEl || qs('main') || document.body;
 
@@ -530,7 +522,7 @@
     if(hasSrc || hasInMemory || (force && hasGlobalJson)){
       renderStandard(mainElCandidate);
     } else {
-      // intentionally do nothing — no injected cards on regular pages
+      // do nothing - no cards on this page
     }
   });
 
