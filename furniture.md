@@ -1,18 +1,16 @@
 ---
 layout: default
-title: "Rokomari PromoCode For Furniture"
-json: "/data/furniture.json"
+title: Furniture
+permalink: /furniture/
 ---
+  <section class="container" style="padding:28px 0;">
+    <h1>Rokomari Promo Code For Furniture</h1>
+    <p>বিভাগভিত্তিক পেজ — নিচে কার্ড লোড হবে</p>
+  </section>
+<main id="main" data-src="{{ '/data/furniture.json' | relative_url }}">
 
-# Rokomari PromoCode For Furniture
-
-ফার্নিচার ও হোম ডেকর সম্পর্কিত অফার ও প্রোডাক্ট।
-
----
-
-<div id="category-cards" style="margin-top:30px;"></div>
-
-<script>
-  window.JSON_DATA_PATH = window.SITE_BASE + "/data/furniture.json";
-  window.FORCE_LOAD_CARDS = true;
-</script>
+  <section id="cardsArea" class="cards-area container" style="padding-bottom:40px;"></section>
+  <div id="spinner" class="spinner center" hidden>লোড হচ্ছে...</div>
+  <div id="endMessage" class="end-message center" hidden>আর কিছু নেই</div>
+  <div id="sentinel" style="height:2px"></div>
+</main>
