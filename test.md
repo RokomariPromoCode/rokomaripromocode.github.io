@@ -4,4 +4,4 @@ title: Test
 permalink: /test
 ---
 
-<h1 class="page-title">This page is for testing</h1>
+<h1>Rokomari Promo Code For Test Products</h1>

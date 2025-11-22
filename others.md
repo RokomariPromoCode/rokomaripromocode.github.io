@@ -5,7 +5,7 @@ permalink: /others/
 ---
 
 <main id="main" data-src="/data/others.json" data-cards="true">
-  <h1 class="page-title">Others</h1>
+  <h1>Rokomari Promo Code For Others Products</h1>
   <p>Miscellaneous items.</p>
 </main>
 

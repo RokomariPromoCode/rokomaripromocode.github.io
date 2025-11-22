@@ -5,7 +5,7 @@ permalink: /best-seller/
 ---
 
 <main id="main" data-src="/data/best_seller.json" data-cards="true">
-  <h1 class="page-title">Best Sellers</h1>
+  <h1>Rokomari Promo Code For Best Sellers Products</h1>
   <p>Top-selling products.</p>
 </main>
 
