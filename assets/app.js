@@ -3,7 +3,7 @@
   'use strict';
 
   // prefer runtime SITE_BASE if set by layout, otherwise fallback to literal (keeps previous behavior)
-  const SITE_BASE = (typeof window !== 'undefined' && window.SITE_BASE !== undefined) ? window.SITE_BASE : '';
+  const SITE_BASE = (typeof window !== 'undefined' && window.SITE_BASE) ? window.SITE_BASE : '/trial';
 
   const qs = (s,p=document)=>p.querySelector(s);
   const qsa = (s,p=document)=>Array.from((p||document).querySelectorAll(s));
@@ -90,8 +90,8 @@
       {key:'best-seller',label:'Best Seller',href:'/best-seller/'},
       {key:'books',label:'Books',href:'/books/'},
       {key:'electronics',label:'Electronics',href:'/electronics/'},
-      {key:'foods',label:'Groceries',href:'/groceries/'},
-      {key:'furniture',label:'Ghorer Bazar',href:'/ghorer_bazar/'},
+      {key:'foods',label:'Foods',href:'/foods/'},
+      {key:'furniture',label:'Furniture',href:'/furniture/'},
       {key:'beauty',label:'Beauty',href:'/beauty/'},
       {key:'others',label:'Others',href:'/others/'},
     ];
@@ -195,8 +195,8 @@
       { key:'best-seller', name:'Best Seller', file:'/data/best_seller.json', href:'/best-seller/' },
       { key:'books', name:'Books', file:'/data/books.json', href:'/books/' },
       { key:'electronics', name:'Electronics', file:'/data/electronics.json', href:'/electronics/' },
-      { key:'foods', name:'Groceries', file:'/data/foods.json', href:'/groceries/' },
-      { key:'furniture', name:'Ghorer Bazar', file:'/data/furnitures.json', href:'/ghorer_bazar/' },
+      { key:'foods', name:'Foods', file:'/data/foods.json', href:'/foods/' },
+      { key:'furniture', name:'Furniture', file:'/data/furnitures.json', href:'/furniture/' },
       { key:'beauty', name:'Beauty', file:'/data/beauty.json', href:'/beauty/' },
       { key:'others', name:'Others', file:'/data/others.json', href:'/others/' }
     ];

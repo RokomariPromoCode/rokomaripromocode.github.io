@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Ghorer Bazar
-permalink: /ghorer_bazar/
+title: Furniture
+permalink: /furniture/
 ---
 
 <main id="main" data-src="/data/furnitures.json" data-cards="true">
-  <h1 class="page-title">Ghorer Bazar</h1>
+  <h1>Furniture</h1>
   <p>Home & office furniture.</p>
 </main>
 

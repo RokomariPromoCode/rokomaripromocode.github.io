@@ -2,7 +2,7 @@
 (function(){
   'use strict';
   // CHANGE THIS if your site root is different (for your GitHub Pages it is "/trial")
-  const BASE = (typeof window !== 'undefined' && window.SITE_BASE !== undefined) ? window.SITE_BASE : '';
+  const BASE = '/trial';
   const includesPath = BASE + '/_includes';
 
   async function insertHtml(selector, filename){
