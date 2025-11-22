@@ -141,6 +141,7 @@ img{max-width:100%;display:block}
   position: relative;
   padding-bottom: 14px; /* space for underline */
   -webkit-font-smoothing: antialiased;
+  align:center;
 }
 
 /* Accent underline (gradient) */
