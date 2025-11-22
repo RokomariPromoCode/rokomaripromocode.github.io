@@ -5,7 +5,7 @@ permalink: /beauty/
 ---
 
 <main id="main" data-src="/data/beauty.json" data-cards="true">
-  <h1>Rokomari Promo Code For Beauty Products</h1>
+  <h1 class="page-title">Rokomari Promo Code For Beauty Products</h1>
   <p>Beauty and personal care.</p>
 </main>
 

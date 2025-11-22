@@ -5,7 +5,7 @@ permalink: /books/
 ---
 
 <main id="main" data-src="/data/books.json" data-cards="true">
-  <h1>Rokomari Promo Code For Books Products</h1>
+  <h1 class="page-title">Rokomari Promo Code For Books</h1>
   <p>Books and reading materials.</p>
 </main>
 
