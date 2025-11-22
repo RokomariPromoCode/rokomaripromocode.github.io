@@ -1,0 +1,231 @@
+<!-- _includes/footer.html -->
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        background-color: #f4f4f4;
+        padding-bottom: 0;
+    }
+
+    .main-footer {
+        background-color: #111827;
+        color: #e5e7eb;
+        position: relative;
+        margin-top: 80px;
+        padding-top: 0;
+    }
+
+    .main-footer::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #1abc9c, #3498db, #9b59b6);
+    }
+
+    .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .footer-request-area {
+        background: #1f2937;
+        padding: 40px;
+        border-radius: 15px;
+        margin-top: -50px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        border: 1px solid #374151;
+        position: relative;
+        z-index: 10;
+    }
+
+    .footer-request-area h2 {
+        color: #fff;
+        font-size: 22px;
+        margin: 0 0 20px 0;
+        text-align: center;
+    }
+    .footer-request-area h2 span { color: #1abc9c; }
+
+    .footer-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr auto;
+        gap: 15px;
+        align-items: end;
+    }
+
+    .f-group { display: flex; flex-direction: column; }
+    .f-group label { font-size: 13px; color: #9ca3af; margin-bottom: 5px; margin-left: 5px; }
+
+    .f-group input {
+        background: #374151;
+        border: 1px solid #4b5563;
+        color: #fff;
+        padding: 12px 15px;
+        border-radius: 8px;
+        outline: none;
+        transition: 0.3s;
+        font-family: inherit;
+    }
+    .f-group input:focus { border-color: #1abc9c; background: #4b5563; }
+
+    .f-btn {
+        background: linear-gradient(45deg, #1abc9c, #16a085);
+        color: white;
+        padding: 13px 25px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: 0.3s;
+        white-space: nowrap;
+    }
+    .f-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(26, 188, 156, 0.4); }
+
+    .footer-content {
+        padding: 70px 0 40px;
+        display: grid;
+        grid-template-columns: 1.5fr 1fr 1fr 1fr;
+        gap: 30px;
+    }
+
+    .footer-col h3 {
+        font-size: 18px;
+        color: #fff;
+        margin-bottom: 20px;
+        position: relative;
+        display: inline-block;
+    }
+    .footer-col h3::after {
+        content: ''; position: absolute; left: 0; bottom: -8px;
+        width: 40px; height: 2px; background: #1abc9c;
+    }
+
+    .footer-about p { color: #9ca3af; line-height: 1.6; font-size: 14px; margin-bottom: 20px; }
+
+    .footer-links { list-style: none; padding: 0; margin: 0; }
+    .footer-links li { margin-bottom: 10px; }
+
+    .footer-links a {
+        color: #d1d5db;
+        text-decoration: none;
+        font-size: 14px;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .footer-links a:hover { color: #1abc9c; padding-left: 5px; }
+    .footer-links a i { font-size: 12px; color: #4b5563; transition: 0.3s; }
+    .footer-links a:hover i { color: #1abc9c; }
+
+    .social-links { display: flex; gap: 10px; }
+    .social-icon {
+        width: 36px; height: 36px;
+        background: #374151; color: #fff;
+        display: flex; justify-content: center; align-items: center;
+        border-radius: 50%; text-decoration: none; transition: 0.3s;
+    }
+    .social-icon:hover { background: #1abc9c; transform: rotate(360deg); }
+
+    .footer-bottom {
+        background: #0f1218;
+        padding: 20px 0;
+        text-align: center;
+        border-top: 1px solid #1f2937;
+        font-size: 13px;
+        color: #6b7280;
+    }
+    .footer-bottom span { color: #1abc9c; font-weight: bold; }
+
+    @media (max-width: 900px) {
+        .footer-form { grid-template-columns: 1fr 1fr; }
+        .f-btn { grid-column: span 2; }
+        .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+        .footer-form { grid-template-columns: 1fr; }
+        .f-btn { grid-column: span 1; }
+        .footer-content { grid-template-columns: 1fr; gap: 30px; }
+        .footer-request-area { margin-top: 0; border-radius: 0; border-left: none; border-right: none; }
+    }
+</style>
+
+<footer id="footer" class="main-footer">
+    <div class="footer-container">
+
+        <div class="footer-request-area" id="request-area">
+            <h2>কাঙ্খিত বই বা প্রমো কোড <span>খুঁজে পাচ্ছেন না?</span></h2>
+            <form action="https://formspree.io/f/YOUR_FORM_ID_HERE" method="POST" class="footer-form">
+                <div class="f-group">
+                    <label>আপনার নাম</label>
+                    <input type="text" name="name" placeholder="নাম লিখুন" required>
+                </div>
+                <div class="f-group">
+                    <label>যোগাযোগ</label>
+                    <input type="text" name="contact" placeholder="মোবাইল/ইমেইল" required>
+                </div>
+                <div class="f-group">
+                    <label>প্রোডাক্টের নাম</label>
+                    <input type="text" name="product-name" id="product-name" placeholder="বই বা পণ্যের নাম" required>
+                </div>
+                <button type="submit" class="f-btn">রিকোয়েস্ট পাঠান <i class="fas fa-paper-plane"></i></button>
+            </form>
+        </div>
+
+        <div class="footer-content">
+            <div class="footer-col footer-about">
+                <h3>About Us</h3>
+                <img src="{{ '/assets/images/logo.png' | relative_url }}" alt="Logo" style="margin-bottom: 15px; border-radius: 5px;">
+                <p>আমরা রকমারি ডট কমের অফিশিয়াল অ্যাফিলিয়েট পার্টনার। পাঠকদের জন্য সেরা বইয়ের সন্ধান এবং সর্বোচ্চ ডিসকাউন্ট অফার নিশ্চিত করাই আমাদের লক্ষ্য।</p>
+                <div class="social-links">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>Top Categories</h3>
+                <ul class="footer-links">
+                    <li><a href="{{ '/books/' | relative_url }}"><i class="fas fa-book"></i> Fiction Books</a></li>
+                    <li><a href="{{ '/books/' | relative_url }}"><i class="fas fa-book-open"></i> Non-Fiction</a></li>
+                    <li><a href="{{ '/books/' | relative_url }}"><i class="fas fa-graduation-cap"></i> Academic</a></li>
+                    <li><a href="{{ '/electronics/' | relative_url }}"><i class="fas fa-laptop"></i> Electronics Gadgets</a></li>
+                    <li><a href="{{ '/ghorer_bazar/' | relative_url }}"><i class="fas fa-home"></i> Ghorer Bazar</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="{{ '/' | relative_url }}"><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a href="#trending"><i class="fas fa-chevron-right"></i> Trending Offers</a></li>
+                    <li><a href="#how-to"><i class="fas fa-chevron-right"></i> How to Use Code</a></li>
+                    <li><a href="{{ '/groceries/' | relative_url }}"><i class="fas fa-chevron-right"></i> Daily Groceries</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Contact Info</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> Dhaka, Bangladesh</a></li>
+                    <li><a href="mailto:support@mysite.com"><i class="fas fa-envelope"></i> support@mysite.com</a></li>
+                    <li><a href="tel:+880123456789"><i class="fas fa-phone-alt"></i> +880 1234 567 890</a></li>
+                </ul>
+                <div style="margin-top: 20px; padding: 10px; background: #2c333e; border-radius: 5px; font-size: 12px; color: #aaa;">
+                    <i class="fas fa-info-circle"></i> Affiliate of Rokomari.com
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="footer-container">
+            <p>&copy; 2025 <span>{{ site.title | default: 'YourSiteName' }}</span>. All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>

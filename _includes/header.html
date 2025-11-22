@@ -1,0 +1,181 @@
+<!-- _includes/header.html -->
+<header class="modern-header" role="banner" aria-label="Main header">
+    <div class="header-container container">
+        <div class="header-logo">
+            <a href="{{ '/' | relative_url }}">
+                <img src="{{ '/assets/images/logo.png' | relative_url }}" alt="{{ site.title | default: 'Site' }}">
+            </a>
+        </div>
+
+        <div class="header-search-wrapper">
+            <div class="search-box">
+                <input type="text" id="header-search-input" placeholder="ক্যাটাগরি, বই বা লেখকের নাম খুঁজুন..." autocomplete="off" aria-label="Search">
+                <i class="fas fa-search search-icon-btn" id="search-lens" aria-hidden="true"></i>
+                <i class="fas fa-times clear-btn" id="search-clear" aria-hidden="true" title="Clear search"></i>
+            </div>
+            <div class="search-results-dropdown" id="header-search-results" aria-live="polite" role="listbox"></div>
+        </div>
+
+        <div class="header-menu" role="navigation" aria-label="Main menu">
+            <ul class="menu-links" id="menu-links">
+                <li><a href="{{ '/' | relative_url }}">Home</a></li>
+                <li><a href="{{ '/books/' | relative_url }}">Books</a></li>
+                <li><a href="{{ '/electronics/' | relative_url }}">Electronics</a></li>
+                <li><a href="{{ '/groceries/' | relative_url }}">Groceries</a></li>
+                <li><a href="{{ '/ghorer_bazar/' | relative_url }}">Ghorer Bazar</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger" aria-label="Open mobile menu" role="button" tabindex="0">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Reveal header (prevent FOUC)
+    (function revealHeader(){
+      const hdr = document.querySelector('header.modern-header');
+      if(hdr){
+        hdr.style.visibility = 'visible';
+        hdr.style.opacity = '1';
+      }
+    })();
+
+    const searchInput = document.getElementById('header-search-input');
+    const resultsContainer = document.getElementById('header-search-results');
+    const clearBtn = document.getElementById('search-clear');
+    const searchLens = document.getElementById('search-lens');
+    const hamburger = document.getElementById('hamburger');
+    const menuLinks = document.getElementById('menu-links');
+
+    // Mobile menu toggle with icon switch
+    if(hamburger && menuLinks){
+        hamburger.addEventListener('click', () => {
+            menuLinks.classList.toggle('active');
+            const icon = hamburger.querySelector('i');
+            if (menuLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+                hamburger.setAttribute('aria-expanded', 'true');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                hamburger.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !menuLinks.contains(e.target) && menuLinks.classList.contains('active')) {
+                menuLinks.classList.remove('active');
+                const icon = hamburger.querySelector('i');
+                icon.classList.remove('fa-times'); 
+                icon.classList.add('fa-bars');
+                hamburger.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    // Build a small client-side product database by scanning product-card elements (if any)
+    let productDatabase = [];
+    try {
+      const cards = document.querySelectorAll('.product-card');
+      cards.forEach(card => {
+          productDatabase.push({
+              title: (card.getAttribute('data-title') || '').trim(),
+              img: (card.getAttribute('data-img') || '').trim(),
+              href: (card.getAttribute('data-href') || '#').trim()
+          });
+      });
+    } catch (e) {
+      productDatabase = [];
+    }
+
+    // Add some demo entries (optional). Remove if you don't want demo results.
+    productDatabase.push(
+      { title: "ল্যাপটপ - এইচপি কোর আই ৫", img: "https://via.placeholder.com/50", href: "/electronics/" },
+      { title: "মিনিকেট চাল - ৫ কেজি", img: "https://via.placeholder.com/50", href: "/groceries/" }
+    );
+
+    // Search logic
+    if(searchInput){
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim().toLowerCase();
+
+            if (query.length > 0) {
+                clearBtn && (clearBtn.style.display = 'block');
+                searchLens && (searchLens.style.display = 'none');
+            } else {
+                clearBtn && (clearBtn.style.display = 'none');
+                searchLens && (searchLens.style.display = 'block');
+                resultsContainer && (resultsContainer.style.display = 'none');
+                return;
+            }
+
+            const matches = productDatabase.filter(product =>
+                (product.title || '').toLowerCase().includes(query)
+            );
+
+            if(!resultsContainer) return;
+            resultsContainer.style.display = 'block';
+            resultsContainer.innerHTML = '';
+
+            if (matches.length > 0) {
+                matches.forEach(product => {
+                    const a = document.createElement('a');
+                    a.className = 'result-item';
+                    a.href = product.href || '#';
+                    a.setAttribute('role','option');
+                    a.innerHTML = `
+                        <img src="${product.img || 'https://via.placeholder.com/40x50'}" alt="">
+                        <div class="result-info"><h4 style="margin:0;font-size:14px;">${product.title}</h4></div>
+                    `;
+                    resultsContainer.appendChild(a);
+                });
+            } else {
+                resultsContainer.innerHTML = `
+                    <div class="no-result-box">
+                        <p>কোনো প্রোডাক্ট পাওয়া যায়নি!</p>
+                        <button class="request-btn-small" type="button" onclick="triggerRequest('${query.replace(/'/g,'\\'')}')">
+                            ডিসকাউন্ট রিকুয়েষ্ট পাঠান
+                        </button>
+                    </div>
+                `;
+            }
+        });
+    }
+
+    // Clear button
+    if(clearBtn){
+        clearBtn.addEventListener('click', function() {
+            if(searchInput) searchInput.value = '';
+            resultsContainer && (resultsContainer.style.display = 'none');
+            clearBtn.style.display = 'none';
+            searchLens && (searchLens.style.display = 'block');
+            searchInput && searchInput.focus();
+        });
+    }
+
+    // Request button: scroll to footer request form if present
+    window.triggerRequest = function(searchTerm) {
+        resultsContainer && (resultsContainer.style.display = 'none');
+        if(searchInput) searchInput.value = '';
+        clearBtn && (clearBtn.style.display = 'none');
+        searchLens && (searchLens.style.display = 'block');
+
+        const requestArea = document.getElementById('request-area') || document.getElementById('footer') || document.getElementById('contactForm');
+        const productInput = document.getElementById('product-name');
+
+        if (requestArea) {
+            requestArea.scrollIntoView({ behavior: 'smooth' });
+            if (productInput && searchTerm) {
+                productInput.value = searchTerm;
+                setTimeout(() => productInput.focus(), 800);
+            }
+        } else {
+            alert("রিকোয়েস্ট ফর্মের জন্য পেজের নিচে যান।");
+        }
+    };
+});
+</script>
