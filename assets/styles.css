@@ -196,3 +196,27 @@ img{max-width:100%;display:block}
   .page-title .subtitle { font-size: 13px; color:#505f6b; }
 }
 
+
+/* H1 desgine for all */
+.header-wrap h1 {
+  font-family: "Poppins", sans-serif;
+  font-size: clamp(2.4rem, 4vw, 3.4rem);
+  font-weight: 800;
+  text-align: center;
+  margin: 2rem auto;
+  position: relative;
+  color: #333;
+}
+
+.header-wrap h1::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -6px;
+  width: 50%;
+  height: 6px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #ff6b6b, #5f27cd);
+}
+
