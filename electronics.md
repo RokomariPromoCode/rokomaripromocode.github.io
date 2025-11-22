@@ -5,7 +5,7 @@ permalink: /electronics/
 ---
 
 <main id="main" data-src="/data/electronics.json" data-cards="true">
-  <h1>Electronics</h1>
+  <h1 class="page-title">Electronics</h1>
   <p>Browse the latest electronics.</p>
 </main>
 

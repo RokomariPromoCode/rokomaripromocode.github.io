@@ -5,7 +5,7 @@ permalink: /foods/
 ---
 
 <main id="main" data-src="/data/foods.json" data-cards="true">
-  <h1>Foods</h1>
+  <h1 class="page-title">Foods</h1>
   <p>Food products and grocery items.</p>
 </main>
 

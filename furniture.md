@@ -5,7 +5,7 @@ permalink: /furniture/
 ---
 
 <main id="main" data-src="/data/furnitures.json" data-cards="true">
-  <h1>Furniture</h1>
+  <h1 class="page-title">Furniture</h1>
   <p>Home & office furniture.</p>
 </main>
 
