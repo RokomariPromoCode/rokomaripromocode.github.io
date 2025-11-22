@@ -177,19 +177,11 @@
   }
 
   function injectPageTitle(){
-    const existing = qs('.page-title');
-    if(existing) return;
-    const headerNode = qs('.modern-header');
-    const el = document.createElement('div');
-    el.className = 'page-title';
-    el.innerHTML = `<h1>Rokomari Promo Code</h1>`;
-    if(headerNode && headerNode.parentNode) headerNode.parentNode.insertBefore(el, headerNode.nextSibling);
-    else document.body.insertBefore(el, document.body.firstChild);
-  }
+  // Disabled: Home title is now controlled via index.md H1
+}
+
 
   async function renderHome(){
-    injectPageTitle();
-
     const root = document.createElement('div'); root.className = 'home-cats container';
     const cats = [
       { key:'best-seller', name:'Best Seller', file:'/data/best_seller.json', href:'/best-seller/' },
