@@ -4,7 +4,7 @@ title: Home
 permalink: /
 ---
 
-<h1 class="page-title">Rokomari Promo Code For Home Products</h1>
+<h1 class="page-title">Rokomari Promo Code</h1>
 
 <!-- 👇 This is your own content, will stay ABOVE the auto card sections -->
 <section class="container home-intro" style="padding:24px 0;">
