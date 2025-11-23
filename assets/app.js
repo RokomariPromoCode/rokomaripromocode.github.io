@@ -29,7 +29,7 @@
     }
   }
 
-  function escapeHtml(str){ return String(str||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function escapeHtml(str){ return String(str||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'" :'&#39;'}[c])); }
   function safe(x){ return x==null ? '' : x; }
   function cleanDesc(s){
     if(!s) return '';
@@ -144,8 +144,14 @@
       searchInput.addEventListener('input', function(){
         clearTimeout(timer);
         const q = this.value.trim();
-        if(!q){ if(resultsContainer) resultsContainer.style.display='none'; if(clearBtn) clearBtn.style.display='none'; if(lens) lens.style.display='block'; return; }
-        if(clearBtn) clearBtn.style.display='block'; if(lens) lens.style.display='none';
+        if(!q){
+          if(resultsContainer) resultsContainer.style.display='none';
+          if(clearBtn) clearBtn.style.display='none';
+          if(lens) lens.style.display='block';
+          return;
+        }
+        if(clearBtn) clearBtn.style.display='block';
+        if(lens) lens.style.display='none';
         timer = setTimeout(()=>{
           const matches = localIndex.length ? localIndex.filter(it => (it.title + ' ' + (it.author||'') + ' ' + (it.seller||'')).toLowerCase().includes(q.toLowerCase())) : [];
           const seen = new Set();
@@ -171,15 +177,22 @@
         }, 160);
       });
 
-      if(clearBtn) clearBtn.addEventListener('click', ()=>{ searchInput.value=''; resultsContainer.style.display='none'; clearBtn.style.display='none'; if(lens) lens.style.display='block'; searchInput.focus(); });
-      document.addEventListener('click', (e)=>{ if(!e.target.closest('.search-box') && resultsContainer) resultsContainer.style.display='none'; });
+      if(clearBtn) clearBtn.addEventListener('click', ()=>{
+        searchInput.value='';
+        resultsContainer.style.display='none';
+        clearBtn.style.display='none';
+        if(lens) lens.style.display='block';
+        searchInput.focus();
+      });
+      document.addEventListener('click', (e)=>{
+        if(!e.target.closest('.search-box') && resultsContainer) resultsContainer.style.display='none';
+      });
     }
   }
 
   function injectPageTitle(){
-  // Disabled: Home title is now controlled via index.md H1
-}
-
+    // Disabled: Home title is now controlled via index.md H1
+  }
 
   async function renderHome(){
     const root = document.createElement('div'); root.className = 'home-cats container';
@@ -244,25 +257,26 @@
       })(c, section);
     }
 
-   // Prefer explicit anchor if present (so content in index.md can stay on top)
-const anchor = qs('#home-cards-anchor');
+    // ⬇⬇⬇ NEW INSERTION LOGIC FOR HOME SECTIONS ⬇⬇⬇
+    // Prefer explicit anchor if present (so content in index.md can stay on top)
+    const anchor = qs('#home-cards-anchor');
 
-if (anchor && anchor.parentNode) {
-  // Insert the home sections right AFTER the anchor
-  anchor.parentNode.insertBefore(root, anchor.nextSibling);
-} else {
-  // Fallback to old behavior if no anchor exists
-  const headerNode = qs('.modern-header');
-  if (headerNode && headerNode.parentNode) {
-    headerNode.parentNode.insertBefore(
-      root,
-      headerNode.nextSibling?.nextSibling || headerNode.nextSibling
-    );
-  } else {
-    document.body.insertBefore(root, document.body.firstChild);
+    if (anchor && anchor.parentNode) {
+      // Insert the home sections right AFTER the anchor
+      anchor.parentNode.insertBefore(root, anchor.nextSibling);
+    } else {
+      // Fallback to old behavior if no anchor exists
+      const headerNode = qs('.modern-header');
+      if (headerNode && headerNode.parentNode) {
+        headerNode.parentNode.insertBefore(
+          root,
+          headerNode.nextSibling?.nextSibling || headerNode.nextSibling
+        );
+      } else {
+        document.body.insertBefore(root, document.body.firstChild);
+      }
+    }
   }
-}
-
 
   function appendItemsToTrack(section, startIndex, count){
     const track = section._track;
@@ -392,7 +406,12 @@ if (anchor && anchor.parentNode) {
     window._all_index = all;
 
     let cards = qs('#cardsArea', mainEl);
-    if(!cards){ cards = document.createElement('div'); cards.id='cardsArea'; cards.className='cards-area container'; mainEl.appendChild(cards); }
+    if(!cards){
+      cards = document.createElement('div');
+      cards.id='cardsArea';
+      cards.className='cards-area container';
+      mainEl.appendChild(cards);
+    }
     cards.className = 'cards-area container';
 
     let idx = 0;
@@ -418,8 +437,16 @@ if (anchor && anchor.parentNode) {
       const sk = document.createElement('div'); sk.className = 'img-skel';
       wrapper.insertBefore(sk, img);
       img.style.opacity = 0;
-      img.addEventListener('load', ()=>{ img.style.transition='opacity .35s'; img.style.opacity = 1; if(sk && sk.parentNode) sk.parentNode.removeChild(sk); updateAllButtons(); });
-      img.addEventListener('error', ()=>{ if(sk && sk.parentNode) sk.parentNode.removeChild(sk); updateAllButtons(); });
+      img.addEventListener('load', ()=>{
+        img.style.transition='opacity .35s';
+        img.style.opacity = 1;
+        if(sk && sk.parentNode) sk.parentNode.removeChild(sk);
+        updateAllButtons();
+      });
+      img.addEventListener('error', ()=>{
+        if(sk && sk.parentNode) sk.parentNode.removeChild(sk);
+        updateAllButtons();
+      });
     });
   }
   setTimeout(()=>attachImageSkeletons(), 250);
@@ -427,52 +454,63 @@ if (anchor && anchor.parentNode) {
   mut.observe(document.body, { childList:true, subtree:true });
 
   function updateAllButtons(){
-    qsa('.cat-row').forEach(section=>{ if(section._track) updateButtonsVisibility(section); });
+    qsa('.cat-row').forEach(section=>{
+      if(section._track) updateButtonsVisibility(section);
+    });
   }
 
-document.addEventListener('DOMContentLoaded', function(){
-  setupHeader();
+  document.addEventListener('DOMContentLoaded', function(){
+    setupHeader();
 
-  // normalize and compare path against SITE_BASE aware roots
-  const path = (location.pathname || '/').replace(/\/$/, '') || '/';
-  const base = SITE_BASE || '';
-  const isHome = (path === '' || path === base || path === base + '/' || path === '/' || path === '');
-  if(isHome) {
-    renderHome();
-    return;
-  }
+    // normalize and compare path against SITE_BASE aware roots
+    const path = (location.pathname || '/').replace(/\/$/, '') || '/';
+    const base = SITE_BASE || '';
+    const isHome = (path === '' || path === base || path === base + '/' || path === '/' || path === '');
+    if(isHome) {
+      renderHome();
+      return;
+    }
 
-  // Prefer element with explicit data-src (for category pages we put <main data-src="..."> inside the page content)
-  // If no such element exists, fall back to the first <main> in the layout, then document.body.
-  const pageDataSrcEl = document.querySelector('[data-src]');
-  const mainElCandidate = pageDataSrcEl || qs('main') || document.body;
+    // Prefer element with explicit data-src (for category pages we put <main data-src="..."> inside the page content)
+    // If no such element exists, fall back to the first <main> in the layout, then document.body.
+    const pageDataSrcEl = document.querySelector('[data-src]');
+    const mainElCandidate = pageDataSrcEl || qs('main') || document.body;
 
-  // Determine whether to render cards:
-  // - element has data-src OR
-  // - in-memory window.rokomariData exists OR
-  // - FORCE_LOAD_CARDS is true AND JSON_DATA_PATH is set
-  const hasSrc = !!(mainElCandidate && mainElCandidate.dataset && mainElCandidate.dataset.src);
-  const hasInMemory = Array.isArray(window.rokomariData) && window.rokomariData.length;
-  const hasGlobalJson = (typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH);
-  const force = !!window.FORCE_LOAD_CARDS;
+    // Determine whether to render cards:
+    // - element has data-src OR
+    // - in-memory window.rokomariData exists OR
+    // - FORCE_LOAD_CARDS is true AND JSON_DATA_PATH is set
+    const hasSrc = !!(mainElCandidate && mainElCandidate.dataset && mainElCandidate.dataset.src);
+    const hasInMemory = Array.isArray(window.rokomariData) && window.rokomariData.length;
+    const hasGlobalJson = (typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH);
+    const force = !!window.FORCE_LOAD_CARDS;
 
-  if(hasSrc || hasInMemory || (force && hasGlobalJson)){
-    renderStandard(mainElCandidate);
-  } else {
-    // intentionally do nothing — no cards for this page
-  }
-});
-
+    if(hasSrc || hasInMemory || (force && hasGlobalJson)){
+      renderStandard(mainElCandidate);
+    } else {
+      // intentionally do nothing — no cards for this page
+    }
+  });
 
   window.triggerRequest = function(searchTerm){
     const searchInput = qs('#header-search-input');
     const resultsContainer = qs('#header-search-results');
     if(resultsContainer) resultsContainer.style.display='none';
-    if(searchInput){ searchInput.value=''; searchInput.blur(); }
+    if(searchInput){
+      searchInput.value='';
+      searchInput.blur();
+    }
     const requestArea = qs('#request-area') || qs('#footer') || null;
     const productInput = qs('#product-name');
-    if(requestArea){ requestArea.scrollIntoView({behavior:'smooth'}); if(productInput){ productInput.value = searchTerm; setTimeout(()=>productInput.focus(), 600); } }
-    else alert('রিকোয়েস্ট ফর্মের জন্য পেজের নিচে যান।');
+    if(requestArea){
+      requestArea.scrollIntoView({behavior:'smooth'});
+      if(productInput){
+        productInput.value = searchTerm;
+        setTimeout(()=>productInput.focus(), 600);
+      }
+    } else {
+      alert('রিকোয়েস্ট ফর্মের জন্য পেজের নিচে যান।');
+    }
   };
 
 })();
