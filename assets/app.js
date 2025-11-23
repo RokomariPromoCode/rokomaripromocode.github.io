@@ -244,10 +244,25 @@
       })(c, section);
     }
 
-    const headerNode = qs('.modern-header');
-    if(headerNode && headerNode.parentNode) headerNode.parentNode.insertBefore(root, headerNode.nextSibling?.nextSibling || headerNode.nextSibling);
-    else document.body.insertBefore(root, document.body.firstChild);
+   // Prefer explicit anchor if present (so content in index.md can stay on top)
+const anchor = qs('#home-cards-anchor');
+
+if (anchor && anchor.parentNode) {
+  // Insert the home sections right AFTER the anchor
+  anchor.parentNode.insertBefore(root, anchor.nextSibling);
+} else {
+  // Fallback to old behavior if no anchor exists
+  const headerNode = qs('.modern-header');
+  if (headerNode && headerNode.parentNode) {
+    headerNode.parentNode.insertBefore(
+      root,
+      headerNode.nextSibling?.nextSibling || headerNode.nextSibling
+    );
+  } else {
+    document.body.insertBefore(root, document.body.firstChild);
   }
+}
+
 
   function appendItemsToTrack(section, startIndex, count){
     const track = section._track;
