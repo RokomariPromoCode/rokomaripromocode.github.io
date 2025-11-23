@@ -248,13 +248,10 @@
 
         next.addEventListener('click', ()=> onNextClick(sec, catDef));
         prev.addEventListener('click', ()=> slideCategory(sec, -1));
+        enableSwipe(wrapper, sec);
 
-        // Save info for swipe as well
         sec._nextIndex = idx;
         sec._batchSize = batch;
-        sec._catDef = catDef;
-
-        enableSwipe(wrapper, sec);
 
         setTimeout(()=>updateButtonsVisibility(sec), 160);
       })(c, section);
@@ -382,76 +379,38 @@
     updateButtonsVisibility(section);
   }
 
-  
   function enableSwipe(wrapper, section){
-    let startX = 0;
-    let curX = 0;
-    let isDown = false;
-
-    wrapper.addEventListener('touchstart', e => {
-      startX = e.touches[0].clientX;
-      curX = startX;
-      isDown = true;
-    });
-
-    wrapper.addEventListener('touchmove', e => {
-      if (!isDown) return;
-      curX = e.touches[0].clientX;
-      const dx = curX - startX;
-      const baseTx = section._track._tx || 0;
-      section._track.style.transform = `translateX(${baseTx + dx}px)`;
-    });
-
-    wrapper.addEventListener('touchend', e => {
-      if (!isDown) return;
-      isDown = false;
-
-      const dx = curX - startX;
-      const threshold = 40;
-
-      if (Math.abs(dx) > threshold) {
-        if (dx < 0) {
-          // swipe left → same as clicking Next button
-          if (typeof onNextClick === 'function' && section._catDef) {
-            onNextClick(section, section._catDef);
-          } else {
-            slideCategory(section, +1);
-          }
-        } else {
-          // swipe right → go back
-          slideCategory(section, -1);
-        }
-      } else {
-        // small drag → snap back
-        section._track.style.transform = `translateX(${section._track._tx || 0}px)`;
-      }
-
-      startX = 0;
-      curX = 0;
-    });
-
-    wrapper.addEventListener('mouseleave', () => {
-      if (isDown) {
-        isDown = false;
-        section._track.style.transform = `translateX(${section._track._tx || 0}px)`;
-      }
-    });
+    let startX=0, curX=0, isDown=false;
+    wrapper.addEventListener('touchstart', e=>{ startX = e.touches[0].clientX; isDown=true; });
+    wrapper.addEventListener('touchmove', e=>{ if(!isDown) return; curX = e.touches[0].clientX; const dx = curX - startX; section._track.style.transform = `translateX(${(section._track._tx || 0) + dx}px)`; });
+    wrapper.addEventListener('touchend', e=>{ if(!isDown) return; isDown=false; const dx = curX - startX; if(Math.abs(dx) > 40){ slideCategory(section, dx < 0 ? +1 : -1); } else { section._track.style.transform = `translateX(${section._track._tx || 0}px)`; } startX=curX=0; });
+    wrapper.addEventListener('mouseleave', ()=>{ if(isDown){ isDown=false; section._track.style.transform = `translateX(${section._track._tx || 0}px)`; }});
   }
 
-  async function renderStandard(mainEl){
+  
+async function renderStandard(mainEl){
     // prefer page-specific data-src, otherwise check explicit global JSON_DATA_PATH if allowed
     const dataSrc = mainEl?.dataset?.src || null;
 
     // If no source provided and no in-memory data, do not render anything.
-    if(!dataSrc && !(Array.isArray(window.rokomariData) && window.rokomariData.length) && !(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH)){
+    if(
+      !dataSrc &&
+      !(Array.isArray(window.rokomariData) && window.rokomariData.length) &&
+      !(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH)
+    ){
       return;
     }
 
     let raw = [];
-    if(Array.isArray(window.rokomariData) && window.rokomariData.length) raw = window.rokomariData;
-    else if(dataSrc) raw = await fetchJson(dataSrc);
-    else if(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH) raw = await fetchJson(window.JSON_DATA_PATH);
-    else raw = [];
+    if(Array.isArray(window.rokomariData) && window.rokomariData.length){
+      raw = window.rokomariData;
+    } else if(dataSrc){
+      raw = await fetchJson(dataSrc);
+    } else if(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH){
+      raw = await fetchJson(window.JSON_DATA_PATH);
+    } else {
+      raw = [];
+    }
 
     const all = normalize(raw);
     window._all_index = all;
@@ -459,26 +418,57 @@
     let cards = qs('#cardsArea', mainEl);
     if(!cards){
       cards = document.createElement('div');
-      cards.id='cardsArea';
-      cards.className='cards-area container';
+      cards.id = 'cardsArea';
+      cards.className = 'cards-area container';
       mainEl.appendChild(cards);
     }
     cards.className = 'cards-area container';
 
+    const PAGE_SIZE = 10;
     let idx = 0;
+    let loadMoreBtn = null;
+
     function appendBatch(){
-      const slice = all.slice(idx, idx + (4 * 2));
+      if(idx >= all.length) return;
+      const slice = all.slice(idx, idx + PAGE_SIZE);
       slice.forEach(it => cards.appendChild(createCard(it)));
       idx += slice.length;
+      if(loadMoreBtn && idx >= all.length){
+        loadMoreBtn.style.display = 'none';
+      }
     }
+
+    // initial load
     appendBatch();
 
-    const sentinel = document.createElement('div'); sentinel.id='sentinel'; sentinel.style.height='2px'; mainEl.appendChild(sentinel);
-    const obs = new IntersectionObserver(entries=>{
-      entries.forEach(en=>{ if(en.isIntersecting) appendBatch(); });
-    }, { rootMargin:'400px' });
-    obs.observe(sentinel);
-  }
+    // create / wire "See more" button (green) to load 10 more cards
+    loadMoreBtn = qs('.cards-load-more', mainEl);
+    if(!loadMoreBtn){
+      loadMoreBtn = document.createElement('button');
+      loadMoreBtn.type = 'button';
+      loadMoreBtn.className = 'btn cards-load-more';
+      loadMoreBtn.textContent = 'আরও ১০টি দেখুন';
+      loadMoreBtn.style.margin = '16px auto 0';
+      loadMoreBtn.style.padding = '10px 20px';
+      loadMoreBtn.style.borderRadius = '999px';
+      loadMoreBtn.style.border = 'none';
+      loadMoreBtn.style.cursor = 'pointer';
+      loadMoreBtn.style.background = '#16a34a';
+      loadMoreBtn.style.color = '#ffffff';
+      loadMoreBtn.style.fontWeight = '600';
+      loadMoreBtn.style.display = (all.length > PAGE_SIZE) ? 'flex' : 'none';
+      loadMoreBtn.style.justifyContent = 'center';
+      loadMoreBtn.style.alignItems = 'center';
+      mainEl.appendChild(loadMoreBtn);
+    } else {
+      loadMoreBtn.style.display = (all.length > PAGE_SIZE && idx < all.length) ? 'flex' : 'none';
+    }
+
+    if(loadMoreBtn){
+      loadMoreBtn.addEventListener('click', appendBatch);
+    }
+}
+
 
   function attachImageSkeletons(){
     document.querySelectorAll('.card .media img').forEach(img=>{
