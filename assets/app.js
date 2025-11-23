@@ -248,10 +248,13 @@
 
         next.addEventListener('click', ()=> onNextClick(sec, catDef));
         prev.addEventListener('click', ()=> slideCategory(sec, -1));
-        enableSwipe(wrapper, sec);
 
+        // Save info for swipe as well
         sec._nextIndex = idx;
         sec._batchSize = batch;
+        sec._catDef = catDef;
+
+        enableSwipe(wrapper, sec);
 
         setTimeout(()=>updateButtonsVisibility(sec), 160);
       })(c, section);
@@ -379,12 +382,60 @@
     updateButtonsVisibility(section);
   }
 
+  
   function enableSwipe(wrapper, section){
-    let startX=0, curX=0, isDown=false;
-    wrapper.addEventListener('touchstart', e=>{ startX = e.touches[0].clientX; isDown=true; });
-    wrapper.addEventListener('touchmove', e=>{ if(!isDown) return; curX = e.touches[0].clientX; const dx = curX - startX; section._track.style.transform = `translateX(${(section._track._tx || 0) + dx}px)`; });
-    wrapper.addEventListener('touchend', e=>{ if(!isDown) return; isDown=false; const dx = curX - startX; if(Math.abs(dx) > 40){ slideCategory(section, dx < 0 ? +1 : -1); } else { section._track.style.transform = `translateX(${section._track._tx || 0}px)`; } startX=curX=0; });
-    wrapper.addEventListener('mouseleave', ()=>{ if(isDown){ isDown=false; section._track.style.transform = `translateX(${section._track._tx || 0}px)`; }});
+    let startX = 0;
+    let curX = 0;
+    let isDown = false;
+
+    wrapper.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+      curX = startX;
+      isDown = true;
+    });
+
+    wrapper.addEventListener('touchmove', e => {
+      if (!isDown) return;
+      curX = e.touches[0].clientX;
+      const dx = curX - startX;
+      const baseTx = section._track._tx || 0;
+      section._track.style.transform = `translateX(${baseTx + dx}px)`;
+    });
+
+    wrapper.addEventListener('touchend', e => {
+      if (!isDown) return;
+      isDown = false;
+
+      const dx = curX - startX;
+      const threshold = 40;
+
+      if (Math.abs(dx) > threshold) {
+        if (dx < 0) {
+          // swipe left → same as clicking Next button
+          if (typeof onNextClick === 'function' && section._catDef) {
+            onNextClick(section, section._catDef);
+          } else {
+            slideCategory(section, +1);
+          }
+        } else {
+          // swipe right → go back
+          slideCategory(section, -1);
+        }
+      } else {
+        // small drag → snap back
+        section._track.style.transform = `translateX(${section._track._tx || 0}px)`;
+      }
+
+      startX = 0;
+      curX = 0;
+    });
+
+    wrapper.addEventListener('mouseleave', () => {
+      if (isDown) {
+        isDown = false;
+        section._track.style.transform = `translateX(${section._track._tx || 0}px)`;
+      }
+    });
   }
 
   
@@ -447,7 +498,7 @@ async function renderStandard(mainEl){
       loadMoreBtn = document.createElement('button');
       loadMoreBtn.type = 'button';
       loadMoreBtn.className = 'btn cards-load-more';
-      loadMoreBtn.textContent = 'আরও ১০টি দেখুন';
+      loadMoreBtn.textContent = 'আরও দেখুন';
       loadMoreBtn.style.margin = '16px auto 0';
       loadMoreBtn.style.padding = '10px 20px';
       loadMoreBtn.style.borderRadius = '999px';
@@ -468,7 +519,6 @@ async function renderStandard(mainEl){
       loadMoreBtn.addEventListener('click', appendBatch);
     }
 }
-
 
   function attachImageSkeletons(){
     document.querySelectorAll('.card .media img').forEach(img=>{
