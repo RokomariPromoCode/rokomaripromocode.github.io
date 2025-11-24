@@ -88,7 +88,7 @@
 
     const categories = [
       {key:'best-seller',label:'Best Seller',href:'/best-seller/'},
-      {key:'books',label:'Books',href:'/books/'},
+      {key:'books',label:'Books',href:'/rokomari-book/'},
       {key:'electronics',label:'Electronics',href:'/electronics/'},
       {key:'foods',label:'Foods',href:'/foods/'},
       {key:'furniture',label:'Furniture',href:'/furniture/'},
