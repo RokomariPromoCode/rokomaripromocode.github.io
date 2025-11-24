@@ -87,13 +87,13 @@
     const menuLinks = qs('.menu-links');
 
     const categories = [
-      {key:'best-seller',label:'Best Seller',href:'/best-seller/'},
+      {key:'best-seller',label:'Best Seller',href:'/rokomari-best-seller/'},
       {key:'books',label:'Books',href:'/rokomari-book/'},
-      {key:'electronics',label:'Electronics',href:'/electronics/'},
-      {key:'foods',label:'Foods',href:'/foods/'},
-      {key:'furniture',label:'Furniture',href:'/furniture/'},
-      {key:'beauty',label:'Beauty',href:'/beauty/'},
-      {key:'others',label:'Others',href:'/others/'},
+      {key:'electronics',label:'Electronics',href:'/rokomari-electronics/'},
+      {key:'foods',label:'Foods',href:'/rokomari-foods/'},
+      {key:'furniture',label:'Furniture',href:'/rokomari-furniture/'},
+      {key:'beauty',label:'Beauty',href:'/rokomari-beauty/'},
+      {key:'others',label:'Others',href:'/rokomari-others/'},
     ];
 
     if(menuLinks){
