@@ -2,7 +2,7 @@
 layout: default
 title: Rokomari promo code for Sellers - Get it any time
 description: Best selling items are also in our site and give the maximum discount.Open it to get the Rokomari promo codes or Discount
-permalink: /best-seller/
+permalink: /rokomari-best-seller/
 ---
 
 <main id="main" data-src="/data/best_seller.json" data-cards="true">
