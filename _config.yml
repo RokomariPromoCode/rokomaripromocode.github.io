@@ -1,3 +1,5 @@
-title: RokomariPromoCode
-description: Affiliate book deals & summaries
-baseurl: ""   # IMPORTANT: set to your repo project name
+# _config.yml (important parts)
+title: "Rokomari Promo Code"
+description: "Best Rokomari promo codes, discounts and offers."
+url: "https://rokomaripromocode.com"   # your custom domain (no trailing slash)
+baseurl: ""                             # MUST be empty for user site
