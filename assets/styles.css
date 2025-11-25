@@ -298,3 +298,150 @@ h1.page-title::before {
   justify-content:space-between;
   gap:8px;
 }
+
+/* ===== Desktop: compact horizontal card style (like your 2nd picture) ===== */
+
+/* Base card adjustments so cards keep consistent small size on wide screens */
+@media (min-width: 992px) {
+  /* Make cards horizontal blocks */
+  .cards-area .card {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    max-width: 880px;           /* overall card width (adjust if you want wider/narrower) */
+    margin: 14px auto;          /* center single-column cards; for grid reduce margin */
+    padding: 16px;
+    gap: 18px;
+    border-radius: 8px;
+    background: #fff;           /* white surface */
+    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.04);
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  /* If you have multiple cards in a row (grid), allow them to shrink */
+  .cards-area.grid .card {
+    max-width: 100%;
+    width: calc(50% - 28px);    /* two column layout example; change as needed */
+    display: flex;
+    margin: 12px;
+  }
+
+  /* Left image area: fixed square */
+  .cards-area .card .media {
+    flex: 0 0 120px;            /* image column width */
+    height: 96px;               /* image container height */
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f7f7f7;
+  }
+
+  .cards-area .card .media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Content area */
+  .cards-area .card .body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-width: 0;               /* prevents overflow with long titles */
+    padding-right: 8px;
+  }
+
+  /* Title: slightly larger and bolder */
+  .cards-area .card .title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+    color: #222;
+    line-height: 1.15;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;        /* keep single-line title like example */
+  }
+
+  /* Meta/author line (smaller, muted) */
+  .cards-area .card .meta {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+
+  /* Description: clamp to 2-3 lines to keep card compact */
+  .cards-area .card .desc {
+    font-size: 0.95rem;
+    color: #374151;
+    line-height: 1.4;
+    margin-bottom: 10px;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;      /* show 2 lines on desktop compact card */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Bottom row: place Buy button to the far-right/bottom */
+  .cards-area .card .card-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: auto;           /* push to bottom */
+  }
+
+  /* Buy button styling that matches the example (small rounded) */
+  .cards-area .card .buy-btn,
+  .cards-area .card .btn-buy,
+  .cards-area .card .buy-now {
+    background: #6b7280;        /* muted gray background */
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.92rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  }
+  /* Hover */
+  .cards-area .card .buy-btn:hover,
+  .cards-area .card .btn-buy:hover,
+  .cards-area .card .buy-now:hover {
+    transform: translateY(-1px);
+  }
+
+  /* Hide the price field if present */
+  .cards-area .card .price,
+  .cards-area .card .card-price,
+  .cards-area .card .price-tag {
+    display: none !important;
+  }
+
+  /* Slight subtle border inset to mimic the second image's top version when you want darker bg */
+  .cards-area .card.alt-dark {
+    background: #666; color: #fff;
+  }
+
+  /* optionally, make the second (lighter) style as base */
+  .cards-area .card + .card {
+    /* small difference between cards if needed */
+  }
+}
+
+/* ===== Keep mobile layout unchanged: stacked, image on top etc. ===== */
+@media (max-width: 991px) {
+  .cards-area .card .desc {
+    -webkit-line-clamp: 3; /* allow slightly more lines on small screens */
+  }
+
+  /* keep existing mobile image sizing — no changes here */
+}
