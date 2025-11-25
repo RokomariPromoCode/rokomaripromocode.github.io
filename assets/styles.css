@@ -653,3 +653,164 @@ h1.page-title::before {
   }
 }
 
+/* ---------- Force 2-column card layout: image left, content right ---------- */
+@media (min-width: 900px) {
+  /* Ensure container stacks cards vertically and centers them */
+  .cards-area {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 18px !important;
+    align-items: center !important;
+  }
+
+  /* Target typical card wrappers used in your site */
+  .cards-area .card,
+  .cards-area .product-card,
+  .cards-area .entry-card,
+  .cards-area .post-card {
+    display: flex !important;              /* make left + right columns */
+    flex-direction: row !important;
+    align-items: stretch !important;
+    width: 920px !important;               /* fixed width for desktop */
+    height: 200px !important;              /* fixed height */
+    padding: 14px !important;
+    gap: 16px !important;
+    box-sizing: border-box !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.06) !important;
+    border: 1px solid rgba(0,0,0,0.04) !important;
+    overflow: hidden !important;
+  }
+
+  /* Left column: image area - fixed width, full card height */
+  .cards-area .card .media,
+  .cards-area .card .thumb,
+  .cards-area .card .card-media,
+  .cards-area .product-card .media,
+  .card .post-thumb {
+    flex: 0 0 150px !important;            /* image column width */
+    width: 150px !important;
+    height: 100% !important;
+    min-width: 150px !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #f7f7f7 !important;
+  }
+
+  /* Ensure image covers the left area */
+  .cards-area .card .media img,
+  .cards-area .card .thumb img,
+  .card .card-media img,
+  .post-thumb img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+
+  /* Right column: content - fills remaining space and stacked vertically */
+  .cards-area .card .body,
+  .cards-area .card .content,
+  .cards-area .card .card-body,
+  .cards-area .card .card-content,
+  .cards-area .product-card .body {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;               /* prevents text overflow */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important; /* top/middle/bottom layout */
+    height: 100% !important;
+    padding: 2px 6px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Top area: title (stick to top) */
+  .cards-area .card .title,
+  .cards-area .card h3,
+  .cards-area .card .card-title,
+  .cards-area .product-card .title {
+    margin: 0 0 6px 0 !important;
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* Middle area: description (fill middle, clamp to lines) */
+  .cards-area .card .desc,
+  .cards-area .card .summary,
+  .cards-area .card p {
+    flex: 1 1 auto !important;
+    margin: 0 !important;
+    color: #333 !important;
+    font-size: 0.96rem !important;
+    line-height: 1.4 !important;
+    overflow: hidden !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 4 !important;     /* number of lines inside the fixed height */
+    -webkit-box-orient: vertical !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* Bottom area: Buy button centered horizontally */
+  .cards-area .card .card-bottom,
+  .cards-area .card .card-foot,
+  .cards-area .card .actions {
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;   /* center the buy button */
+    padding-top: 8px !important;
+  }
+
+  /* Buy button styling */
+  .cards-area .card .buy-now,
+  .cards-area .card .btn-buy,
+  .cards-area .card .buy-btn {
+    background: #16a34a !important;        /* green */
+    color: #fff !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    border: none !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Hide any price tag */
+  .cards-area .card .price,
+  .cards-area .card .card-price,
+  .price-tag,
+  .product-price {
+    display: none !important;
+  }
+}
+
+/* Mobile: fallback to stacked cards (image on top) */
+@media (max-width: 899px) {
+  .cards-area .card,
+  .cards-area .product-card {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    padding: 12px !important;
+  }
+  .cards-area .card .media,
+  .cards-area .card .thumb {
+    width: 100% !important;
+    height: 220px !important;
+    min-width: 0 !important;
+  }
+  .cards-area .card .card-content,
+  .cards-area .card .body {
+    height: auto !important;
+  }
+}
