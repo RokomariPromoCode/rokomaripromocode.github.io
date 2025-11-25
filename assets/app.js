@@ -461,42 +461,95 @@ async function renderHome(){
     const dataSrc = mainEl?.dataset?.src || null;
 
     // If no source provided and no in-memory data, do not render anything.
-    if(!dataSrc && !(Array.isArray(window.rokomariData) && window.rokomariData.length) && !(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH)){
+    if(
+      !dataSrc &&
+      !(Array.isArray(window.rokomariData) && window.rokomariData.length) &&
+      !(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH)
+    ){
       return;
     }
 
     let raw = [];
-    if(Array.isArray(window.rokomariData) && window.rokomariData.length) raw = window.rokomariData;
-    else if(dataSrc) raw = await fetchJson(dataSrc);
-    else if(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH) raw = await fetchJson(window.JSON_DATA_PATH);
-    else raw = [];
+    if(Array.isArray(window.rokomariData) && window.rokomariData.length){
+      raw = window.rokomariData;
+    } else if(dataSrc){
+      raw = await fetchJson(dataSrc);
+    } else if(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH){
+      raw = await fetchJson(window.JSON_DATA_PATH);
+    } else {
+      raw = [];
+    }
 
-    const all = normalize(raw);
+    // normalize and apply priority shuffle if available
+    const bestSet = (typeof getBestSellerSet === 'function') ? await getBestSellerSet() : null;
+    let all = normalize(raw);
+    if(typeof priorityShuffle === 'function'){
+      all = priorityShuffle(all, bestSet);
+    }
+
     window._all_index = all;
 
     let cards = qs('#cardsArea', mainEl);
     if(!cards){
       cards = document.createElement('div');
-      cards.id='cardsArea';
-      cards.className='cards-area container';
+      cards.id = 'cardsArea';
+      cards.className = 'cards-area container';
       mainEl.appendChild(cards);
     }
     cards.className = 'cards-area container';
 
+    const PAGE_SIZE = 10;
     let idx = 0;
+    let loadMoreBtn = null;
+
     function appendBatch(){
-      const slice = all.slice(idx, idx + (4 * 2));
+      if(idx >= all.length) return;
+      const slice = all.slice(idx, idx + PAGE_SIZE);
       slice.forEach(it => cards.appendChild(createCard(it)));
       idx += slice.length;
+      // hide the button if finished
+      if(loadMoreBtn && idx >= all.length){
+        loadMoreBtn.style.display = 'none';
+      }
     }
+
+    // initial load
     appendBatch();
 
-    const sentinel = document.createElement('div'); sentinel.id='sentinel'; sentinel.style.height='2px'; mainEl.appendChild(sentinel);
-    const obs = new IntersectionObserver(entries=>{
-      entries.forEach(en=>{ if(en.isIntersecting) appendBatch(); });
-    }, { rootMargin:'400px' });
-    obs.observe(sentinel);
-  }
+    // create / wire "See more" button (green) to load more cards
+    loadMoreBtn = qs('.cards-load-more', mainEl);
+    if(!loadMoreBtn){
+      loadMoreBtn = document.createElement('button');
+      loadMoreBtn.type = 'button';
+      loadMoreBtn.className = 'btn cards-load-more';
+      loadMoreBtn.textContent = 'আরও দেখুন';
+      loadMoreBtn.style.margin = '16px auto 0';
+      loadMoreBtn.style.padding = '10px 20px';
+      loadMoreBtn.style.borderRadius = '999px';
+      loadMoreBtn.style.border = 'none';
+      loadMoreBtn.style.cursor = 'pointer';
+      loadMoreBtn.style.background = '#16a34a';
+      loadMoreBtn.style.color = '#ffffff';
+      loadMoreBtn.style.fontWeight = '600';
+      loadMoreBtn.style.display = (all.length > PAGE_SIZE) ? 'flex' : 'none';
+      loadMoreBtn.style.justifyContent = 'center';
+      loadMoreBtn.style.alignItems = 'center';
+      mainEl.appendChild(loadMoreBtn);
+    } else {
+      loadMoreBtn.style.display = (all.length > PAGE_SIZE && idx < all.length) ? 'flex' : 'none';
+    }
+
+    if(loadMoreBtn){
+      loadMoreBtn.addEventListener('click', appendBatch);
+    }
+
+    // Remove any intersection observer sentinel from earlier code to prevent infinite loading
+    const existingSentinel = qs('#sentinel', mainEl);
+    if(existingSentinel && existingSentinel.parentNode){
+      existingSentinel.parentNode.removeChild(existingSentinel);
+    }
+}
+
 
   function attachImageSkeletons(){
     document.querySelectorAll('.card .media img').forEach(img=>{
