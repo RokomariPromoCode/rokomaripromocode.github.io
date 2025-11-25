@@ -462,4 +462,194 @@ h1.page-title::before {
     -webkit-line-clamp: 3;
   }
 }
+/* ===== Fixed horizontal card layout: image left / content right ===== */
+
+/* Constants: tweak these to change sizes */
+:root{
+  --card-width-desktop: 920px;   /* overall card width on desktop */
+  --card-height: 200px;         /* fixed card height */
+  --card-image-width: 180px;     /* left image column width */
+  --card-gap: 18px;
+  --card-radius: 10px;
+  --card-bg: #ffffff;
+  --card-shadow: 0 10px 20px rgba(0,0,0,0.06);
+  --buy-bg: #16a34a;
+  --buy-color: #ffffff;
+}
+
+/* Apply only for desktop & large tablets */
+@media (min-width: 992px) {
+
+  /* Ensure the cards container stacks cards vertically */
+  .cards-area {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+
+  /* Base card box */
+  .cards-area .card,
+  .cards-area .product-card,
+  .cards-area .entry-card {
+    width: var(--card-width-desktop) !important;
+    height: var(--card-height) !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: var(--card-gap) !important;
+    padding: 14px !important;
+    box-sizing: border-box !important;
+    border-radius: var(--card-radius) !important;
+    background: var(--card-bg) !important;
+    box-shadow: var(--card-shadow) !important;
+    border: 1px solid rgba(0,0,0,0.04) !important;
+    overflow: hidden !important;
+    align-items: stretch !important;
+  }
+
+  /* Left image column - fixed */
+  .cards-area .card .media,
+  .cards-area .card .thumb,
+  .cards-area .card .card-media,
+  .cards-area .product-card .media {
+    width: var(--card-image-width) !important;
+    min-width: var(--card-image-width) !important;
+    height: 100% !important;
+    flex: 0 0 var(--card-image-width) !important;
+    border-radius: calc(var(--card-radius) - 4px) !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #f7f7f7 !important;
+  }
+
+  .cards-area .card .media img,
+  .cards-area .card .thumb img,
+  .card .card-media img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+
+  /* Right content column - vertical layout */
+  .cards-area .card .card-content,
+  .cards-area .card .body,
+  .cards-area .card .content,
+  .cards-area .card .card-body {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;  /* prevents overflow */
+    height: 100% !important;
+    padding: 4px 6px 4px 6px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Top: title (fixed at top) */
+  .cards-area .card .card-head,
+  .cards-area .card .card-head .title,
+  .cards-area .card .card-title {
+    flex: 0 0 auto !important;
+    margin: 0 0 6px 0 !important;
+  }
+  .cards-area .card .card-head .title,
+  .cards-area .card .card-title,
+  .cards-area .card h3 {
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    color: #111 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* Middle: description (fills remaining height) */
+  .cards-area .card .card-mid,
+  .cards-area .card .desc,
+  .cards-area .card .summary {
+    flex: 1 1 auto !important;
+    overflow: hidden !important;
+    font-size: 0.95rem !important;
+    color: #333 !important;
+    line-height: 1.4 !important;
+
+    display: -webkit-box !important;
+    -webkit-line-clamp: 4;    /* adjust clamp to fit within fixed height */
+    -webkit-box-orient: vertical !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* Bottom: controls (Buy button) */
+  .cards-area .card .card-foot,
+  .cards-area .card .card-bottom,
+  .cards-area .card .actions {
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important; /* center horizontally in footer */
+    padding-top: 8px !important;
+    gap: 10px !important;
+  }
+
+  /* Single-line centered Buy button */
+  .cards-area .card .buy-now,
+  .cards-area .card .btn-buy,
+  .cards-area .card .buy-btn {
+    background: var(--buy-bg) !important;
+    color: var(--buy-color) !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    border: none !important;
+    font-weight: 600 !important;
+    font-size: 0.96rem !important;
+    cursor: pointer !important;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.08) !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Hide price if present */
+  .cards-area .card .price,
+  .cards-area .card .card-price,
+  .price-tag,
+  .product-price {
+    display: none !important;
+  }
+
+  /* Ensure the right column content flows vertically (title at top, footer at bottom) */
+  .cards-area .card .card-content > .card-head { order: 0; }
+  .cards-area .card .card-content > .card-mid  { order: 1; }
+  .cards-area .card .card-content > .card-foot { order: 2; }
+}
+
+/* ===== Mobile: stack (image on top) ===== */
+@media (max-width: 991px) {
+  .cards-area .card,
+  .cards-area .product-card {
+    width: 100% !important;
+    height: auto !important;
+    flex-direction: column !important;
+    padding: 12px !important;
+  }
+
+  .cards-area .card .media,
+  .cards-area .card .thumb {
+    width: 100% !important;
+    height: 220px !important;
+    min-width: auto !important;
+  }
+
+  .cards-area .card .card-content,
+  .cards-area .card .body {
+    height: auto !important;
+  }
+
+  .cards-area .card .card-mid {
+    -webkit-line-clamp: 3;
+  }
+}
 
