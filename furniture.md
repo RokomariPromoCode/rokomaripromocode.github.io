@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Furniture
-permalink: /furniture/
+permalink: /rokomari-furniture/
 ---
 
 <main id="main" data-src="/data/furnitures.json" data-cards="true">
