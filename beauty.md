@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Beauty
-permalink: /rokomari-beauty/
+permalink: /beauty/
 ---
 
 <main id="main" data-src="/data/beauty.json" data-cards="true">

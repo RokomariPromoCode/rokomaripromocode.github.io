@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Others
-permalink: /rokomari-others/
+permalink: /others/
 ---
 
 <main id="main" data-src="/data/others.json" data-cards="true">

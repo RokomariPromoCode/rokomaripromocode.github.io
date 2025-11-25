@@ -1,13 +1,7 @@
-/* ------------------------------------------------------------------
-   Full site stylesheet (replace assets/styles.css with this file)
-   - Enforces compact, fixed-height, two-column cards on desktop
-   - Keeps mobile stacked layout
-   - Hides price fields and aligns Buy button centered at bottom
-   ------------------------------------------------------------------ */
-
+/* assets/styles.css - full file (paste entire content) */
 /* Reset & Base */
 *{box-sizing:border-box;margin:0;padding:0}
-html{font-size:16px}
+html{font-size:16px} /* change to 17 to zoom more */
 body{font-family:'Poppins',sans-serif;background:#f6f6f8;color:#111;min-height:100vh;-webkit-font-smoothing:antialiased}
 
 /* container */
@@ -37,10 +31,8 @@ body{font-family:'Poppins',sans-serif;background:#f6f6f8;color:#111;min-height:1
 .hamburger{display:none;font-size:22px;cursor:pointer;color:#333;padding:8px}
 
 /* page title */
-.page-title{max-width:1260px;margin:22px auto;padding:0 16px; display:flex;flex-direction:column;align-items:center;text-align:center}
-.page-title h1{font-size:clamp(20px,3.6vw,40px);margin:0;font-weight:800;color:#0b1220;position:relative;padding-bottom:14px}
-.page-title h1::after{content:"";position:absolute;left:50%;transform:translateX(-50%);bottom:0;height:6px;width:min(240px,60%);border-radius:6px;background:linear-gradient(90deg,#1abc9c,#3498db,#9b59b6);box-shadow:0 6px 18px rgba(60,80,120,0.12);opacity:.95}
-.page-title .subtitle{font-size:14px;color:#49515b;opacity:.95;max-width:900px;line-height:1.4;margin-top:6px}
+.page-title{max-width:1260px;margin:22px auto;padding:0 16px}
+.page-title h1{font-size:30px;margin:0;font-weight:800;color:#0b1220}
 
 /* category row */
 .cat-row{background:#fff;border-radius:12px;padding:14px;box-shadow:0 10px 30px rgba(12,20,30,0.06);border:1px solid rgba(12,20,30,0.03);position:relative;margin:22px 0}
@@ -52,7 +44,7 @@ body{font-family:'Poppins',sans-serif;background:#f6f6f8;color:#111;min-height:1
 .cat-track-wrapper{position:relative;overflow:hidden;padding:6px 2px}
 .cat-track{display:flex;gap:16px;transition:transform 420ms cubic-bezier(.22,.9,.35,1);will-change:transform;padding-bottom:6px}
 
-/* card item width -- leave for track */
+/* card item width */
 .cat-item{flex:0 0 calc((100% - 16px*3)/4);max-width:calc((100% - 16px*3)/4);min-width:220px}
 .cat-item.see-more{flex:0 0 calc((100% - 16px*3)/4);max-width:calc((100% - 16px*3)/4);display:flex;align-items:center;justify-content:center}
 
@@ -60,15 +52,15 @@ body{font-family:'Poppins',sans-serif;background:#f6f6f8;color:#111;min-height:1
 .see-more-card{width:100%;height:420px;border-radius:10px;background:#f7fafc;border:2px dashed #e6edf2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center;color:#334155;font-weight:700}
 .see-more-card a{display:inline-block;margin-top:12px;padding:10px 14px;background:#fff;border-radius:8px;border:1px solid #e2e8f0;text-decoration:none;color:#0b1220;font-weight:700}
 
-/* ========== CARD DEFAULT (mobile-first) ========== */
-/* Base card: keep simple stack on mobile; we override for desktop below */
-.card{background:#fff;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 24px rgba(12,20,30,0.06);border:1px solid rgba(12,20,30,0.03);min-height:360px;transform:translateY(10px);opacity:0;animation:slide-and-fade-in .45s ease forwards}
+/* card */
+.card{background:#fff;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 24px rgba(12,20,30,0.06);border:1px solid rgba(12,20,30,0.03);min-height:460px;transform:translateY(10px);opacity:0;animation:slide-and-fade-in .45s ease forwards}
 @keyframes slide-and-fade-in{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
 
 /* media */
-.card .media{height:220px;display:flex;align-items:center;justify-content:center;background:#fff;padding:12px;border-bottom:1px solid #f4f4f4}
-.card .media img{width:100%;height:100%;object-fit:cover;border-radius:6px}
+.card .media{height:260px;display:flex;align-items:center;justify-content:center;background:#fff;padding:12px;border-bottom:1px solid #f4f4f4}
+.card .media img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px}
 .img-skel{width:100%;height:100%;background:linear-gradient(90deg,#f0f0f0,#eaeaea,#f0f0f0);background-size:200% 100%;animation:skeleton 1.2s linear infinite}
+@keyframes skeleton{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
 /* body */
 .card .body{padding:12px;display:flex;flex-direction:column;flex:1}
@@ -100,7 +92,7 @@ body{font-family:'Poppins',sans-serif;background:#f6f6f8;color:#111;min-height:1
 .footer-links a:hover{color:#7ee0c6;padding-left:6px;transition:all .18s}
 .footer-bottom{background:#071018;padding:12px 0;text-align:center;color:#6b7280}
 
-/* Responsive helpers */
+/* Responsive */
 @media(max-width:1260px){.container{max-width:1100px}}
 @media(max-width:980px){.cat-item{flex:0 0 calc((100% - 16px*2)/3);max-width:calc((100% - 16px*2)/3)} .card .media{height:220px}}
 @media(max-width:760px){
@@ -125,184 +117,184 @@ body{font-family:'Poppins',sans-serif;background:#f6f6f8;color:#111;min-height:1
 /* small helper */
 img{max-width:100%;display:block}
 .no-image{background:#f4f6f7;color:#9aa3ab;padding:18px;border-radius:6px;display:flex;align-items:center;justify-content:center}
-
-/* --------------------------
-   NEW: Strict two-column card layout for desktop
-   Structure expected:
-   <div class="card">
-     <div class="media"><img></div>
-     <div class="card-content">
-       <div class="card-head"><h3 class="title">...</h3></div>
-       <div class="card-mid"><p class="desc">...</p></div>
-       <div class="card-foot"><a class="buy-now">Buy</a></div>
-     </div>
-   </div>
-   This section will strongly enforce that layout regardless of existing rules.
-   -------------------------- */
-
-:root{
-  --card-desktop-width: 920px;
-  --card-desktop-height: 200px;
-  --card-img-width: 150px;
-  --card-radius: 10px;
-  --buy-color: #fff;
-  --buy-bg: #16a34a;
+/* ---------- Page title / site H1 styling: "Rokomari Promo Code" ---------- */
+.page-title {
+  max-width: 1260px;
+  margin: 18px auto 12px;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;       /* center on desktop; page layout already centered */
+  text-align: center;
 }
 
-/* Apply only for desktop & larger tablets */
-@media (min-width: 900px) {
-
-  .cards-area{ display:flex; flex-direction:column; gap:18px; align-items:center; }
-
-  /* Force card wrapper into row layout */
-  .cards-area .card,
-  .cards-area .product-card,
-  .cards-area .entry-card {
-    width: var(--card-desktop-width) !important;
-    height: var(--card-desktop-height) !important;
-    display:flex !important;
-    flex-direction:row !important;
-    gap:14px !important;
-    padding:14px !important;
-    border-radius:var(--card-radius) !important;
-    background:#fff !important;
-    box-shadow:0 10px 20px rgba(0,0,0,0.06) !important;
-    border:1px solid rgba(0,0,0,0.04) !important;
-    overflow:hidden !important;
-    box-sizing:border-box !important;
-    align-items:stretch !important;
-  }
-
-  /* Left image column fixed */
-  .cards-area .card .media,
-  .cards-area .card .thumb,
-  .cards-area .card .card-media,
-  .cards-area .product-card .media {
-    width:var(--card-img-width) !important;
-    min-width:var(--card-img-width) !important;
-    height:100% !important;
-    flex:0 0 var(--card-img-width) !important;
-    border-radius:calc(var(--card-radius) - 4px) !important;
-    overflow:hidden !important;
-    display:flex !important;
-    align-items:center !important;
-    justify-content:center !important;
-    background:#f7f7f7 !important;
-  }
-
-  .cards-area .card .media img,
-  .cards-area .card .thumb img,
-  .card .card-media img { width:100% !important; height:100% !important; object-fit:cover !important; display:block !important; }
-
-  /* Right column (content) vertical stacking */
-  .cards-area .card .card-content,
-  .cards-area .card .body,
-  .cards-area .card .content,
-  .cards-area .card .card-body {
-    display:flex !important;
-    flex-direction:column !important;
-    flex:1 1 auto !important;
-    min-width:0 !important;
-    height:100% !important;
-    padding:6px !important;
-    box-sizing:border-box !important;
-    justify-content:space-between !important; /* title top, desc middle, buy bottom */
-  }
-
-  /* Top: Title */
-  .cards-area .card .card-head,
-  .cards-area .card .title,
-  .cards-area .card h3,
-  .cards-area .card .card-title {
-    flex:0 0 auto !important;
-    margin:0 0 6px 0 !important;
-    font-size:1.03rem !important;
-    font-weight:700 !important;
-    color:#111 !important;
-    white-space:nowrap !important;
-    overflow:hidden !important;
-    text-overflow:ellipsis !important;
-  }
-
-  /* Middle: description - fill and clamp */
-  .cards-area .card .card-mid,
-  .cards-area .card .desc,
-  .cards-area .card .summary {
-    flex:1 1 auto !important;
-    overflow:hidden !important;
-    font-size:0.95rem !important;
-    color:#333 !important;
-    line-height:1.4 !important;
-    display:-webkit-box !important;
-    -webkit-line-clamp:4 !important;
-    -webkit-box-orient:vertical !important;
-    text-overflow:ellipsis !important;
-    margin:0 !important;
-  }
-
-  /* Bottom: buy button centered */
-  .cards-area .card .card-foot,
-  .cards-area .card .card-bottom,
-  .cards-area .card .actions {
-    flex:0 0 auto !important;
-    display:flex !important;
-    align-items:center !important;
-    justify-content:center !important;
-    gap:8px !important;
-    padding-top:6px !important;
-  }
-
-  .cards-area .card .buy-now,
-  .cards-area .card .btn-buy,
-  .cards-area .card .buy-btn,
-  .buy-now {
-    background:var(--buy-bg) !important;
-    color:var(--buy-color) !important;
-    padding:8px 16px !important;
-    border-radius:8px !important;
-    border:none !important;
-    font-weight:700 !important;
-    text-decoration:none !important;
-    cursor:pointer !important;
-    display:inline-flex !important;
-    align-items:center !important;
-    justify-content:center !important;
-  }
-
-  /* Hide price elements */
-  .cards-area .card .price,
-  .cards-area .card .card-price,
-  .price-tag,
-  .product-price { display:none !important; }
-
-  /* Defensive: if structure differs, try to force children layout */
-  .cards-area .card > .media { order:0 !important; }
-  .cards-area .card > .body,
-  .cards-area .card > .card-content,
-  .cards-area .card > .content { order:1 !important; }
-
+/* H1 */
+.page-title h1 {
+  font-size: clamp(20px, 3.6vw, 40px); /* responsive: grows on wide screens */
+  line-height: 1.06;
+  margin: 0;
+  font-weight: 800;
+  color: #0b1220;
+  letter-spacing: -0.5px;
+  display: inline-block;
+  position: relative;
+  padding-bottom: 14px; /* space for underline */
+  -webkit-font-smoothing: antialiased;
+  align:center;
 }
 
-/* Mobile responsive: stacked layout */
-@media (max-width:899px) {
-  .cards-area .card,
-  .cards-area .product-card {
-    display:block !important;
-    width:100% !important;
-    height:auto !important;
-    padding:12px !important;
-  }
-  .cards-area .card .media,
-  .cards-area .card .thumb {
-    width:100% !important;
-    height:220px !important;
-    min-width:auto !important;
-  }
-  .cards-area .card .card-content,
-  .cards-area .card .body { height:auto !important; }
-  .cards-area .card .card-mid { -webkit-line-clamp:3; }
+/* Accent underline (gradient) */
+.page-title h1::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  height: 6px;
+  width: min(240px, 60%);
+  border-radius: 6px;
+  background: linear-gradient(90deg, #1abc9c, #3498db, #9b59b6);
+  box-shadow: 0 6px 18px rgba(60,80,120,0.12);
+  opacity: 0.95;
 }
 
-/* Small helpers */
-img{max-width:100%;display:block}
-.no-image{background:#f4f6f7;color:#9aa3ab;padding:18px;border-radius:6px;display:flex;align-items:center;justify-content:center}
+/* Small subtitle under the H1 (Bangla hint text) */
+.page-title .subtitle {
+  font-size: 14px;
+  color: #49515b;
+  opacity: 0.95;
+  max-width: 900px;
+  line-height: 1.4;
+  margin-top: 6px;
+}
+
+/* Small left badge (optional) */
+.page-title .site-badge {
+  position:absolute;
+  left: 16px;
+  top: -6px;
+  background:#fff;
+  border-radius:8px;
+  padding:6px 10px;
+  box-shadow:0 6px 20px rgba(10,20,30,0.06);
+  border:1px solid rgba(0,0,0,0.04);
+  font-weight:700;
+  font-size:12px;
+  color:#0b1220;
+  display:none; /* hidden by default; enable if you want the badge */
+}
+
+/* responsive tweaks */
+@media (max-width: 980px) {
+  .page-title { align-items: flex-start; text-align: left; padding-left: 16px; padding-right: 16px; }
+  .page-title h1::after { width: 160px; }
+  .page-title h1 { padding-bottom: 12px; }
+}
+@media (max-width: 520px) {
+  .page-title { padding-left: 12px; padding-right: 12px; }
+  .page-title h1 { font-size: clamp(18px, 6.8vw, 28px); }
+  .page-title .subtitle { font-size: 13px; color:#505f6b; }
+}
+
+
+
+/* ----------------------------------------------------------
+   PAGE TITLE (fully rewritten to work on all devices)
+----------------------------------------------------------- */
+
+/* Main H1 Title */
+h1.page-title {
+  font-family: "Poppins", sans-serif;
+  font-size: clamp(2.4rem, 4vw, 3.4rem);
+  font-weight: 800;
+
+  /* Proper centering everywhere */
+  text-align: center !important;
+  display: block;
+  width: 100%;
+
+  margin: 2rem auto;
+  position: relative;
+  color: #333;
+}
+
+/* Gradient underline */
+h1.page-title::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -6px;
+
+  width: 50%;
+  height: 6px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #ff6b6b, #5f27cd);
+}
+
+/* Mobile optimization */
+@media (max-width: 600px) {
+  h1.page-title::before {
+    width: 70%;
+  }
+}
+
+
+/* === Card layout normalization === */
+.card{
+  display:flex;
+  flex-direction:column;
+  height:460px; /* adjust if you want taller/shorter cards */
+}
+
+.card-content{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+}
+
+/* Fixed image area */
+.card .media{
+  flex-shrink:0;
+  height:220px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.card .media img{
+  max-width:100%;
+  max-height:100%;
+  object-fit:cover;
+}
+
+/* Text + button area */
+.card .body{
+  display:flex;
+  flex-direction:column;
+  flex:1;
+}
+
+/* Description: max 4 lines, fill available space */
+.card .desc{
+  flex:1;
+  font-size:14px;
+  line-height:1.5;
+  margin-top:6px;
+
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+/* Button bar pinned to bottom */
+.card-bottom{
+  margin-top:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
