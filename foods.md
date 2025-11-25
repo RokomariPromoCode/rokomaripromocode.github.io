@@ -2,7 +2,7 @@
 layout: default
 title: Rokomari Promo Code for food item - Exclusive deals 
 description: Food is essential but Rokomari Promo Code also essential for buying them from rokomari. 
-permalink: /foods/
+permalink: /rokomari-foods/
 ---
 
 <main id="main" data-src="/data/foods.json" data-cards="true">
