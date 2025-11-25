@@ -299,149 +299,167 @@ h1.page-title::before {
   gap:8px;
 }
 
-/* ===== Desktop: compact horizontal card style (like your 2nd picture) ===== */
-
-/* Base card adjustments so cards keep consistent small size on wide screens */
+/* ========== Desktop compact horizontal cards (strong override) ========== */
+/* Only apply on wide screens */
 @media (min-width: 992px) {
-  /* Make cards horizontal blocks */
-  .cards-area .card {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    max-width: 880px;           /* overall card width (adjust if you want wider/narrower) */
-    margin: 14px auto;          /* center single-column cards; for grid reduce margin */
-    padding: 16px;
-    gap: 18px;
-    border-radius: 8px;
-    background: #fff;           /* white surface */
-    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
-    border: 1px solid rgba(0,0,0,0.04);
-    overflow: hidden;
-    box-sizing: border-box;
+
+  /* Target likely card selectors used by your project (broad coverage) */
+  .cards-area .card,
+  .cards-area .product-card,
+  .cards-area .entry-card,
+  .card.item-card {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    gap: 18px !important;
+    max-width: 980px;
+    margin: 16px auto !important;
+    padding: 14px !important;
+    border-radius: 10px !important;
+    background: #ffffff !important;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.06) !important;
+    border: 1px solid rgba(0,0,0,0.04) !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
   }
 
-  /* If you have multiple cards in a row (grid), allow them to shrink */
-  .cards-area.grid .card {
-    max-width: 100%;
-    width: calc(50% - 28px);    /* two column layout example; change as needed */
-    display: flex;
-    margin: 12px;
+  /* Make sure grid container doesn't force image on top */
+  .cards-area { display:flex; flex-direction:column; gap:12px; }
+
+  /* Left image column (fixed size) */
+  .cards-area .card .media,
+  .cards-area .product-card .media,
+  .cards-area .card .thumb,
+  .card .card-media {
+    flex: 0 0 120px !important;   /* image column width */
+    height: 96px !important;      /* image height */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    border-radius: 8px !important;
+    background: #f7f7f7 !important;
   }
 
-  /* Left image area: fixed square */
-  .cards-area .card .media {
-    flex: 0 0 120px;            /* image column width */
-    height: 96px;               /* image container height */
-    border-radius: 6px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f7f7f7;
+  /* Force image sizing inside */
+  .cards-area .card .media img,
+  .cards-area .card .thumb img,
+  .card .card-media img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
   }
 
-  .cards-area .card .media img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+  /* Content area: title, meta, desc, bottom row */
+  .cards-area .card .body,
+  .cards-area .card .content,
+  .cards-area .card .card-body,
+  .cards-area .product-card .body {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important; /* prevents long text overflow */
+    padding: 0 6px !important;
   }
 
-  /* Content area */
-  .cards-area .card .body {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    min-width: 0;               /* prevents overflow with long titles */
-    padding-right: 8px;
+  /* Title — single line, bold */
+  .cards-area .card .title,
+  .cards-area .card h3,
+  .cards-area .card .card-title,
+  .cards-area .product-card .title {
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    color: #222 !important;
+    margin: 0 0 6px 0 !important;
+    line-height: 1.15 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
 
-  /* Title: slightly larger and bolder */
-  .cards-area .card .title {
-    font-size: 1.05rem;
-    font-weight: 700;
-    margin: 0 0 6px 0;
-    color: #222;
-    line-height: 1.15;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;        /* keep single-line title like example */
+  /* Meta/author: muted */
+  .cards-area .card .meta,
+  .cards-area .card .sub,
+  .cards-area .card .card-meta {
+    color: #6b7280 !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 6px !important;
   }
 
-  /* Meta/author line (smaller, muted) */
-  .cards-area .card .meta {
-    color: #6b7280;
-    font-size: 0.9rem;
-    margin-bottom: 8px;
+  /* Description: clamp to 2 lines for desktop compact look */
+  .cards-area .card .desc,
+  .cards-area .card .summary,
+  .cards-area .card p {
+    font-size: 0.95rem !important;
+    color: #374151 !important;
+    margin: 0 0 10px 0 !important;
+    line-height: 1.35 !important;
+
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
 
-  /* Description: clamp to 2-3 lines to keep card compact */
-  .cards-area .card .desc {
-    font-size: 0.95rem;
-    color: #374151;
-    line-height: 1.4;
-    margin-bottom: 10px;
-
-    display: -webkit-box;
-    -webkit-line-clamp: 2;      /* show 2 lines on desktop compact card */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  /* Bottom row: push buy button to right/bottom */
+  .cards-area .card .card-bottom,
+  .cards-area .card .bottom-row,
+  .cards-area .card .actions {
+    margin-top: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 10px !important;
   }
 
-  /* Bottom row: place Buy button to the far-right/bottom */
-  .cards-area .card .card-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: auto;           /* push to bottom */
-  }
-
-  /* Buy button styling that matches the example (small rounded) */
+  /* Buy button: small rounded grey (like your second image) */
   .cards-area .card .buy-btn,
   .cards-area .card .btn-buy,
-  .cards-area .card .buy-now {
-    background: #6b7280;        /* muted gray background */
-    color: #fff;
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: none;
-    font-weight: 600;
-    font-size: 0.92rem;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  .cards-area .card .buy-now,
+  .buy-now {
+    background: #6b7280 !important;
+    color: #fff !important;
+    padding: 8px 12px !important;
+    border-radius: 6px !important;
+    border: none !important;
+    font-weight: 600 !important;
+    font-size: 0.92rem !important;
+    cursor: pointer !important;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.08) !important;
   }
-  /* Hover */
   .cards-area .card .buy-btn:hover,
   .cards-area .card .btn-buy:hover,
-  .cards-area .card .buy-now:hover {
-    transform: translateY(-1px);
-  }
+  .cards-area .card .buy-now:hover { transform: translateY(-1px); }
 
-  /* Hide the price field if present */
+  /* Hide price element (multiple common selector names) */
   .cards-area .card .price,
-  .cards-area .card .card-price,
-  .cards-area .card .price-tag {
+  .card .card-price,
+  .price-tag,
+  .product-price {
     display: none !important;
   }
 
-  /* Slight subtle border inset to mimic the second image's top version when you want darker bg */
-  .cards-area .card.alt-dark {
-    background: #666; color: #fff;
+  /* If the card image sits above due to extra internal wrapper, force layout */
+  .cards-area .card > .media,
+  .cards-area .card > .card-media,
+  .cards-area .card > .thumb {
+    order: 0;
   }
-
-  /* optionally, make the second (lighter) style as base */
-  .cards-area .card + .card {
-    /* small difference between cards if needed */
+  .cards-area .card > .body,
+  .cards-area .card > .card-body,
+  .cards-area .card > .content {
+    order: 1;
   }
 }
 
-/* ===== Keep mobile layout unchanged: stacked, image on top etc. ===== */
+/* ===== Mobile: keep stacked behavior (no changes) ===== */
 @media (max-width: 991px) {
-  .cards-area .card .desc {
-    -webkit-line-clamp: 3; /* allow slightly more lines on small screens */
+  .cards-area .card .desc,
+  .cards-area .card .summary,
+  .cards-area .card p {
+    -webkit-line-clamp: 3;
   }
-
-  /* keep existing mobile image sizing — no changes here */
 }
+
