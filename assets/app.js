@@ -3,7 +3,7 @@
   'use strict';
 
   // prefer runtime SITE_BASE if set by layout, otherwise fallback to literal (keeps previous behavior)
-  const SITE_BASE = (typeof window !== 'undefined' && window.SITE_BASE) ? window.SITE_BASE : '/trial';
+  const SITE_BASE = (typeof window !== 'undefined' && window.SITE_BASE) ? window.SITE_BASE : '/';
 
   const qs = (s,p=document)=>p.querySelector(s);
   const qsa = (s,p=document)=>Array.from((p||document).querySelectorAll(s));

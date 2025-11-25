@@ -1,8 +1,8 @@
 // assets/includes-loader.js
 (function(){
   'use strict';
-  // CHANGE THIS if your site root is different (for your GitHub Pages it is "/trial")
-  const BASE = '/trial';
+  // CHANGE THIS if your site root is different (for your GitHub Pages it is "/")
+  const BASE = '/';
   const includesPath = BASE + '/_includes';
 
   async function insertHtml(selector, filename){
