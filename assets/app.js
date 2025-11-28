@@ -51,6 +51,37 @@
     }));
   }
 
+  // Deterministic shuffle that changes order once per hour (per key)
+  function hourlyShuffle(list, key){
+    if(!Array.isArray(list) || !list.length) return list || [];
+    const stamp = new Date();
+    const hourStamp = stamp.getUTCFullYear() + '-' +
+      String(stamp.getUTCMonth()+1).padStart(2,'0') + '-' +
+      String(stamp.getUTCDate()).padStart(2,'0') + '-' +
+      String(stamp.getUTCHours()).padStart(2,'0');
+    const seedStr = String(key || 'default') + '|' + hourStamp;
+
+    let h = 0;
+    for(let i=0;i<seedStr.length;i++){
+      h = Math.imul(31, h) + seedStr.charCodeAt(i) | 0;
+    }
+    let seed = h >>> 0;
+    function rand(){
+      // simple LCG
+      seed = (seed * 1664525 + 1013904223) >>> 0;
+      return seed / 4294967296;
+    }
+
+    const arr = list.slice();
+    for(let i=arr.length-1;i>0;i--){
+      const j = Math.floor(rand() * (i+1));
+      const tmp = arr[i];
+      arr[i] = arr[j];
+      arr[j] = tmp;
+    }
+    return arr;
+  }
+
   function createCard(item){
     const title = safe(item.title);
     const author = safe(item.author || '');
@@ -233,9 +264,12 @@ async function renderHome(){
       section.appendChild(wrapper);
       root.appendChild(section);
 
-      (async function load(catDef, sec){
+      (
+async function load(catDef, sec){
         const raw = await fetchJson(catDef.file);
-        const items = normalize(raw);
+        let items = normalize(raw);
+        // Shuffle deterministically once per hour based on category key
+        items = hourlyShuffle(items, catDef.key || catDef.name || 'home');
         sec._items = items;
         sec._track = track;
         sec._tx = 0;
@@ -301,15 +335,33 @@ async function renderHome(){
     setTimeout(()=>updateButtonsVisibility(section), 120);
   }
 
-  function addSeeMoreCard(section){
+  
+function addSeeMoreCard(section){
     if(!section || !section._track) return;
     if(section._track.querySelector('.cat-item.see-more')) return;
-    const wrap = document.createElement('div'); wrap.className='cat-item see-more';
-    const link = `/${section.dataset.key}/`;
-    const readable = section.dataset.name || section.dataset.key || 'আরও দেখুন';
+    const wrap = document.createElement('div'); 
+    wrap.className = 'cat-item see-more';
+
+    // Map home sections to their real category URLs
+    const key = section.dataset.key || '';
+    const readable = section.dataset.name || key || 'আরও দেখুন';
+    const map = {
+      'best-seller': '/rokomari-best-seller/',
+      'books': '/rokomari-book/',
+      'electronics': '/rokomari-electronics/',
+      'foods': '/rokomari-foods/',
+      'furniture': '/rokomari-furniture/',
+      'beauty': '/rokomari-beauty/',
+      'others': '/rokomari-others/'
+    };
+    const link = map[key] || ('/' + key + '/');
+
     const inner = document.createElement('div');
-    inner.className='see-more-card';
-    inner.innerHTML = `<div>আরও দেখুন — ${escapeHtml(readable)}</div><a href="${resolveUrl(link)}">See all ${escapeHtml(readable)}</a>`;
+    inner.className = 'see-more-card';
+    inner.innerHTML = `
+      <div>আরও দেখুন — ${escapeHtml(readable)}</div>
+      <a href="${resolveUrl(link)}">See all ${escapeHtml(readable)}</a>
+    `;
     wrap.appendChild(inner);
     section._track.appendChild(wrap);
   }
@@ -456,47 +508,89 @@ async function renderHome(){
     });
   }
 
-  async function renderStandard(mainEl){
+  
+async function renderStandard(mainEl){
     // prefer page-specific data-src, otherwise check explicit global JSON_DATA_PATH if allowed
     const dataSrc = mainEl?.dataset?.src || null;
 
     // If no source provided and no in-memory data, do not render anything.
-    if(!dataSrc && !(Array.isArray(window.rokomariData) && window.rokomariData.length) && !(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH)){
+    if(
+      !dataSrc &&
+      !(Array.isArray(window.rokomariData) && window.rokomariData.length) &&
+      !(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH)
+    ){
       return;
     }
 
     let raw = [];
-    if(Array.isArray(window.rokomariData) && window.rokomariData.length) raw = window.rokomariData;
-    else if(dataSrc) raw = await fetchJson(dataSrc);
-    else if(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH) raw = await fetchJson(window.JSON_DATA_PATH);
-    else raw = [];
+    if(Array.isArray(window.rokomariData) && window.rokomariData.length){
+      raw = window.rokomariData;
+    } else if(dataSrc){
+      raw = await fetchJson(dataSrc);
+    } else if(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH){
+      raw = await fetchJson(window.JSON_DATA_PATH);
+    } else {
+      raw = [];
+    }
 
-    const all = normalize(raw);
+    // Derive a category key from the dataSrc path, e.g. "/data/books.json" -> "books"
+    let catKey = '';
+    if(typeof dataSrc === 'string'){
+      const m = dataSrc.match(/\/data\/([^./]+)\.json/i);
+      if(m) catKey = m[1];
+    }
+
+    let all = normalize(raw);
+    // Shuffle deterministically once per hour per category
+    all = hourlyShuffle(all, catKey || 'category');
+
     window._all_index = all;
 
     let cards = qs('#cardsArea', mainEl);
     if(!cards){
       cards = document.createElement('div');
-      cards.id='cardsArea';
-      cards.className='cards-area container';
+      cards.id = 'cardsArea';
+      cards.className = 'cards-area container';
       mainEl.appendChild(cards);
+    } else {
+      cards.className = 'cards-area container';
     }
-    cards.className = 'cards-area container';
 
+    const PAGE_SIZE = 10;
     let idx = 0;
+    let loadMoreBtn = null;
+
     function appendBatch(){
-      const slice = all.slice(idx, idx + (4 * 2));
+      if(idx >= all.length) return;
+      const slice = all.slice(idx, idx + PAGE_SIZE);
       slice.forEach(it => cards.appendChild(createCard(it)));
       idx += slice.length;
+      if(loadMoreBtn && idx >= all.length){
+        loadMoreBtn.style.display = 'none';
+      }
     }
+
+    // initial load
     appendBatch();
 
-    const sentinel = document.createElement('div'); sentinel.id='sentinel'; sentinel.style.height='2px'; mainEl.appendChild(sentinel);
-    const obs = new IntersectionObserver(entries=>{
-      entries.forEach(en=>{ if(en.isIntersecting) appendBatch(); });
-    }, { rootMargin:'400px' });
-    obs.observe(sentinel);
-  }
+    // create / reuse "আরও দেখুন" button
+    loadMoreBtn = qs('.cards-load-more', mainEl);
+    if(!loadMoreBtn){
+      loadMoreBtn = document.createElement('button');
+      loadMoreBtn.type = 'button';
+      loadMoreBtn.className = 'btn cards-load-more';
+      loadMoreBtn.textContent = 'আরও দেখুন';
+      loadMoreBtn.style.margin = '18px auto 4px';
+      loadMoreBtn.style.display = (all.length > PAGE_SIZE) ? 'block' : 'none';
+      mainEl.appendChild(loadMoreBtn);
+    } else {
+      loadMoreBtn.style.display = (all.length > PAGE_SIZE && idx < all.length) ? 'block' : 'none';
+    }
+
+    if(loadMoreBtn){
+      loadMoreBtn.onclick = appendBatch;
+    }
+}
 
   function attachImageSkeletons(){
     document.querySelectorAll('.card .media img').forEach(img=>{
