@@ -1,6 +1,8 @@
 ---
 layout: default
 title: Contact
+show_faq: false
+
 ---
 
 <section class="container" style="padding:28px 0;">
