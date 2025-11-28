@@ -200,13 +200,13 @@
 async function renderHome(){
     const root = document.createElement('div'); root.className = 'home-cats container';
     const cats = [
-      { key:'best-seller', name:'Best Seller', file:'/data/best_seller.json', href:'/best-seller/' },
-      { key:'books', name:'Books', file:'/data/books.json', href:'/books/' },
-      { key:'electronics', name:'Electronics', file:'/data/electronics.json', href:'/electronics/' },
-      { key:'foods', name:'Foods', file:'/data/foods.json', href:'/foods/' },
-      { key:'furniture', name:'Furniture', file:'/data/furnitures.json', href:'/furniture/' },
-      { key:'beauty', name:'Beauty', file:'/data/beauty.json', href:'/beauty/' },
-      { key:'others', name:'Others', file:'/data/others.json', href:'/others/' }
+      { key:'best-seller', name:'Best Seller', file:'/data/best_seller.json', href:'/rokomari-best-seller/' },
+      { key:'books', name:'Books', file:'/data/books.json', href:'/rokomari-books/' },
+      { key:'electronics', name:'Electronics', file:'/data/electronics.json', href:'/rokomari-electronics/' },
+      { key:'foods', name:'Foods', file:'/data/foods.json', href:'/rokomari-foods/' },
+      { key:'furniture', name:'Furniture', file:'/data/furnitures.json', href:'/rokomari-furniture/' },
+      { key:'beauty', name:'Beauty', file:'/data/beauty.json', href:'/rokomari-beauty/' },
+      { key:'others', name:'Others', file:'/data/others.json', href:'/rokomari-others/' }
     ];
 
     for(const c of cats){
