@@ -53,7 +53,7 @@ body{font-family:'Poppins',sans-serif;background:#f6f6f8;color:#111;min-height:1
 .see-more-card a{display:inline-block;margin-top:12px;padding:10px 14px;background:#fff;border-radius:8px;border:1px solid #e2e8f0;text-decoration:none;color:#0b1220;font-weight:700}
 
 /* card */
-.card{background:#fff;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 24px rgba(12,20,30,0.06);border:1px solid rgba(12,20,30,0.03);min-height:460px;transform:translateY(10px);opacity:0;animation:slide-and-fade-in .45s ease forwards}
+.card{background:#fff;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 24px rgba(12,20,30,0.06);border:1px solid rgba(12,20,30,0.03);min-height:auto;transform:translateY(10px);opacity:0;animation:slide-and-fade-in .45s ease forwards}
 @keyframes slide-and-fade-in{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
 
 /* media */
