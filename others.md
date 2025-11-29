@@ -14,18 +14,6 @@ description: "বাকি সব miscellaneous প্রোডাক্ট, গ
     এখানে পাবেন বিভিন্ন <strong>miscellaneous পণ্য</strong> ও গিফট আইটেমের জন্য Rokomari promo code।
     যেকোনো ইউনিক প্রোডাক্ট পছন্দ হলে কার্ড থেকে লিংকে গিয়ে Checkout পেইজে কুপন ব্যবহার করে ডিসকাউন্ট নিন।
   </p>
-
-  <nav class="category-inline-links">
-    <span>Browse more categories:</span>
-    <a href="/rokomari-book/">Books</a>
-    <a href="/rokomari-electronics/">Electronics</a>
-    <a href="/rokomari-foods/">Foods</a>
-    <a href="/rokomari-furniture/">Furniture</a>
-    <a href="/rokomari-beauty/">Beauty</a>
-    <a href="/rokomari-others/">Others</a>
-    <a href="/rokomari-best-seller/">Best Seller</a>
-  </nav>
-
 </main>
 
 <script>

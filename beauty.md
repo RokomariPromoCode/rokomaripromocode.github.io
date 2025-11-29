@@ -14,18 +14,6 @@ description: "স্কিনকেয়ার, হেয়ারকেয়�
     বিউটি ও পার্সোনাল কেয়ার আইটেম কেনার আগে এই পেইজ থেকে সবশেষ <strong>Rokomari promo code</strong> দেখে নিন।
     ফেসওয়াশ, ক্রিম, শ্যাম্পু, পারফিউমসহ পছন্দের ব্র্যান্ডের প্রোডাক্টে কম খরচে অর্ডার করতে বক্স থেকে কোড কপি করুন।
   </p>
-
-  <nav class="category-inline-links">
-    <span>Browse more categories:</span>
-    <a href="/rokomari-book/">Books</a>
-    <a href="/rokomari-electronics/">Electronics</a>
-    <a href="/rokomari-foods/">Foods</a>
-    <a href="/rokomari-furniture/">Furniture</a>
-    <a href="/rokomari-beauty/">Beauty</a>
-    <a href="/rokomari-others/">Others</a>
-    <a href="/rokomari-best-seller/">Best Seller</a>
-  </nav>
-
 </main>
 
 <script>

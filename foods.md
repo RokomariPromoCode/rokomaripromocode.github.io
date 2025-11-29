@@ -14,18 +14,6 @@ permalink: /rokomari-foods/
     চাল, ডাল, স্ন্যাকস বা অন্য যেকোনো ফুড আইটেমে সেভ করতে চাইলে এখানে থাকা <strong>Rokomari promo code</strong> ব্যবহার করুন।
     নিত্যপ্রয়োজনীয় পণ্যে অর্ডার দেওয়ার আগে কুপন কপি করে Checkout পেইজে ব্যবহার করলেই কম দামে পেয়ে যাবেন।
   </p>
-
-  <nav class="category-inline-links">
-    <span>Browse more categories:</span>
-    <a href="/rokomari-book/">Books</a>
-    <a href="/rokomari-electronics/">Electronics</a>
-    <a href="/rokomari-foods/">Foods</a>
-    <a href="/rokomari-furniture/">Furniture</a>
-    <a href="/rokomari-beauty/">Beauty</a>
-    <a href="/rokomari-others/">Others</a>
-    <a href="/rokomari-best-seller/">Best Seller</a>
-  </nav>
-
 </main>
 
 <script>
