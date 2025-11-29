@@ -228,22 +228,7 @@
   
   const MAX_HOME_ITEMS = 8;
 
-async 
-
-function setupFaq(){
-  const items = Array.from(document.querySelectorAll('.faq-section .faq-item'));
-  if(!items.length) return;
-  items.forEach(item=>{
-    item.addEventListener('toggle', ()=> {
-      if(!item.open) return;
-      items.forEach(other=>{
-        if(other !== item) other.open = false;
-      });
-    });
-  });
-}
-
-function renderHome(){
+async function renderHome(){
     const root = document.createElement('div'); root.className = 'home-cats container';
     const cats = [
       { key:'best-seller', name:'Best Seller', file:'/data/best_seller.json', href:'/rokomari-best-seller/' },
@@ -647,25 +632,8 @@ async function renderStandard(mainEl){
     });
   }
 
-
-  function setupFaqAccordion(){
-    const section = document.querySelector('.faq-section');
-    if(!section) return;
-    const items = Array.from(section.querySelectorAll('.faq-item'));
-    if(!items.length) return;
-    items.forEach(item=>{
-      item.addEventListener('toggle', ()=>{
-        if(item.open){
-          items.forEach(other=>{
-            if(other !== item) other.open = false;
-          });
-        }
-      });
-    });
-  }
   document.addEventListener('DOMContentLoaded', function(){
     setupHeader();
-    setupFaq();
 
     // normalize and compare path against SITE_BASE aware roots
     const path = (location.pathname || '/').replace(/\/$/, '') || '/';

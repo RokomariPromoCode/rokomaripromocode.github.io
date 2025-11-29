@@ -14,18 +14,6 @@ permalink: /rokomari-electronics/
     ইলেকট্রনিক্স প্রোডাক্ট কেনার সময় যেন কোনো <strong>ডিসকাউন্ট কোড</strong> মিস না হয়—সে জন্যই এই লিস্ট।
     যে ডিভাইসটি পছন্দ হয়েছে, সেটির “Buy Now” বাটনে ক্লিক করে Checkout পেইজে কুপনটি পেস্ট করুন।
   </p>
-
-  <nav class="category-inline-links">
-    <span>Browse more categories:</span>
-    <a href="/rokomari-book/">Books</a>
-    <a href="/rokomari-electronics/">Electronics</a>
-    <a href="/rokomari-foods/">Foods</a>
-    <a href="/rokomari-furniture/">Furniture</a>
-    <a href="/rokomari-beauty/">Beauty</a>
-    <a href="/rokomari-others/">Others</a>
-    <a href="/rokomari-best-seller/">Best Seller</a>
-  </nav>
-
 </main>
 
 <script>

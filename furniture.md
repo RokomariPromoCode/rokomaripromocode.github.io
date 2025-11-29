@@ -14,18 +14,6 @@ description: "রকমারি থেকে চেয়ার, টেবি�
     ঘর কিংবা অফিস সাজাতে এখনই দেখে নিন সর্বশেষ <strong>Rokomari furniture promo code</strong>।
     স্টাডি টেবিল, কম্পিউটার টেবিল, বুকশেলফ থেকে শুরু করে বিভিন্ন ফার্নিচার—সঠিক কুপন ব্যবহার করলে বাজেটের মধ্যেই অর্ডার করা যাবে।
   </p>
-
-  <nav class="category-inline-links">
-    <span>Browse more categories:</span>
-    <a href="/rokomari-book/">Books</a>
-    <a href="/rokomari-electronics/">Electronics</a>
-    <a href="/rokomari-foods/">Foods</a>
-    <a href="/rokomari-furniture/">Furniture</a>
-    <a href="/rokomari-beauty/">Beauty</a>
-    <a href="/rokomari-others/">Others</a>
-    <a href="/rokomari-best-seller/">Best Seller</a>
-  </nav>
-
 </main>
 
 <script>
