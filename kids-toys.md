@@ -4,7 +4,7 @@ title: "Rokomari Promo Code for Kids Toys – কিডস টয়স অফ�
 permalink: /rokomari-kids-toys/
 description: "রকমারি থেকে কিডস টয়স, গেমস, পাজলসহ শিশুদের বিভিন্ন খেলনা কিনতে ব্যবহার করুন আমাদের Rokomari promo code। কম খরচে বাচ্চাদের জন্য সেরা গিফট বেছে নিন।"
 ---
-<main id="main" data-src="/data/furnitures.json" data-cards="true">
+<main id="main" data-src="/data/kids-toys.json" data-cards="true">
   <h1 class="page-title">Rokomari Promo Code For Kids Toys</h1>
   <p>
     Browse a curated list of kids toys, puzzles, games and creative learning items that are available on Rokomari with active promo codes.
