@@ -436,14 +436,14 @@ h1.page-title::before {
     color:#374151;
     line-height:1.4;
     margin-bottom:8px;
-    flex:0 0 auto;
     display:-webkit-box;
     -webkit-line-clamp:3;
     -webkit-box-orient:vertical;
     overflow:hidden;
     text-overflow:ellipsis;
   }
-in[data-cards] .card .card-bottom{
+
+  #main[data-cards] .card .card-bottom{
     margin-top:6px;
     padding-top:8px;
     border-top:1px dashed #e5e7eb;
@@ -612,10 +612,4 @@ in[data-cards] .card .card-bottom{
 #main[data-cards] p{
   font-size:14px;
   line-height:1.7;
-}
-
-
-/* Reduce vertical gap above discount row on category cards */
-#main[data-cards] .card .card-bottom{
-  margin-top:8px;
 }
