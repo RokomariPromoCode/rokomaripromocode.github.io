@@ -122,7 +122,7 @@
       {key:'books',label:'Books',href:'/rokomari-book/'},
       {key:'electronics',label:'Electronics',href:'/rokomari-electronics/'},
       {key:'foods',label:'Foods',href:'/rokomari-foods/'},
-      {key:'furniture',label:'Kids Toys',href:'/rokomari-kids-toys/'},
+      {key:'kids-toys',label:'Kids Toys',href:'/rokomari-kids-toys/'},
       {key:'beauty',label:'Beauty',href:'/rokomari-beauty/'},
       {key:'others',label:'Others',href:'/rokomari-others/'},
     ];
@@ -158,7 +158,7 @@
 
     let localIndex = [];
     (async ()=>{
-      const files = ['/data/json_data.json','/data/best_seller.json','/data/books.json','/data/electronics.json','/data/foods.json','/data/furnitures.json','/data/beauty.json','/data/others.json'];
+      const files = ['/data/json_data.json','/data/best_seller.json','/data/books.json','/data/electronics.json','/data/foods.json','/data/kids-toys.json','/data/beauty.json','/data/others.json'];
       const fetched = await Promise.all(files.map(f => fetchJson(f)));
       const merged = fetched.flat();
       const normalized = normalize(merged);
@@ -235,7 +235,7 @@ async function renderHome(){
       { key:'books', name:'Books', file:'/data/books.json', href:'/rokomari-books/' },
       { key:'electronics', name:'Electronics', file:'/data/electronics.json', href:'/rokomari-electronics/' },
       { key:'foods', name:'Foods', file:'/data/foods.json', href:'/rokomari-foods/' },
-      { key:'furniture', name:'Kids Toys', file:'/data/furnitures.json', href:'/rokomari-kids-toys/' },
+      { key:'kids-toys', name:'Kids Toys', file:'/data/kids-toys.json', href:'/rokomari-kids-toys/' },
       { key:'beauty', name:'Beauty', file:'/data/beauty.json', href:'/rokomari-beauty/' },
       { key:'others', name:'Others', file:'/data/others.json', href:'/rokomari-others/' }
     ];
@@ -350,7 +350,7 @@ function addSeeMoreCard(section){
       'books': '/rokomari-book/',
       'electronics': '/rokomari-electronics/',
       'foods': '/rokomari-foods/',
-      'furniture': '/rokomari-furniture/',
+      'kids-toys': '/rokomari-kids-toys/',
       'beauty': '/rokomari-beauty/',
       'others': '/rokomari-others/'
     };
