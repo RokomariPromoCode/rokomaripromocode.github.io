@@ -14,6 +14,18 @@ permalink: /rokomari-book/
     বই কেনার আগে এই পেইজ থেকে আজকের <strong>Rokomari promo code</strong> ও ডিসকাউন্ট দেখে নিন।
     ইসলামিক, মোটিভেশনাল, উপন্যাস কিংবা একাডেমিক – যে ক্যাটাগরিই হোক, সঠিক কুপন ব্যবহার করে সহজেই টাকা সেভ করুন।
   </p>
+
+  <nav class="category-inline-links">
+    <span>Browse more categories:</span>
+    <a href="/rokomari-book/">Books</a>
+    <a href="/rokomari-electronics/">Electronics</a>
+    <a href="/rokomari-foods/">Foods</a>
+    <a href="/rokomari-furniture/">Furniture</a>
+    <a href="/rokomari-beauty/">Beauty</a>
+    <a href="/rokomari-others/">Others</a>
+    <a href="/rokomari-best-seller/">Best Seller</a>
+  </nav>
+
 </main>
 
 <script>

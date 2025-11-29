@@ -14,6 +14,18 @@ permalink: /rokomari-best-seller/
     রকমারিতে যেসব পণ্য বেশি বিক্রি হচ্ছে, সেগুলোর জন্য বিশেষ <strong>best seller promo code</strong> আমরা একসাথে দিয়েছি।
     বেস্ট সেলার বই বা প্রোডাক্ট অর্ডার করার আগে এখান থেকে কুপন কপি করলে কম খরচে পণ্যটি পাওয়া সহজ হবে।
   </p>
+
+  <nav class="category-inline-links">
+    <span>Browse more categories:</span>
+    <a href="/rokomari-book/">Books</a>
+    <a href="/rokomari-electronics/">Electronics</a>
+    <a href="/rokomari-foods/">Foods</a>
+    <a href="/rokomari-furniture/">Furniture</a>
+    <a href="/rokomari-beauty/">Beauty</a>
+    <a href="/rokomari-others/">Others</a>
+    <a href="/rokomari-best-seller/">Best Seller</a>
+  </nav>
+
 </main>
 
 <script>

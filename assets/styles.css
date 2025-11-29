@@ -2,7 +2,20 @@
 /* Reset & Base */
 *{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px} /* change to 17 to zoom more */
-body{font-family:'Poppins',sans-serif;background:#f6f6f8;color:#111;min-height:100vh;-webkit-font-smoothing:antialiased}
+:root{
+  --bg-body:#f6f6f8;
+  --bg-card:#ffffff;
+  --bg-muted:#f9fafb;
+  --text-main:#111827;
+  --text-muted:#6b7280;
+}
+body{font-family:'Poppins',sans-serif;background:var(--bg-body);color:var(--text-main);min-height:100vh;-webkit-font-smoothing:antialiased}
+p{
+  font-size:14px;
+  line-height:1.7;
+  color:var(--text-main);
+  margin:4px 0 10px;
+}
 
 /* container */
 .container{max-width:1260px;margin:0 auto;padding:0 16px}
@@ -57,7 +70,7 @@ body{font-family:'Poppins',sans-serif;background:#f6f6f8;color:#111;min-height:1
 @keyframes slide-and-fade-in{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
 
 /* media */
-.card .media{height:260px;display:flex;align-items:center;justify-content:center;background:#fff;padding:12px;border-bottom:1px solid #f4f4f4}
+.card .media{height:220px;display:flex;align-items:center;justify-content:center;background:#fff;padding:12px;border-bottom:1px solid #f4f4f4}
 .card .media img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px}
 .img-skel{width:100%;height:100%;background:linear-gradient(90deg,#f0f0f0,#eaeaea,#f0f0f0);background-size:200% 100%;animation:skeleton 1.2s linear infinite}
 @keyframes skeleton{0%{background-position:200% 0}100%{background-position:-200% 0}}
@@ -381,6 +394,7 @@ h1.page-title::before {
     box-shadow:0 10px 24px rgba(15,23,42,0.06);
     border:1px solid rgba(15,23,42,0.04);
     overflow:hidden;
+    min-height:auto;
   }
 
   #main[data-cards] .card-content{
@@ -580,4 +594,21 @@ h1.page-title::before {
 }
 .contact-form .btn.primary:hover{
   background:#15803d;
+}
+
+.category-inline-links{
+  margin-top:10px;
+  font-size:14px;
+}
+.category-inline-links span{
+  font-weight:600;
+  margin-right:6px;
+}
+.category-inline-links a{
+  margin-right:6px;
+  text-decoration:none;
+  color:#2563eb;
+}
+.category-inline-links a:hover{
+  text-decoration:underline;
 }
