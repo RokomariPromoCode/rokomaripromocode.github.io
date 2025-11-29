@@ -86,7 +86,7 @@
     const title = safe(item.title);
     const author = safe(item.author || '');
     const seller = safe(item.seller || '');
-    const desc = safe(item.desc || '');
+    const desc = cleanDesc(item.desc || '');
     const img = safe(item.img);
     const link = safe(item.link || '#');
 
@@ -122,7 +122,7 @@
       {key:'books',label:'Books',href:'/rokomari-book/'},
       {key:'electronics',label:'Electronics',href:'/rokomari-electronics/'},
       {key:'foods',label:'Foods',href:'/rokomari-foods/'},
-      {key:'furniture',label:'Furniture',href:'/rokomari-furniture/'},
+      {key:'furniture',label:'Kids Toys',href:'/rokomari-kids-toys/'},
       {key:'beauty',label:'Beauty',href:'/rokomari-beauty/'},
       {key:'others',label:'Others',href:'/rokomari-others/'},
     ];
@@ -235,7 +235,7 @@ async function renderHome(){
       { key:'books', name:'Books', file:'/data/books.json', href:'/rokomari-books/' },
       { key:'electronics', name:'Electronics', file:'/data/electronics.json', href:'/rokomari-electronics/' },
       { key:'foods', name:'Foods', file:'/data/foods.json', href:'/rokomari-foods/' },
-      { key:'furniture', name:'Furniture', file:'/data/furnitures.json', href:'/rokomari-furniture/' },
+      { key:'furniture', name:'Kids Toys', file:'/data/furnitures.json', href:'/rokomari-kids-toys/' },
       { key:'beauty', name:'Beauty', file:'/data/beauty.json', href:'/rokomari-beauty/' },
       { key:'others', name:'Others', file:'/data/others.json', href:'/rokomari-others/' }
     ];
