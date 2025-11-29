@@ -1,13 +1,19 @@
 ---
 layout: default
-title: Rokomari Promo Code for books | Exclusive deals
-description: আমাদের সাইটে রকমারি এর সকল বইয়ে পাচ্ছেন সর্বোচ্চ ডিসকাউন্ট। Rokomari promo code আছে আপনাদের কাছে 
+title: "Rokomari Promo Code for Books – বইয়ে সর্বোচ্চ ডিসকাউন্ট"
+description: "রকমারি থেকে প্রিয় বই কেনার আগে এখানে দেখে নিন আজকের active Rokomari promo code ও বইয়ের ডিসকাউন্ট অফার। ইসলামিক, উপন্যাস, একাডেমিক সহ সব ক্যাটাগরি কভার করা হয়েছে।"
 permalink: /rokomari-book/
 ---
-
 <main id="main" data-src="/data/books.json" data-cards="true">
   <h1 class="page-title">Rokomari Promo Code For Books</h1>
-  <p>Books and reading materials.Get with exclusive deals from us.</p>
+  <p>
+    Find Rokomari promo codes for Islamic books, novels, academic guides, kids’ books and more – all in one place.
+    We curate updated discount offers so you can save every time you order a new title.
+  </p>
+  <p>
+    বই কেনার আগে এই পেইজ থেকে আজকের <strong>Rokomari promo code</strong> ও ডিসকাউন্ট দেখে নিন।
+    ইসলামিক, মোটিভেশনাল, উপন্যাস কিংবা একাডেমিক – যে ক্যাটাগরিই হোক, সঠিক কুপন ব্যবহার করে সহজেই টাকা সেভ করুন।
+  </p>
 </main>
 
 <script>

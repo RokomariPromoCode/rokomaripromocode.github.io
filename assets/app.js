@@ -544,6 +544,16 @@ async function renderStandard(mainEl){
     // Shuffle deterministically once per hour per category
     all = hourlyShuffle(all, catKey || 'category');
 
+    // Priority sort: items appearing in best_seller.json come first
+    try {
+      const bs = await fetchJson('/data/best_seller.json');
+      const titles = new Set(bs.map(it=> (it.title||'').trim().toLowerCase()));
+      all.sort((a,b)=>{
+        const at = titles.has((a.title||'').toLowerCase());
+        const bt = titles.has((b.title||'').toLowerCase());
+        return at===bt?0:(at?-1:1);
+      });
+    } catch(e) { console.warn('priority sort failed',e);}
     window._all_index = all;
 
     let cards = qs('#cardsArea', mainEl);
