@@ -94,7 +94,7 @@
     article.className = 'card';
     article.innerHTML = `
       <div class="card-content">
-        <div class="media">${ img ? `<img src="${escapeHtml(img)}" alt="${escapeHtml(title)}" loading="lazy">` : '<div class="no-image">No image</div>' }</div>
+        <div class="media">${ img ? `<img src="${escapeHtml(img)}" alt="${escapeHtml(title)}" loading="lazy" decoding="async" width="260" height="260">` : '<div class="no-image">No image</div>' }</div>
         <div class="body">
           <h4 class="title">${escapeHtml(title)}</h4>
           <div class="meta">${author ? 'লেখক: '+escapeHtml(author) : ''} ${seller ? ' • বিক্রেতা: '+escapeHtml(seller) : ''}</div>

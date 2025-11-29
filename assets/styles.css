@@ -580,3 +580,36 @@ h1.page-title::before {
 .contact-form .btn.primary:hover{
   background:#15803d;
 }
+
+/* Add arrow icon at end of FAQ question */
+.faq-item summary{
+  position:relative;
+  padding-right:24px;
+}
+.faq-item summary::after{
+  content:"🔽";
+  position:absolute;
+  right:0;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:12px;
+  opacity:0.7;
+}
+.faq-item[open] summary::after{
+  transform:translateY(-50%) rotate(180deg);
+}
+
+
+/* Category page intro paragraphs */
+.page-title + p,
+.page-title + p + p{
+  max-width:900px;
+  margin:6px auto;
+  font-size:14px;
+  line-height:1.7;
+}
+
+#main[data-cards] p{
+  font-size:14px;
+  line-height:1.7;
+}
