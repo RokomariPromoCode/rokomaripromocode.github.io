@@ -1,6 +1,3 @@
-title: Rokomari Promo Code
-description: "আজকের হালনাগাদ Rokomari promo code, বই, ইলেকট্রনিক্স, ফুড, কিডস টয়সসহ সব ক্যাটাগরির জন্য ডিসকাউন্ট ও কুপন লিস্ট।"
-url: "https://rokomaripromocode.com"
-baseurl: ""   # keep empty when using custom domain root
-lang: "bn"
-timezone: "Asia/Dhaka"
+title: RokomariPromoCode
+description: Affiliate book deals & summaries
+baseurl: ""   # IMPORTANT: set to your repo project name

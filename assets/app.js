@@ -101,7 +101,7 @@
           <p class="desc">${escapeHtml(desc)}</p>
           <div class="card-bottom">
             <div class="discount-text">ডিসকাউন্ট পেতে এখানে কিনুন</div>
-            <a class="btn" href="${escapeHtml(link)}" target="_blank" rel="nofollow sponsored noopener">Buy Now</a>
+            <a class="btn" href="${escapeHtml(link)}" target="_blank" rel="noopener">Buy Now</a>
           </div>
         </div>
       </div>
