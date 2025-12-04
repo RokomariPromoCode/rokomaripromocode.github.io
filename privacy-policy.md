@@ -4,6 +4,7 @@ title: "Privacy Policy – Rokomari Promo Code"
 permalink: /privacy-policy/
 description: "Rokomari Promo Code privacy policy. Learn how we collect, use and protect your information including form submissions and Google Analytics data."
 noindex: false
+show_faq: false
 ---
 
 <h1 class="page-title">Privacy Policy</h1>
