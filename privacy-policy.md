@@ -144,7 +144,7 @@ show_faq: false
 </ul>
 <p>
   To exercise any of these rights, please contact us at:
-  <strong>synazib24@gmail.com</strong>
+  <strong>support@rokomaripromocode.com</strong>
 </p>
 
 <hr>
@@ -172,6 +172,6 @@ show_faq: false
 </p>
 <ul>
   <li><strong>Website:</strong> Rokomari Promo Code</li>
-  <li><strong>Email:</strong> synazib24@gmail.com</li>
+  <li><strong>Email:</strong> support@rokomaripromocode.com</li>
   <li><strong>Team Members:</strong> Syed Nazib Hossain, Mohammed Abu Jeshan Chowdhury, Mohammad Mumtahin Hasan</li>
 </ul>
