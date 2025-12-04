@@ -613,3 +613,208 @@ h1.page-title::before {
   font-size:14px;
   line-height:1.7;
 }
+
+
+/* Footer styles extracted from _includes/footer.html */
+
+/* --- ফুটারের মেইন লেআউট ফিক্স --- */
+.main-footer {
+    background-color: #111827;
+    color: #e5e7eb;
+    position: relative;
+    margin-top: 100px;
+    padding-top: 0;
+}
+
+.main-footer::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #1abc9c, #3498db, #9b59b6);
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+}
+
+/* --- ডিসকাউন্ট রিকোয়েস্ট ফর্ম --- */
+.footer-request-area {
+    background: #1f2937;
+    padding: 30px 40px;
+    border-radius: 15px;
+    margin-top: -60px; /* অর্ধেক উপরে থাকবে */
+    box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+    border: 1px solid #374151;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    box-sizing: border-box; /* প্যাডিং সহ উইথ ঠিক রাখবে */
+}
+
+.footer-request-area h2 {
+    color: #fff;
+    font-size: 22px;
+    margin: 0 0 20px 0;
+    text-align: center;
+}
+.footer-request-area h2 span { color: #1abc9c; }
+
+/* ফর্মের গ্রিড সিস্টেম (রেসপন্সিভ) */
+.footer-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    align-items: end;
+}
+
+.f-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* ফ্লেক্সবক্স ওভারফ্লো ফিক্স */
+}
+.f-group label {
+    font-size: 13px;
+    color: #9ca3af;
+    margin-bottom: 6px;
+    margin-left: 2px;
+    font-weight: 500;
+}
+
+.f-group input {
+    background: #374151;
+    border: 1px solid #4b5563;
+    color: #fff;
+    padding: 12px 15px;
+    border-radius: 8px;
+    outline: none;
+    transition: 0.3s;
+    width: 100%;
+    box-sizing: border-box;
+}
+.f-group input:focus {
+    border-color: #1abc9c;
+    background: #4b5563;
+}
+
+.f-btn {
+    background: linear-gradient(45deg, #1abc9c, #16a085);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    transition: 0.3s;
+    height: 46px; /* ইনপুটের হাইটের সমান */
+    white-space: nowrap;
+    width: 100%;
+}
+.f-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(26, 188, 156, 0.4);
+}
+
+/* --- ফুটার কন্টেন্ট --- */
+.footer-content {
+    padding: 80px 0 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+}
+
+.footer-col h3 {
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+}
+.footer-col h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 40px;
+    height: 2px;
+    background: #1abc9c;
+}
+
+.footer-about p {
+    color: #9ca3af;
+    line-height: 1.6;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.footer-links li { margin-bottom: 10px; }
+.footer-links a {
+    color: #d1d5db;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.footer-links a:hover {
+    color: #1abc9c;
+    padding-left: 5px;
+}
+.footer-links a i {
+    font-size: 12px;
+    color: #4b5563;
+    transition: 0.3s;
+}
+.footer-links a:hover i { color: #1abc9c; }
+
+.social-links { display: flex; gap: 10px; }
+.social-icon {
+    width: 36px;
+    height: 36px;
+    background: #374151;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: 0.3s;
+}
+.social-icon:hover {
+    background: #1abc9c;
+    transform: rotate(360deg);
+}
+
+.footer-bottom {
+    background: #0f1218;
+    padding: 20px 0;
+    text-align: center;
+    border-top: 1px solid #1f2937;
+    font-size: 13px;
+    color: #6b7280;
+}
+.footer-bottom span {
+    color: #1abc9c;
+    font-weight: bold;
+}
+
+/* --- মোবাইল স্পেসিফিক ফিক্স --- */
+@media (max-width: 768px) {
+    .main-footer { margin-top: 80px; }
+    .footer-request-area { margin-top: -40px; padding: 25px; }
+    .footer-form {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    .f-btn { width: 100%; }
+}

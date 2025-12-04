@@ -34,27 +34,12 @@
 
 
 
-  <!-- Fonts & Icons -->
-  <!-- Preconnect for faster font loading -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Google Font (Poppins) -->
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
-
-  <!-- Font Awesome (defer so it is not render-blocking) -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        media="print"
-        onload="this.media='all'">
-  <noscript>
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  </noscript>
-
-  <!-- Primary stylesheet: preload + normal load -->
-  <link rel="preload" href="{{ '/assets/styles.css' | relative_url }}" as="style">
+  <!-- Primary stylesheet -->
   <link rel="stylesheet" href="{{ '/assets/styles.css' | relative_url }}">
 
   <!-- Global JS variables -->
@@ -103,7 +88,6 @@
   {% include footer.html %}
   {% include wa.html %}
 
- <!-- <script src="{{ '/assets/inject-includes.js' | relative_url }}" defer></script> -->
   <script src="{{ '/assets/app.js' | relative_url }}" defer></script>
 
 </body>
