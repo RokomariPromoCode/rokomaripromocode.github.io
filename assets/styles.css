@@ -945,36 +945,3 @@ ol li {
     line-height: 1.75;
   }
 }
-
-/* If there are multiple paragraphs in a row, keep them close */
-p + p {
-  margin-top: 0.15rem;
-}
-
-/* Optional: lists in Markdown text */
-ul,
-ol {
-  font-size: 0.97rem;
-  line-height: 1.7;
-  color: #374151;
-  margin: 0 0 0.9rem 1.2rem;
-}
-
-ul li,
-ol li {
-  margin-bottom: 0.35rem;
-}
-
-/* Slightly smaller on mobile so it feels balanced */
-@media (max-width: 640px) {
-  h2 {
-    font-size: 1.3rem;
-    margin-top: 2rem;
-  }
-  h3 {
-    font-size: 1.05rem;
-  }
-  p {
-    font-size: 0.95rem;
-  }
-}
