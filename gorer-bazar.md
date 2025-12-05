@@ -19,6 +19,11 @@ show_faq : false
   <p>
     Before you check out on Rokomari, simply visit this page, look for an available promo code, and use it to reduce your total cost instantly.
   </p>
+  </main>
+  
+<script>
+  window.FORCE_LOAD_CARDS = true;
+</script>
 
   <h2>About Gorer Bazar Products on Rokomari</h2>
   <p>
@@ -76,9 +81,3 @@ show_faq : false
   <p>
     Check this page regularly to never miss a <strong>Gorer Bazar discount</strong> or <strong>Rokomari Gorer Bazar promocode</strong>.
   </p>
-
-</main>
-
-<script>
-  window.FORCE_LOAD_CARDS = true;
-</script>
