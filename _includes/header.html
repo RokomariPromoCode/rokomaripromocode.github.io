@@ -2,21 +2,39 @@
 <header class="modern-header">
   <div class="header-container container">
     <div class="header-logo">
-      <a href="/"><img src="/assets/logo.png" alt="Logo" style="height:42px"></a>
+      <a href="{{ '/' | relative_url }}">
+        <img src="{{ '/assets/logo.png' | relative_url }}" alt="Rokomari Promo Code Logo" style="height:42px">
+      </a>
     </div>
 
     <div class="header-search-wrapper">
       <div class="search-box">
-        <input id="header-search-input" placeholder="ক্যাটাগরি, বই বা লেখকের নাম খুঁজুন..." autocomplete="off">
+        <input id="header-search-input"
+               placeholder="ক্যাটাগরি, বই বা লেখকের নাম খুঁজুন..."
+               autocomplete="off">
         <span id="search-lens" class="search-icon-btn" role="button" aria-label="Search">🔍</span>
         <span id="search-clear" class="clear-btn" role="button" aria-label="Clear search">✕</span>
       </div>
       <div id="header-search-results" class="search-results-dropdown"></div>
     </div>
 
-    <nav class="header-menu">
-      <ul class="menu-links"></ul>
-      <div class="hamburger" role="button" aria-label="Toggle menu">☰</div>
+    <nav class="header-menu" aria-label="Primary">
+      <ul class="menu-links">
+        <!-- Static HTML navigation (good for SEO); JS will only enhance if empty -->
+        <li><a href="{{ '/' | relative_url }}">Home</a></li>
+        <li><a href="{{ '/rokomari-book/' | relative_url }}">Books Promo Code</a></li>
+        <li><a href="{{ '/rokomari-electronics/' | relative_url }}">Electronics</a></li>
+        <li><a href="{{ '/rokomari-foods/' | relative_url }}">Foods</a></li>
+        <li><a href="{{ '/rokomari-gorer-bazar/' | relative_url }}">Gorer Bazar</a></li>
+        <li><a href="{{ '/rokomari-kids-toys/' | relative_url }}">Kids Toys</a></li>
+        <li><a href="{{ '/rokomari-baby-products/' | relative_url }}">Baby Products</a></li>
+        <li><a href="{{ '/rokomari-beauty/' | relative_url }}">Beauty</a></li>
+        <li><a href "{{ '/rokomari-others/' | relative_url }}">Others</a></li>
+      </ul>
+
+      <button class="hamburger" type="button" aria-label="Toggle menu">
+        ☰
+      </button>
     </nav>
   </div>
 </header>
