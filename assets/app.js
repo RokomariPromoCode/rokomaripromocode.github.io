@@ -136,12 +136,13 @@
       {key:'others',label:'Others',href:'/rokomari-others/'},
     ];
 
-    if(menuLinks){
+    // Only build menu from JS if HTML is empty (keeps SEO-friendly server HTML)
+    if (menuLinks && !menuLinks.children.length) {
       menuLinks.innerHTML = '';
       const homeLi = document.createElement('li');
       homeLi.innerHTML = `<a href="${resolveUrl('/')}">Home</a>`;
       menuLinks.appendChild(homeLi);
-      categories.forEach(c=>{
+      categories.forEach(c => {
         const li = document.createElement('li');
         li.innerHTML = `<a href="${resolveUrl(c.href)}">${escapeHtml(c.label)}</a>`;
         menuLinks.appendChild(li);
