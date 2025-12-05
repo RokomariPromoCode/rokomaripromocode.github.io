@@ -29,6 +29,8 @@ keywords:
   </p>
 </section>
 
+<div id="home-cards-anchor"></div>
+
 <section class="container home-categories" aria-label="Rokomari promo code categories">
   <h2>কোন ক্যাটাগরির Rokomari promo code খুঁজছেন?</h2>
   <p>
