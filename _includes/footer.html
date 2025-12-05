@@ -1,92 +1,78 @@
 <!-- _includes/footer.html -->
+<footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-top">
 
-<footer id="footer" class="main-footer">
-  <div class="footer-container">
-
-    <div class="footer-request-area" id="request-area">
-      <h2>কাঙ্খিত বই বা প্রমো কোড <span>খুঁজে পাচ্ছেন না?</span></h2>
-      <form action="https://formspree.io/f/xovoyakd" method="POST" class="footer-form">
-        <div class="f-group">
-          <label>আপনার নাম</label>
-          <input type="text" name="name" placeholder="আপনার নাম লিখুন" required>
-        </div>
-        <div class="f-group">
-          <label>যোগাযোগ</label>
-          <input type="text" name="contact" placeholder="মোবাইল বা ইমেইল" required>
-        </div>
-        <div class="f-group">
-          <label>প্রোডাক্টের নাম</label>
-          <input type="text" name="product-name" id="product-name" placeholder="বই বা পণ্যের নাম" required>
-        </div>
-        <button type="submit" class="f-btn">
-          রিকোয়েস্ট পাঠান 
-        </button>
-      </form>
-    </div>
-
-    <div class="footer-content">
-      <div class="footer-col footer-about">
-        <h3>About Us</h3>
-        <img 
-								src="{{ 'favico.ico' | relative_url }}"
-             alt="{{ site.title | default: 'Logo' }}"
-             style="height:25px; width:25px;margin-bottom: 15px; border-radius: 5px;">
-        <p>
-          আমরা রকমারি ডট কমের অফিশিয়াল অ্যাফিলিয়েট পার্টনার। পাঠকদের জন্য
-          সেরা বইয়ের সন্ধান এবং সর্বোচ্চ ডিসকাউন্ট অফার নিশ্চিত করাই আমাদের লক্ষ্য।
+      <!-- About Us -->
+      <div>
+        <h3 class="footer-title">About Us</h3>
+        <p class="footer-about-text">
+          আমরা রকমারি ডট কমের অফিশিয়াল অ্যাফিলিয়েট পার্টনার নই। পাঠকদের জন্য সেরা
+          বইয়ের সংগ্রহ এবং সর্বোচ্চ ডিসকাউন্ট খুঁজে পেতে সাহায্য করা আমাদের লক্ষ্য।
         </p>
-        <div class="social-links">
-          <a href="#" class="social-icon"><span aria-hidden="true">f</span></a>
-          <a href="#" class="social-icon"><span aria-hidden="true">t</span></a>
-          <a href="#" class="social-icon"><span aria-hidden="true">ig</span></a>
-          <a href="#" class="social-icon"><span aria-hidden="true">▶</span></a>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook">f</a>
+          <a href="#" aria-label="Twitter">t</a>
+          <a href="#" aria-label="Instagram">ig</a>
+          <a href="#" aria-label="YouTube">▶</a>
         </div>
       </div>
 
-      <div class="footer-col">
-        <h3>Top Categories</h3>
-        <ul class="footer-links">
-          <li><a href="{{ '/rokomari-best-seller/' | relative_url }}"> Best Seller</a></li>
-          <li><a href="{{ '/rokomari-book/' | relative_url }}"> Books</a></li>
-          <li><a href="{{ '/rokomari-electronics/' | relative_url }}"> Electronics</a></li>
-          <li><a href="{{ '/rokomari-foods/' | relative_url }}"> Foods & Grocery</a></li>
-          <li><a href="{{ '/rokomari-kids-toys/' | relative_url }}"> Kids Toys</a></li>
-          <li><a href="{{ '/rokomari-baby-products/' | relative_url }}"> Baby Products</a></li>
-          <li><a href="{{ '/rokomari-beauty/' | relative_url }}"> Beauty</a></li>
-          <li><a href="{{ '/rokomari-others/' | relative_url }}"> Others</a></li>
+      <!-- Top Categories -->
+      <div>
+        <h3 class="footer-title">Top Categories</h3>
+        <ul class="footer-list">
+          <li><a href="/rokomari-best-seller/">Best Seller</a></li>
+          <li><a href="/rokomari-book/">Books</a></li>
+          <li><a href="/rokomari-electronics/">Electronics</a></li>
+          <li><a href="/gorer-bazar/">Foods &amp; Grocery</a></li>
+          <li><a href="/rokomari-kids-toys/">Kids Toys</a></li>
+          <li><a href="/rokomari-baby-products/">Baby Products</a></li>
+          <li><a href="/rokomari-beauty/">Beauty</a></li>
+          <li><a href="/rokomari-others/">Others</a></li>
         </ul>
       </div>
 
-      <div class="footer-col">
-        <h3>Quick Links</h3>
-        <ul class="footer-links">
-         <li><a href="{{ '/' | relative_url }}">Home</a></li>
-          <li><a href="{{ '/contact/' | relative_url }}">Contact</a></li>
-          <li><a href="{{ '/privacy-policy/' | relative_url }}">Privacy Policy</a></li>
-          <li><a href="{{ '/sitemap.xml' | relative_url }}">Sitemap</a></li>
-          <li>Affiliate partner of Rokomari.com</li> 
-		</ul>
+      <!-- NEW Brands column -->
+      <div>
+        <h3 class="footer-title">Brands</h3>
+        <ul class="footer-list">
+          <li>Rokomari</li>
+          <li>Gorer Bazar</li>
+          <li>Electronics &amp; Gadgets</li>
+          <li>Kids &amp; Baby</li>
+          <!-- Add or rename brands as you like -->
+        </ul>
       </div>
 
-      <div class="footer-col">
-        <h3>Contact Info</h3>
-        <ul class="footer-links">
-          <li><a href="#"> Dhaka, Bangladesh</a></li>
-           <li><a href="tel:+8801341691699">+8801341691699</a></li>
-          <li>
-            <a href="mailto:support@rokomaripromocode.com">support@rokomaripromocode.com</a>
-          </li>
-		</ul>
-        <div style="margin-top: 20px; padding: 10px; background: #2c333e; border-radius: 5px; font-size: 12px; color: #aaa;">
-           Affiliate of Rokomari.com
-        </div>
+      <!-- Quick Links -->
+      <div>
+        <h3 class="footer-title">Quick Links</h3>
+        <ul class="footer-list">
+          <li><a href="/">Home</a></li>
+          <li><a href="/contact/">Contact</a></li>
+          <li><a href="/privacy-policy/">Privacy Policy</a></li>
+          <li><a href="/sitemap/">Sitemap</a></li>
+          <li><a href="https://www.rokomari.com/" target="_blank" rel="noopener">
+            Affiliate partner of Rokomari.com
+          </a></li>
+        </ul>
       </div>
+
+      <!-- Contact Info -->
+      <div>
+        <h3 class="footer-title">Contact Info</h3>
+        <ul class="footer-list">
+          <li>Dhaka, Bangladesh</li>
+          <li><a href="tel:+8801341691699">+8801341691699</a></li>
+          <li><a href="mailto:support@rokomaripromocode.com">support@rokomaripromocode.com</a></li>
+        </ul>
+      </div>
+
     </div>
-  </div>
 
-  <div class="footer-bottom">
-    <div class="footer-container">
-      <p>&copy; 2025 <span>{{ site.title | default: 'YourSiteName' }}</span>. All Rights Reserved.</p>
+    <div class="footer-bottom">
+      © 2025 <strong>RokomariPromoCode</strong>. All Rights Reserved.
     </div>
   </div>
 </footer>
