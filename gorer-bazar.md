@@ -3,6 +3,7 @@ layout: default
 title: "Gorer Bazar Promo Code – Rokomari Gorer Bazar Discount & Offers"
 description: "Find active Gorer Bazar promo code, Rokomari Gorer Bazar promocode and discounts on food, wellness and household products at Rokomari."
 permalink: /gorer-bazar/
+show_faq : false
 
 ---
 
