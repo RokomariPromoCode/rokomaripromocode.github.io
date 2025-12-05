@@ -1623,6 +1623,52 @@ ol li {
 }
 
 /* ============================================================
+   FINAL BOTTOM SECTION — HOME SLIDER CARDS
+   ============================================================ */
+
+/* Bottom row is always at the bottom of the card */
+.cat-row .card .card-bottom{
+  margin-top: auto;                    /* pushes it down */
+  padding-top: 10px;
+  border-top: 1px dashed #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Full Bangla text, no ... , can wrap if needed */
+.cat-row .card .discount-text{
+  font-size: 13px;
+  font-weight: 700;
+  color: #e63946;
+  flex: 1;
+  min-width: 0;
+  white-space: normal;                 /* allow wrapping */
+  line-height: 1.4;
+  overflow: visible;                   /* no clipping, no ellipsis */
+  text-overflow: clip;
+}
+
+/* Consistent Buy Now button */
+.cat-row .card .btn{
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #16a34a;
+  color: #fff;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+/* Ensure body area uses remaining space above bottom */
+.cat-row .card .body{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================
    FIXED BOTTOM SECTION — HOME SLIDER CARDS
    ============================================================ */
 
