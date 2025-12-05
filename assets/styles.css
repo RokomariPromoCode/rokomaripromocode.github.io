@@ -818,3 +818,31 @@ h1.page-title::before {
     }
     .f-btn { width: 100%; }
 }
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.loading-spinner .spinner {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #00b894; /* adjust to your brand color */
+  animation: spinner-rotate 0.8s linear infinite;
+}
+
+@keyframes spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.load-error {
+  padding: 20px 0;
+  text-align: center;
+  color: #b91c1c;
+  font-size: 0.95rem;
+}
