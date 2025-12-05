@@ -715,3 +715,40 @@
   };
 
 })();
+
+  // --- Scroll to top / bottom buttons ---
+  const scrollUpBtn = document.querySelector('.scroll-btn-up');
+  const scrollDownBtn = document.querySelector('.scroll-btn-down');
+
+  function smoothScrollTo(y) {
+    window.scrollTo({
+      top: y,
+      behavior: 'smooth'
+    });
+  }
+
+  if (scrollUpBtn) {
+    scrollUpBtn.addEventListener('click', () => {
+      smoothScrollTo(0);
+    });
+  }
+
+  if (scrollDownBtn) {
+    scrollDownBtn.addEventListener('click', () => {
+      const maxY = document.documentElement.scrollHeight - window.innerHeight;
+      smoothScrollTo(maxY);
+    });
+  }
+
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY || document.documentElement.scrollTop;
+    const maxY = document.documentElement.scrollHeight - window.innerHeight;
+
+    if (scrollUpBtn) {
+      scrollUpBtn.classList.toggle('visible', scrollY > 300);
+    }
+    if (scrollDownBtn) {
+      scrollDownBtn.classList.toggle('visible', scrollY < maxY - 300);
+    }
+  });
+
