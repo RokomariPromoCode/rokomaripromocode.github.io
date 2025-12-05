@@ -868,78 +868,66 @@ h1.page-title::before {
 }
 
 /* =========================================
-   MD page typography (content inside <main>)
-   For: About / How to use / Types sections
+   Global typography for Markdown / page text
+   (does NOT affect cards or header/footer)
    ========================================= */
 
-/* Layout: keep text in a comfortable width */
-#main > h2,
-#main > h3,
-#main > p,
-#main > ul,
-#main > ol {
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* H2 headings (section titles) */
-#main > h2 {
-  font-size: 1.45rem;          /* ~23px */
+/* Section headings (e.g. About / How to Use) */
+h2 {
+  font-size: 1.5rem;            /* ~24px on desktop */
   font-weight: 700;
   margin-top: 2.4rem;
   margin-bottom: 0.9rem;
-  color: #111827;              /* dark grey, not pure black */
+  color: #111827;
   letter-spacing: -0.01em;
 }
 
-/* H3 headings (sub-section titles) */
-#main > h3 {
-  font-size: 1.18rem;          /* ~19px */
+/* Sub-section headings */
+h3 {
+  font-size: 1.2rem;            /* ~19px */
   font-weight: 600;
   margin-top: 1.9rem;
   margin-bottom: 0.7rem;
   color: #1f2933;
 }
 
-/* Paragraphs */
-#main > p {
-  font-size: 0.98rem;          /* ~15.5px */
+/* Normal paragraphs */
+p {
+  font-size: 0.98rem;           /* ~15.5px */
   line-height: 1.75;
   color: #374151;
   margin-bottom: 0.85rem;
 }
 
-/* Tighten spacing between consecutive paragraphs */
-#main > p + p {
-  margin-top: 0.1rem;
+/* If there are multiple paragraphs in a row, keep them close */
+p + p {
+  margin-top: 0.15rem;
 }
 
-/* Lists in MD content */
-#main > ul,
-#main > ol {
-  padding-left: 1.2rem;
-  margin-bottom: 0.9rem;
+/* Optional: lists in Markdown text */
+ul,
+ol {
   font-size: 0.97rem;
   line-height: 1.7;
   color: #374151;
+  margin: 0 0 0.9rem 1.2rem;
 }
 
-#main > ul li,
-#main > ol li {
+ul li,
+ol li {
   margin-bottom: 0.35rem;
 }
 
-/* Slightly smaller on mobile so it doesn’t look too big */
+/* Slightly smaller on mobile so it feels balanced */
 @media (max-width: 640px) {
-  #main > h2 {
+  h2 {
     font-size: 1.3rem;
     margin-top: 2rem;
   }
-  #main > h3 {
+  h3 {
     font-size: 1.05rem;
   }
-  #main > p {
+  p {
     font-size: 0.95rem;
   }
 }
