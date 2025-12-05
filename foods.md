@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Rokomari Promo Code for Foods & Grocery – খাবারেও সেভ করুন"
+title: "40% discount with our Rokomari promo code - foods"
 description: "ফুড ও গ্রোসারি প্রোডাক্টে অনলাইন কেনাকাটার আগে দেখে নিন Rokomari promo code ও deals। নিত্যপ্রয়োজনীয় পণ্য কম খরচে পেতে প্রতিদিনের ডিসকাউন্ট আপডেট করুন।"
 permalink: /rokomari-foods/
 ---
