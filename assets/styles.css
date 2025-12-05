@@ -403,6 +403,110 @@ h1.page-title::before {
     padding-top:32px;
   }
 }
+/* =========================================
+   FAQ (প্রশ্নোত্তর) styling – cleaner & professional
+   ========================================= */
+
+.faq-section{
+  margin: 48px 0 32px;
+  padding: 32px 0 40px;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.faq-section .container{
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* FAQ heading */
+.faq-section h2{
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+/* optional small intro text under heading */
+.faq-section .faq-intro{
+  text-align: center;
+  font-size: 0.95rem;
+  color: #6b7280;
+  max-width: 640px;
+  margin: 0 auto 18px;
+}
+
+/* Stack FAQ items vertically */
+.faq-grid{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* Each FAQ item as a card */
+.faq-item{
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  padding: 10px 14px;
+  box-shadow: 0 4px 14px rgba(15,23,42,0.05);
+  transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+}
+
+.faq-item:hover{
+  border-color: #cbd5f5;
+  box-shadow: 0 8px 24px rgba(15,23,42,0.08);
+  transform: translateY(-1px);
+}
+
+/* Question line */
+.faq-item summary{
+  position: relative;
+  padding-right: 26px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+/* Remove default triangle */
+.faq-item summary::-webkit-details-marker{
+  display:none;
+}
+
+/* Down arrow icon */
+.faq-item summary::after{
+  content:"▾";
+  position:absolute;
+  right:4px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size: 0.8rem;
+  color:#9ca3af;
+  transition: transform 0.18s ease, color 0.18s ease;
+}
+
+.faq-item[open] summary{
+  color:#2563eb;
+}
+
+.faq-item[open] summary::after{
+  transform:translateY(-50%) rotate(180deg);
+  color:#2563eb;
+}
+
+/* Answer body */
+.faq-body{
+  margin-top: 8px;
+  font-size: 0.93rem;
+  color: #4b5563;
+  line-height: 1.7;
+}
+
 
 
 /* ===========================
@@ -967,3 +1071,54 @@ ol li {
     line-height: 1.75;
   }
 }
+
+/* =========================================
+   Home slider cards: fixed, equal height
+   (does NOT affect category pages)
+   ========================================= */
+
+.cat-row .card{
+  height: 430px;                  /* adjust up/down if you like */
+  display: flex;
+  flex-direction: column;
+}
+
+.cat-row .card .media{
+  height: 230px;                  /* image area height on home cards */
+}
+
+.cat-row .card .body{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make sure title, meta, desc are clamped so content fits nicely */
+.cat-row .card .title{
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
+}
+
+.cat-row .card .meta{
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
+}
+
+.cat-row .card .desc{
+  -webkit-line-clamp: 3;          /* show max 3 lines */
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
+}
+
+/* Button row sticks to the bottom */
+.cat-row .card .card-bottom{
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #f1f1f1;
+}
+
