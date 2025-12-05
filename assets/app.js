@@ -121,6 +121,7 @@
       {key:'best-seller',label:'Best Seller',href:'/rokomari-best-seller/'},
       {key:'books',label:'Books',href:'/rokomari-book/'},
       {key:'electronics',label:'Electronics',href:'/rokomari-electronics/'},
+      {key:'gorer-bazar',label:'Gorar Bazar',href:'/gorer-bazar/'},
       {key:'foods',label:'Foods',href:'/rokomari-foods/'},
       {key:'kids-toys',label:'Kids Toys',href:'/rokomari-kids-toys/'},
       {key:'baby-products',label:'Baby Broducts',href:'/rokomari-baby-products/'},
@@ -159,7 +160,7 @@
 
     let localIndex = [];
     (async ()=>{
-      const files = ['/data/json_data.json','/data/best_seller.json','/data/books.json','/data/electronics.json','/data/foods.json','/data/kids-toys.json','/data/baby-products.json','/data/beauty.json','/data/others.json'];
+      const files = ['/data/json_data.json','/data/best_seller.json','/data/books.json','/data/electronics.json','/data/foods.json','/data/gorer-bazar.json','/data/kids-toys.json','/data/baby-products.json','/data/beauty.json','/data/others.json'];
       const fetched = await Promise.all(files.map(f => fetchJson(f)));
       const merged = fetched.flat();
       const normalized = normalize(merged);
@@ -235,6 +236,7 @@ async function renderHome(){
       { key:'best-seller', name:'Best Seller', file:'/data/best_seller.json', href:'/rokomari-best-seller/' },
       { key:'books', name:'Books', file:'/data/books.json', href:'/rokomari-books/' },
       { key:'electronics', name:'Electronics', file:'/data/electronics.json', href:'/rokomari-electronics/' },
+      { key:'gorer-bazar', name:'Gorer Bazar', file:'/data/gorer-bazar.json', href:'/gorer-bazar/' },
       { key:'foods', name:'Foods', file:'/data/foods.json', href:'/rokomari-foods/' },
       { key:'kids-toys', name:'Kids Toys', file:'/data/kids-toys.json', href:'/rokomari-kids-toys/' },
       { key:'baby-products', name:'Baby Products', file:'/data/baby-products.json', href:'/rokomari-baby-products/' },
@@ -351,6 +353,7 @@ function addSeeMoreCard(section){
       'best-seller': '/rokomari-best-seller/',
       'books': '/rokomari-book/',
       'electronics': '/rokomari-electronics/',
+      'gorer-bazar': '/gorer-bazar/',
       'foods': '/rokomari-foods/',
       'kids-toys': '/rokomari-kids-toys/',
       'baby-products': '/rokomari-baby-products/',
