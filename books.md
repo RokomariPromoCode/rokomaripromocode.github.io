@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Rokomari Promo Code for Books – বইয়ে সর্বোচ্চ ডিসকাউন্ট"
+title: "Rokomari Promo Code for Books – 30% Discount in any book"
 description: "রকমারি থেকে প্রিয় বই কেনার আগে এখানে দেখে নিন আজকের active Rokomari promo code ও বইয়ের ডিসকাউন্ট অফার। ইসলামিক, উপন্যাস, একাডেমিক সহ সব ক্যাটাগরি কভার করা হয়েছে।"
 permalink: /rokomari-book/
 ---
