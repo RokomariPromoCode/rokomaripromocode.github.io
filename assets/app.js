@@ -34,6 +34,7 @@
     if(!container) return;
     container.innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
   }
+  
 
   function escapeHtml(str){ return String(str||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'" :'&#39;'}[c])); }
   function safe(x){ return x==null ? '' : x; }
