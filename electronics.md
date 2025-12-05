@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Rokomari Promo Code for Electronics – গ্যাজেট ও ডিভাইসে ডিসকাউন্ট"
+title: "Up to 30% off in every gadget - Rokomari Promo code"
 description: "হেডফোন, গ্যাজেট, স্মার্ট ডিভাইসসহ বিভিন্ন ইলেকট্রনিক্সের জন্য সেরা Rokomari promo code ও ডিসকাউন্ট কুপন এক জায়গায়। আপডেটেড অফার থেকে পছন্দ করুন।"
 permalink: /rokomari-electronics/
 ---
