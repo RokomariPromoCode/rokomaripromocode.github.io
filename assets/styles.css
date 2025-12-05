@@ -271,7 +271,9 @@ h1.page-title::before {
 .card{
   display:flex;
   flex-direction:column;
-  height:460px; /* adjust if you want taller/shorter cards */
+  /* remove the fixed height so the card can shrink to its content */
+  height:auto;
+  /* or just delete this line entirely */
 }
 
 .card-content{
@@ -279,6 +281,7 @@ h1.page-title::before {
   flex-direction:column;
   height:100%;
 }
+
 
 /* Fixed image area */
 .card .media{
