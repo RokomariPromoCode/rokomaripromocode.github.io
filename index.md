@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Rokomari Promo Code – আজকের সেরা ডিসকাউন্ট & কুপন"
+title: "Rokomari Promo Code & upto 50% discount in all products"
 description: "আজকের হালনাগাদ Rokomari promo code, কুপন ও ডিসকাউন্ট এক জায়গায়। বই, ইলেকট্রনিক্স, ফার্নিচার, ফুড সহ সব ক্যাটাগরির জন্য সর্বশেষ অফার দেখে নিন।"
 permalink: /
 ---
