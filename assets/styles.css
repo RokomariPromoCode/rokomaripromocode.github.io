@@ -24,7 +24,7 @@ img {
   display: block;
 }
 
-.container, section {
+.container {
   max-width: 1260px;
   margin: 0 auto;
   padding: 0 16px;
@@ -730,7 +730,7 @@ ol li {
   border-bottom: 1px solid #e5e7eb;
 }
 
-.faq-section .container, section {
+.faq-section .container {
   max-width: 900px;
   margin: 0 auto;
 }
@@ -1043,7 +1043,7 @@ ol li {
    RESPONSIVE TWEAKS
    ============================================================ */
 @media (max-width: 1260px) {
-  .container, section {
+  .container {
     max-width: 1100px;
   }
 }
@@ -1060,7 +1060,7 @@ ol li {
 }
 
 @media (max-width: 760px) {
-  .container, section {
+  .container {
     max-width: 100%;
     padding: 0 12px;
   }
