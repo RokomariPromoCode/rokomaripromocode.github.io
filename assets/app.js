@@ -1,755 +1,564 @@
-/* assets/app.js - fixed */
-(function(){
+/* assets/app.js - with list skeletons */
+(function () {
   'use strict';
 
   // prefer runtime SITE_BASE if set by layout, otherwise fallback to literal (keeps previous behavior)
-  const SITE_BASE = (typeof window !== 'undefined' && window.SITE_BASE) ? window.SITE_BASE : '/';
+  const SITE_BASE =
+    typeof window !== 'undefined' && window.SITE_BASE
+      ? window.SITE_BASE
+      : '/';
 
-  const qs = (s,p=document)=>p.querySelector(s);
-  const qsa = (s,p=document)=>Array.from((p||document).querySelectorAll(s));
+  const qs = (s, p = document) => p.querySelector(s);
+  const qsa = (s, p = document) =>
+    Array.from((p || document).querySelectorAll(s));
 
-  function resolveUrl(u){
-    if(!u) return u;
+  function resolveUrl(u) {
+    if (!u) return u;
     u = String(u).trim();
-    if(/^https?:\/\//i.test(u)) return u;
-    if(!u.startsWith('/')) u = '/' + u;
-    if(!SITE_BASE) return u;
-    return (SITE_BASE + u).replace(/\/{2,}/g,'/');
+    if (/^https?:\/\//i.test(u)) return u;
+    if (!u.startsWith('/')) u = '/' + u;
+    if (!SITE_BASE) return u;
+    return (SITE_BASE + u).replace(/\/{2,}/g, '/');
   }
 
-  async function fetchJson(path){
+  async function fetchJson(path) {
     try {
       const url = resolveUrl(path);
-      const res = await fetch(url, {cache:'no-store'});
-      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
       return await res.json();
-    } catch(err){
-      console.warn('fetchJson', err, path);
-      return [];
+    } catch (err) {
+      console.error('Failed to load JSON:', path, err);
+      throw err;
     }
   }
 
-  // simple spinner renderer (for cards / category pages)
-  function showSpinner(container){
-    if(!container) return;
-    container.innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
-  }
-  
-
-  function escapeHtml(str){ return String(str||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'" :'&#39;'}[c])); }
-  function safe(x){ return x==null ? '' : x; }
-  function cleanDesc(s){
-    if(!s) return '';
-    let t = String(s).replace(/<\s*br\s*\/?>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-    if(t.length <= 140) return t;
-    const cut = t.lastIndexOf(' ', 120) || 120;
-    return t.slice(0,cut) + '...';
+  function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
-  function normalize(arr){
-    if(!Array.isArray(arr)) return [];
-    return arr.map(it=>({
-      title: String(it.title || '').trim(),
-      author: String(it.author || it.writer || '').trim(),
-      seller: String(it.seller || '').trim(),
-      img: String(it.img || it.image || '').trim(),
-      desc: cleanDesc(it.desc || it.description || ''),
-      link: String(it.link || it.url || '#').trim()
-    }));
+  function safe(x, def = '') {
+    if (x === undefined || x === null) return def;
+    return x;
   }
 
-  // Deterministic shuffle that changes order once per hour (per key)
-  function hourlyShuffle(list, key){
-    if(!Array.isArray(list) || !list.length) return list || [];
-    const stamp = new Date();
-    const hourStamp = stamp.getUTCFullYear() + '-' +
-      String(stamp.getUTCMonth()+1).padStart(2,'0') + '-' +
-      String(stamp.getUTCDate()).padStart(2,'0') + '-' +
-      String(stamp.getUTCHours()).padStart(2,'0');
-    const seedStr = String(key || 'default') + '|' + hourStamp;
-
-    let h = 0;
-    for(let i=0;i<seedStr.length;i++){
-      h = Math.imul(31, h) + seedStr.charCodeAt(i) | 0;
-    }
-    let seed = h >>> 0;
-    function rand(){
-      // simple LCG
-      seed = (seed * 1664525 + 1013904223) >>> 0;
-      return seed / 4294967296;
-    }
-
-    const arr = list.slice();
-    for(let i=arr.length-1;i>0;i--){
-      const j = Math.floor(rand() * (i+1));
-      const tmp = arr[i];
-      arr[i] = arr[j];
-      arr[j] = tmp;
-    }
-    return arr;
+  function debounce(fn, wait) {
+    let t;
+    return function (...args) {
+      clearTimeout(t);
+      t = setTimeout(() => fn.apply(this, args), wait);
+    };
   }
 
-  function createCard(item){
-    const title = safe(item.title);
-    const author = safe(item.author || '');
-    const seller = safe(item.seller || '');
-    const desc = cleanDesc(item.desc || '');
-    const img = safe(item.img);
-    const link = safe(item.link || '#');
+  // --------------------------
+  // Shared rendering helpers
+  // --------------------------
 
-    const article = document.createElement('article');
-    article.className = 'card';
-    article.innerHTML = `
-      <div class="card-content">
-        <div class="media">${ img ? `<img src="${escapeHtml(img)}" alt="${escapeHtml(title)}" loading="lazy" decoding="async" width="260" height="260">` : '<div class="no-image">No image</div>' }</div>
-        <div class="body">
-          <h4 class="title">${escapeHtml(title)}</h4>
-          <div class="meta">${author ? 'লেখক: '+escapeHtml(author) : ''} ${seller ? ' • বিক্রেতা: '+escapeHtml(seller) : ''}</div>
-          <p class="desc">${escapeHtml(desc)}</p>
-          <div class="card-bottom">
-            <div class="discount-text">ডিসকাউন্ট পেতে এখানে কিনুন</div>
-            <a class="btn" href="${escapeHtml(link)}" target="_blank" rel="noopener">Buy Now</a>
+  // List skeletons while JSON is loading
+  function renderSkeletonCards(container, count = 6) {
+    if (!container) return;
+    container.innerHTML = '';
+    const frag = document.createDocumentFragment();
+
+    for (let i = 0; i < count; i++) {
+      const article = document.createElement('article');
+      article.className = 'card card-skel';
+      article.innerHTML = `
+        <div class="card-content">
+          <div class="media skel-anim"></div>
+          <div class="body">
+            <div class="skel-line skel-line-lg skel-anim"></div>
+            <div class="skel-line skel-anim"></div>
+            <div class="skel-line skel-line-sm skel-anim"></div>
+            <div class="card-bottom">
+              <div class="skel-pill skel-anim"></div>
+              <div class="skel-pill skel-pill-sm skel-anim"></div>
+            </div>
+            <div class="skel-btn skel-anim"></div>
           </div>
         </div>
-      </div>
-    `;
-    return article;
+      `;
+      frag.appendChild(article);
+    }
+
+    container.appendChild(frag);
   }
 
-  function setupHeader(){
-    const searchInput = qs('#header-search-input');
-    const resultsContainer = qs('#header-search-results');
-    const clearBtn = qs('#search-clear');
-    const lens = qs('#search-lens');
-    const hamburger = qs('.hamburger');
-    const menuLinks = qs('.menu-links');
+  function renderProductCards(items, container) {
+    if (!container) return;
+    container.innerHTML = '';
 
-    const categories = [
-      {key:'best-seller',label:'Best Seller',href:'/rokomari-best-seller/'},
-      {key:'books',label:'Books',href:'/rokomari-book/'},
-      {key:'electronics',label:'Electronics',href:'/rokomari-electronics/'},
-      {key:'gorer-bazar',label:'Gorer Bazar',href:'/gorer-bazar/'},
-      {key:'foods',label:'Foods',href:'/rokomari-foods/'},
-      {key:'kids-toys',label:'Kids Toys',href:'/rokomari-kids-toys/'},
-      {key:'baby-products',label:'Baby Products',href:'/rokomari-baby-products/'},
-      {key:'beauty',label:'Beauty',href:'/rokomari-beauty/'},
-      {key:'others',label:'Others',href:'/rokomari-others/'},
-    ];
-
-    // Only build menu from JS if HTML is empty (keeps SEO-friendly server HTML)
-    if (menuLinks && !menuLinks.children.length) {
-      menuLinks.innerHTML = '';
-      const homeLi = document.createElement('li');
-      homeLi.innerHTML = `<a href="${resolveUrl('/')}">Home</a>`;
-      menuLinks.appendChild(homeLi);
-      categories.forEach(c => {
-        const li = document.createElement('li');
-        li.innerHTML = `<a href="${resolveUrl(c.href)}">${escapeHtml(c.label)}</a>`;
-        menuLinks.appendChild(li);
-      });
+    if (!items || !items.length) {
+      container.innerHTML =
+        '<p class="empty">কোনো প্রোডাক্ট পাওয়া যায়নি।</p>';
+      return;
     }
 
-    if(hamburger && menuLinks){
-      hamburger.addEventListener('click', (e)=>{
-        e.stopPropagation();
-        menuLinks.classList.toggle('active');
-        const icon = hamburger.querySelector('i');
-        if(menuLinks.classList.contains('active')){ icon.classList.remove('fa-bars'); icon.classList.add('fa-times'); }
-        else { icon.classList.remove('fa-times'); icon.classList.add('fa-bars'); }
-      });
-      document.addEventListener('click', (e)=>{
-        if(menuLinks.classList.contains('active') && !e.target.closest('.menu-links') && !e.target.closest('.hamburger')){
-          menuLinks.classList.remove('active');
-          const icon = hamburger.querySelector('i');
-          if(icon){ icon.classList.remove('fa-times'); icon.classList.add('fa-bars'); }
-        }
-      });
-    }
+    const frag = document.createDocumentFragment();
 
-    // --- SEARCH: auto-index all /data/*.json using data/index.json ---
-    let localIndex = [];
-    (async ()=>{
-      try{
-        const indexList = await fetchJson('/data/index.json');
-        const paths = Array.isArray(indexList)
-          ? indexList
-              .filter(it => it && it.name !== 'index.json')
-              .map(it => it.path || it)
-          : [];
+    items.forEach((item) => {
+      const title = safe(item.title || item.name || 'নাম নেই');
+      const author = safe(item.author || item.writer);
+      const seller = safe(item.seller || item.shop_name);
+      const img = safe(item.img || item.image || item.cover);
+      const link = safe(item.link || item.url || '#');
+      const discount = safe(item.discount_text || item.discount || '');
+      const price = safe(item.price_text || item.price || '');
+      const desc = safe(
+        item.desc || item.description || item.short_description || ''
+      );
 
-        const fetched = await Promise.all(paths.map(p => fetchJson(p)));
-        const merged = fetched.flat();
-        const normalized = normalize(merged);
-
-        const map = new Map();
-        normalized.forEach(item=>{
-          const key = (item.link || item.title).toString();
-          if(!map.has(key)) map.set(key, item);
-        });
-        localIndex = Array.from(map.values());
-      } catch(err){
-        console.warn('search index load failed', err);
-        localIndex = [];
-      }
-    })();
-
-    let timer;
-    if(searchInput){
-      searchInput.addEventListener('input', function(){
-        clearTimeout(timer);
-        const q = this.value.trim();
-        if(!q){
-          if(resultsContainer) resultsContainer.style.display='none';
-          if(clearBtn) clearBtn.style.display='none';
-          if(lens) lens.style.display='block';
-          return;
-        }
-        if(clearBtn) clearBtn.style.display='block';
-        if(lens) lens.style.display='none';
-        timer = setTimeout(()=>{
-          const matches = localIndex.length ? localIndex.filter(it => (it.title + ' ' + (it.author||'') + ' ' + (it.seller||'')).toLowerCase().includes(q.toLowerCase())) : [];
-          const seen = new Set();
-          const unique = [];
-          matches.forEach(m=>{
-            const id = m.link || m.title;
-            if(!seen.has(id)){ seen.add(id); unique.push(m); }
-          });
-          resultsContainer.innerHTML = '';
-          if(!unique.length){
-            resultsContainer.innerHTML = `<div class="no-result-box" style="padding:16px;text-align:center;color:#6b7280"><p>কোনো প্রোডাক্ট পাওয়া যায়নি!</p><button class="request-btn-small" onclick="triggerRequest('${escapeHtml(q)}')">ডিসকাউন্ট রিকুয়েস্ট পাঠান</button></div>`;
-          } else {
-            unique.slice(0,10).forEach(m=>{
-              const a = document.createElement('a'); a.className='result-item'; a.href = m.link || '#';
-              const thumb = m.img ? `<img src="${escapeHtml(m.img)}" alt="">` : `<div style="width:64px;height:64px;background:#f4f6f7;border-radius:6px"></div>`;
-              const meta = (m.author || m.seller) ? `<p>${escapeHtml(m.author || '')} ${m.author && m.seller ? ' • ' : ''}${escapeHtml(m.seller||'')}</p>` : '';
-              a.innerHTML = `${thumb}<div class="result-info"><h4>${escapeHtml(m.title)}</h4>${meta}</div>`;
-              a.target = '_blank'; a.rel = 'noopener';
-              resultsContainer.appendChild(a);
-            });
-          }
-          resultsContainer.style.display = 'block';
-        }, 160);
-      });
-
-      if(clearBtn) clearBtn.addEventListener('click', ()=>{
-        searchInput.value='';
-        resultsContainer.style.display='none';
-        clearBtn.style.display='none';
-        if(lens) lens.style.display='block';
-        searchInput.focus();
-      });
-      document.addEventListener('click', (e)=>{
-        if(!e.target.closest('.search-box') && resultsContainer) resultsContainer.style.display='none';
-      });
-    }
-  }
-
-  function injectPageTitle(){
-    // Disabled: Home title is now controlled via index.md H1
-  }
-
-  const MAX_HOME_ITEMS = 8;
-
-  async function renderHome(){
-    const root = document.createElement('div'); root.className = 'home-cats container';
-    const cats = [
-      { key:'best-seller', name:'Best Seller', file:'/data/best_seller.json', href:'/rokomari-best-seller/' },
-      { key:'books', name:'Books', file:'/data/books.json', href:'/rokomari-book/' },
-      { key:'electronics', name:'Electronics', file:'/data/electronics.json', href:'/rokomari-electronics/' },
-      { key:'gorer-bazar', name:'Gorer Bazar', file:'/data/gorer-bazar.json', href:'/gorer-bazar/' },
-      { key:'foods', name:'Foods', file:'/data/foods.json', href:'/rokomari-foods/' },
-      { key:'kids-toys', name:'Kids Toys', file:'/data/kids-toys.json', href:'/rokomari-kids-toys/' },
-      { key:'baby-products', name:'Baby Products', file:'/data/baby-products.json', href:'/rokomari-baby-products/' },
-      { key:'beauty', name:'Beauty', file:'/data/beauty.json', href:'/rokomari-beauty/' },
-      { key:'others', name:'Others', file:'/data/others.json', href:'/rokomari-others/' }
-    ];
-
-    for(const c of cats){
-      const section = document.createElement('section');
-      section.className='cat-row';
-      section.dataset.key=c.key;
-      section.dataset.name=c.name;
-
-      const header = document.createElement('div'); header.className='cat-header';
-      const nameText = `Rokomari Promocode For ${c.name}`;
-      const titleEl = document.createElement('h3'); titleEl.innerHTML = `<span class="cat-name">${escapeHtml(nameText)}</span>`;
-      header.appendChild(titleEl);
-
-      const actions = document.createElement('div'); actions.className='cat-actions';
-      const prev = document.createElement('button'); prev.className='cat-btn prev'; prev.innerHTML='&#x25C0;';
-      const next = document.createElement('button'); next.className='cat-btn next'; next.innerHTML='&#x25B6;';
-      actions.appendChild(prev); actions.appendChild(next);
-      header.appendChild(actions);
-      section.appendChild(header);
-
-      const wrapper = document.createElement('div'); wrapper.className='cat-track-wrapper';
-      const track = document.createElement('div'); track.className='cat-track';
-      wrapper.appendChild(track);
-      section.appendChild(wrapper);
-      root.appendChild(section);
-
-      (async function load(catDef, sec){
-        const raw = await fetchJson(catDef.file);
-        let items = normalize(raw);
-        // Shuffle deterministically once per hour based on category key
-        items = hourlyShuffle(items, catDef.key || catDef.name || 'home');
-        sec._items = items;
-        sec._track = track;
-        sec._tx = 0;
-        sec._loadedCount = 0;
-
-        const batch = Math.max(1, 4);
-        let idx = 0;
-        const total = items.length;
-        const first = Math.min(batch, total - idx);
-        appendItemsToTrack(sec, idx, first);
-        idx += first;
-        sec._loadedCount = idx;
-
-        next.addEventListener('click', ()=> onNextClick(sec, catDef));
-        prev.addEventListener('click', ()=> slideCategory(sec, -1));
-
-        // Save info for swipe as well
-        sec._nextIndex = idx;
-        sec._batchSize = batch;
-        sec._catDef = catDef;
-
-        enableSwipe(wrapper, sec);
-
-        setTimeout(()=>updateButtonsVisibility(sec), 160);
-      })(c, section);
-    }
-
-    // Prefer explicit anchor if present (so content in index.md can stay on top)
-    const anchor = qs('#home-cards-anchor');
-
-    if (anchor && anchor.parentNode) {
-      // Insert the home sections right AFTER the anchor
-      anchor.parentNode.insertBefore(root, anchor.nextSibling);
-    } else {
-      // Fallback to old behavior if no anchor exists
-      const headerNode = qs('.modern-header');
-      if (headerNode && headerNode.parentNode) {
-        headerNode.parentNode.insertBefore(
-          root,
-          headerNode.nextSibling?.nextSibling || headerNode.nextSibling
-        );
-      } else {
-        document.body.insertBefore(root, document.body.firstChild);
-      }
-    }
-  }
-
-  function appendItemsToTrack(section, startIndex, count){
-    const track = section._track;
-    const items = section._items || [];
-    const slice = items.slice(startIndex, startIndex + count);
-    slice.forEach((it, idx)=>{
-      const wrap = document.createElement('div'); wrap.className='cat-item';
-      const card = createCard(it);
-      card.style.animationDelay = String((startIndex + idx) * 40) + 'ms';
-      wrap.appendChild(card); track.appendChild(wrap);
+      const article = document.createElement('article');
+      article.className = 'card';
+      article.innerHTML = `
+        <div class="card-content">
+          <div class="media">
+            ${
+              img
+                ? `<img src="${escapeHtml(
+                    resolveUrl(img)
+                  )}" alt="${escapeHtml(title)}" loading="lazy" height="260">`
+                : '<div class="no-image">No image</div>'
+            }
+          </div>
+          <div class="body">
+            <h4 class="title">${escapeHtml(title)}</h4>
+            <div class="meta">
+              ${
+                author
+                  ? 'লেখক: ' + escapeHtml(author)
+                  : ''
+              }
+              ${
+                seller
+                  ? (author ? ' • ' : '') +
+                    'বিক্রেতা: ' +
+                    escapeHtml(seller)
+                  : ''
+              }
+            </div>
+            <p class="desc">${escapeHtml(desc)}</p>
+            <div class="card-bottom">
+              <div class="discount-text">
+                ${escapeHtml(discount || 'ডিসকাউন্ট পেতে এখানে কিনুন')}
+              </div>
+              <div class="price">
+                ${price ? escapeHtml(price) : ''}
+              </div>
+            </div>
+            <a class="card-btn" href="${escapeHtml(
+              resolveUrl(link)
+            )}" target="_blank" rel="noopener">
+              এখনই দেখুন
+            </a>
+          </div>
+        </div>
+      `;
+      frag.appendChild(article);
     });
-    section._loadedCount = (section._loadedCount || 0) + slice.length;
-    if(section._loadedCount >= (section._items || []).length){
-      addSeeMoreCard(section);
+
+    container.appendChild(frag);
+  }
+
+  // Attach skeleton + lazy loading for images
+  function initLazyImages(root = document) {
+    const imgs = qsa('img[loading="lazy"]', root);
+    if (!('IntersectionObserver' in window)) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const img = entry.target;
+          io.unobserve(img);
+
+          if (img.dataset._attached) return;
+          img.dataset._attached = 1;
+          const wrapper = img.parentNode;
+          const sk = document.createElement('div');
+          sk.className = 'img-skel';
+          wrapper.insertBefore(sk, img);
+          img.style.opacity = 0;
+
+          img.addEventListener('load', () => {
+            img.style.transition = 'opacity .35s';
+            img.style.opacity = 1;
+            if (sk && sk.parentNode) sk.parentNode.removeChild(sk);
+            updateAllButtons();
+          });
+
+          img.addEventListener('error', () => {
+            if (sk && sk.parentNode) sk.parentNode.removeChild(sk);
+            updateAllButtons();
+          });
+
+          // trigger load (already has src)
+          if (img.complete) {
+            img.dispatchEvent(new Event('load'));
+          }
+        });
+      },
+      { rootMargin: '100px 0px' }
+    );
+
+    imgs.forEach((img) => io.observe(img));
+  }
+
+  // Simple state to re-run UI updates when cards change
+  const updateCallbacks = [];
+
+  function onUpdate(fn) {
+    if (typeof fn === 'function') updateCallbacks.push(fn);
+  }
+
+  function updateAllButtons() {
+    updateCallbacks.forEach((fn) => {
+      try {
+        fn();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  }
+
+  // --------------------------
+  // Page-specific logic
+  // --------------------------
+
+  async function initIndexPage() {
+    const container = qs('#index-products');
+    if (!container) return;
+
+    // show skeletons before fetching
+    renderSkeletonCards(container, 6);
+
+    try {
+      const data = await fetchJson('/data/index.json');
+      renderProductCards(data.items || data, container);
+      initLazyImages(container);
+      updateAllButtons();
+    } catch (err) {
+      container.innerHTML =
+        '<p class="error">ডাটা লোড করতে সমস্যা হয়েছে। একটু পরে চেষ্টা করুন।</p>';
     }
-    setTimeout(()=>updateButtonsVisibility(section), 120);
   }
 
-  function addSeeMoreCard(section){
-    if(!section || !section._track) return;
-    if(section._track.querySelector('.cat-item.see-more')) return;
-    const wrap = document.createElement('div'); 
-    wrap.className = 'cat-item see-more';
+  async function initBooksPage() {
+    const container = qs('#books-products');
+    if (!container) return;
 
-    // Map home sections to their real category URLs
-    const key = section.dataset.key || '';
-    const readable = section.dataset.name || key || 'আরও দেখুন';
-    const map = {
-      'best-seller': '/rokomari-best-seller/',
-      'books': '/rokomari-book/',
-      'electronics': '/rokomari-electronics/',
-      'gorer-bazar': '/gorer-bazar/',
-      'foods': '/rokomari-foods/',
-      'kids-toys': '/rokomari-kids-toys/',
-      'baby-products': '/rokomari-baby-products/',
-      'beauty': '/rokomari-beauty/',
-      'others': '/rokomari-others/'
-    };
-    const link = map[key] || ('/' + key + '/');
+    const searchInput = qs('#books-search-input');
+    const categorySelect = qs('#books-category-select');
 
-    const inner = document.createElement('div');
-    inner.className = 'see-more-card';
-    inner.innerHTML = `
-      <div>আরও দেখুন — ${escapeHtml(readable)}</div>
-      <a href="${resolveUrl(link)}">See all ${escapeHtml(readable)}</a>
-    `;
-    wrap.appendChild(inner);
-    section._track.appendChild(wrap);
+    let allItems = [];
+
+    function applyFilter() {
+      let items = allItems.slice();
+
+      const term = (searchInput && searchInput.value || '').trim().toLowerCase();
+      const cat = (categorySelect && categorySelect.value) || '';
+
+      if (term) {
+        items = items.filter((it) => {
+          const t =
+            String(it.title || it.name || '')
+              .toLowerCase()
+              .includes(term) ||
+            String(it.author || it.writer || '')
+              .toLowerCase()
+              .includes(term);
+          return t;
+        });
+      }
+
+      if (cat && cat !== 'all') {
+        items = items.filter(
+          (it) =>
+            String(it.category || it.cat || '')
+              .toLowerCase() === cat.toLowerCase()
+        );
+      }
+
+      renderProductCards(items, container);
+      initLazyImages(container);
+      updateAllButtons();
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', debounce(applyFilter, 200));
+    }
+
+    if (categorySelect) {
+      categorySelect.addEventListener('change', applyFilter);
+    }
+
+    // skeletons while books JSON loads
+    renderSkeletonCards(container, 8);
+
+    try {
+      const data = await fetchJson('/data/books.json');
+      allItems = data.items || data;
+      applyFilter();
+    } catch (err) {
+      container.innerHTML =
+        '<p class="error">ডাটা লোড করতে সমস্যা হয়েছে। একটু পরে চেষ্টা করুন।</p>';
+    }
   }
 
-  function onNextClick(section, catDef){
-    const items = section._items || [];
-    if(!items.length) return;
+  async function initBestSellerPage() {
+    const container = qs('#best-seller-products');
+    if (!container) return;
 
-    const loaded = section._loadedCount || 0;
-    const nextIdx = section._nextIndex || loaded || 0;
+    renderSkeletonCards(container, 6);
 
-    // Only ever load up to MAX_HOME_ITEMS cards on home sections.
-    if(nextIdx < items.length && loaded < MAX_HOME_ITEMS){
-      const remainingAllowed = Math.max(0, MAX_HOME_ITEMS - loaded);
-      const toAdd = Math.min(section._batchSize || 4, items.length - nextIdx, remainingAllowed);
-      if(toAdd > 0){
-        appendItemsToTrack(section, nextIdx, toAdd);
-        section._nextIndex = nextIdx + toAdd;
+    try {
+      const data = await fetchJson('/data/best_seller.json');
+      renderProductCards(data.items || data, container);
+      initLazyImages(container);
+      updateAllButtons();
+    } catch (err) {
+      container.innerHTML =
+        '<p class="error">ডাটা লোড করতে সমস্যা হয়েছে। একটু পরে চেষ্টা করুন।</p>';
+    }
+  }
 
-        // If we've reached limit or the end of items, ensure the "See more" card exists
-        if((section._loadedCount || 0) >= MAX_HOME_ITEMS || (section._loadedCount || 0) >= items.length){
-          addSeeMoreCard(section);
-        }
+  async function initBabyProductsPage() {
+    const container = qs('#baby-products');
+    if (!container) return;
 
-        setTimeout(()=> slideCategory(section, +1), 80);
+    renderSkeletonCards(container, 6);
+
+    try {
+      const data = await fetchJson('/data/baby-products.json');
+      renderProductCards(data.items || data, container);
+      initLazyImages(container);
+      updateAllButtons();
+    } catch (err) {
+      container.innerHTML =
+        '<p class="error">ডাটা লোড করতে সমস্যা হয়েছে। একটু পরে চেষ্টা করুন।</p>';
+    }
+  }
+
+  async function initElectronicsPage() {
+    const container = qs('#electronics-products');
+    if (!container) return;
+
+    renderSkeletonCards(container, 6);
+
+    try {
+      const data = await fetchJson('/data/electronics.json');
+      renderProductCards(data.items || data, container);
+      initLazyImages(container);
+      updateAllButtons();
+    } catch (err) {
+      container.innerHTML =
+        '<p class="error">ডাটা লোড করতে সমস্যা হয়েছে। একটু পরে চেষ্টা করুন।</p>';
+    }
+  }
+
+  async function initFoodsPage() {
+    const container = qs('#foods-products');
+    if (!container) return;
+
+    renderSkeletonCards(container, 6);
+
+    try {
+      const data = await fetchJson('/data/foods.json');
+      renderProductCards(data.items || data, container);
+      initLazyImages(container);
+      updateAllButtons();
+    } catch (err) {
+      container.innerHTML =
+        '<p class="error">ডাটা লোড করতে সমস্যা হয়েছে। একটু পরে চেষ্টা করুন।</p>';
+    }
+  }
+
+  async function initGorerBazarPage() {
+    const container = qs('#gorer-bazar-products');
+    if (!container) return;
+
+    renderSkeletonCards(container, 6);
+
+    try {
+      const data = await fetchJson('/data/gorer-bazar.json');
+      renderProductCards(data.items || data, container);
+      initLazyImages(container);
+      updateAllButtons();
+    } catch (err) {
+      container.innerHTML =
+        '<p class="error">ডাটা লোড করতে সমস্যা হয়েছে। একটু পরে চেষ্টা করুন।</p>';
+    }
+  }
+
+  async function initBeautyPage() {
+    const container = qs('#beauty-products');
+    if (!container) return;
+
+    renderSkeletonCards(container, 6);
+
+    try {
+      const data = await fetchJson('/data/beauty.json');
+      renderProductCards(data.items || data, container);
+      initLazyImages(container);
+      updateAllButtons();
+    } catch (err) {
+      container.innerHTML =
+        '<p class="error">ডাটা লোড করতে সমস্যা হয়েছে। একটু পরে চেষ্টা করুন।</p>';
+    }
+  }
+
+  async function initKidsToysPage() {
+    const container = qs('#kids-toys-products');
+    if (!container) return;
+
+    renderSkeletonCards(container, 6);
+
+    try {
+      const data = await fetchJson('/data/kids-toys.json');
+      renderProductCards(data.items || data, container);
+      initLazyImages(container);
+      updateAllButtons();
+    } catch (err) {
+      container.innerHTML =
+        '<p class="error">ডাটা লোড করতে সমস্যা হয়েছে। একটু পরে চেষ্টা করুন।</p>';
+    }
+  }
+
+  function initContactPage() {
+    const form = qs('#contact-form');
+    if (!form) return;
+
+    const nameInput = qs('#contact-name', form);
+    const emailInput = qs('#contact-email', form);
+    const messageInput = qs('#contact-message', form);
+    const typeSelect = qs('#contact-type', form);
+    const statusBox = qs('.form-status', form);
+
+    function showStatus(msg, type = 'info') {
+      if (!statusBox) return;
+      statusBox.textContent = msg;
+      statusBox.className = 'form-status ' + type;
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = (nameInput && nameInput.value.trim()) || '';
+      const email = (emailInput && emailInput.value.trim()) || '';
+      const message = (messageInput && messageInput.value.trim()) || '';
+      const type = (typeSelect && typeSelect.value) || 'help';
+
+      if (!name || !email || !message) {
+        showStatus('সব ঘর পূরণ করুন।', 'error');
         return;
       }
-    }
 
-    // Otherwise just slide among existing cards
-    slideCategory(section, +1);
-  }
+      showStatus('মেসেজ পাঠানো হচ্ছে...', 'info');
 
-  function getItemFullWidth(track){
-    const gap = parseFloat(getComputedStyle(track).gap || 16);
-    const first = track.children[0];
-    if(!first) return 300 + gap;
-    const w = first.getBoundingClientRect().width;
-    return w + gap;
-  }
+      const payload = {
+        name,
+        email,
+        message,
+        type,
+        time: new Date().toISOString()
+      };
 
-  function getVisibleWidth(track){
-    const wrapper = track.parentElement;
-    return wrapper.getBoundingClientRect().width;
-  }
-
-  function computeVisibleCount(){
-    const w = Math.max(window.innerWidth || 1024, 320);
-    if (w < 600) return 1;
-    if (w < 880) return 2;
-    if (w < 1100) return 3;
-    return 4;
-  }
-
-  function updateButtonsVisibility(section){
-    if(!section || !section._track) return;
-    const track = section._track;
-    const items = Array.from(track.children);
-    if(!items.length) return;
-    const itemW = getItemFullWidth(track);
-    const totalWidth = items.length * itemW;
-    const visWidth = getVisibleWidth(track);
-    const prevBtn = section.querySelector('.cat-btn.prev');
-    const nextBtn = section.querySelector('.cat-btn.next');
-    const curTx = track._tx || 0;
-    const maxLeft = Math.max(0, totalWidth - visWidth);
-    if(prevBtn) prevBtn.style.display = (Math.abs(curTx) > 0) ? 'flex' : 'none';
-    if(nextBtn) nextBtn.style.display = (totalWidth > visWidth && Math.abs(curTx) < maxLeft) ? 'flex' : 'none';
-  }
-
-  function slideCategory(section, direction){
-    const track = section._track;
-    if(!track) return;
-    const items = Array.from(track.children);
-    if(!items.length) return;
-    const itemW = getItemFullWidth(track);
-    const visible = computeVisibleCount();
-    const totalWidth = items.length * itemW;
-    const visibleWidth = visible * itemW;
-    const maxLeft = Math.max(0, totalWidth - visibleWidth);
-    const curTx = track._tx || 0;
-    const moveBy = itemW * Math.max(1, visible);
-    let newTx = curTx - direction * moveBy;
-    if(Math.abs(newTx) > maxLeft) newTx = -maxLeft;
-    if(newTx > 0) newTx = 0;
-    track.style.transform = `translateX(${newTx}px)`;
-    track._tx = newTx;
-    updateButtonsVisibility(section);
-  }
-
-  function enableSwipe(wrapper, section){
-    let startX = 0;
-    let curX = 0;
-    let isDown = false;
-
-    wrapper.addEventListener('touchstart', e => {
-      startX = e.touches[0].clientX;
-      curX = startX;
-      isDown = true;
-    });
-
-    wrapper.addEventListener('touchmove', e => {
-      if (!isDown) return;
-      curX = e.touches[0].clientX;
-      const dx = curX - startX;
-      const baseTx = section._track._tx || 0;
-      section._track.style.transform = `translateX(${baseTx + dx}px)`;
-    });
-
-    wrapper.addEventListener('touchend', e => {
-      if (!isDown) return;
-      isDown = false;
-
-      const dx = curX - startX;
-      const threshold = 40;
-
-      if (Math.abs(dx) > threshold) {
-        if (dx < 0) {
-          // swipe left → same as clicking Next button
-          if (typeof onNextClick === 'function' && section._catDef) {
-            onNextClick(section, section._catDef);
-          } else {
-            slideCategory(section, +1);
-          }
-        } else {
-          // swipe right → go back
-          slideCategory(section, -1);
-        }
-      } else {
-        // small drag → snap back
-        section._track.style.transform = `translateX(${section._track._tx || 0}px)`;
-      }
-
-      startX = 0;
-      curX = 0;
-    });
-
-    wrapper.addEventListener('mouseleave', () => {
-      if (isDown) {
-        isDown = false;
-        section._track.style.transform = `translateX(${section._track._tx || 0}px)`;
-      }
+      console.log('Contact form payload:', payload);
+      setTimeout(() => {
+        showStatus('ধন্যবাদ! আপনার মেসেজ রিসিভ করা হয়েছে।', 'success');
+        form.reset();
+      }, 800);
     });
   }
 
-  async function renderStandard(mainEl){
-    // prefer page-specific data-src, otherwise check explicit global JSON_DATA_PATH if allowed
-    const dataSrc = mainEl?.dataset?.src || null;
+  // Generic page router based on body class
+  function detectPageAndInit() {
+    const body = document.body;
+    if (!body) return;
 
-    // If no source provided and no in-memory data, do not render anything.
-    if(
-      !dataSrc &&
-      !(Array.isArray(window.rokomariData) && window.rokomariData.length) &&
-      !(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH)
-    ){
-      return;
+    const cls = body.className || '';
+
+    if (cls.includes('page-index')) {
+      initIndexPage();
     }
-
-    // ensure cards container exists and show a loading spinner
-    let cards = qs('#cardsArea', mainEl);
-    if(!cards){
-      cards = document.createElement('div');
-      cards.id = 'cardsArea';
-      cards.className = 'cards-area container';
-      mainEl.appendChild(cards);
-    } else {
-      cards.className = 'cards-area container';
+    if (cls.includes('page-books')) {
+      initBooksPage();
     }
-    showSpinner(cards);
-
-    let raw = [];
-    if(Array.isArray(window.rokomariData) && window.rokomariData.length){
-      raw = window.rokomariData;
-    } else if(dataSrc){
-      raw = await fetchJson(dataSrc);
-    } else if(window.FORCE_LOAD_CARDS && typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH){
-      raw = await fetchJson(window.JSON_DATA_PATH);
-    } else {
-      raw = [];
+    if (cls.includes('page-best-seller')) {
+      initBestSellerPage();
     }
-
-    // Derive a category key from the dataSrc path, e.g. "/data/books.json" -> "books"
-    let catKey = '';
-    if(typeof dataSrc === 'string'){
-      const m = dataSrc.match(/\/data\/([^./]+)\.json/i);
-      if(m) catKey = m[1];
+    if (cls.includes('page-baby-products')) {
+      initBabyProductsPage();
     }
-
-    let all = normalize(raw);
-    // Shuffle deterministically once per hour per category
-    all = hourlyShuffle(all, catKey || 'category');
-
-    // Priority sort: items appearing in best_seller.json come first
-    try {
-      const bs = await fetchJson('/data/best_seller.json');
-      const titles = new Set(bs.map(it=> (it.title||'').trim().toLowerCase()));
-      all.sort((a,b)=>{
-        const at = titles.has((a.title||'').toLowerCase());
-        const bt = titles.has((b.title||'').toLowerCase());
-        return at===bt?0:(at?-1:1);
-      });
-    } catch(e) { console.warn('priority sort failed',e);}
-    window._all_index = all;
-
-    const PAGE_SIZE = 10;
-    let idx = 0;
-    let loadMoreBtn = null;
-
-    function appendBatch(){
-      if(idx >= all.length) return;
-
-      // first batch: clear the spinner
-      if(idx === 0){
-        cards.innerHTML = '';
-      }
-
-      const slice = all.slice(idx, idx + PAGE_SIZE);
-      slice.forEach(it => cards.appendChild(createCard(it)));
-      idx += slice.length;
-      if(loadMoreBtn && idx >= all.length){
-        loadMoreBtn.style.display = 'none';
-      }
+    if (cls.includes('page-electronics')) {
+      initElectronicsPage();
     }
-
-    // initial load
-    appendBatch();
-
-    // create / reuse "আরও দেখুন" button
-    loadMoreBtn = qs('.cards-load-more', mainEl);
-    if(!loadMoreBtn){
-      loadMoreBtn = document.createElement('button');
-      loadMoreBtn.type = 'button';
-      loadMoreBtn.className = 'btn cards-load-more';
-      loadMoreBtn.textContent = 'আরও দেখুন';
-      loadMoreBtn.style.margin = '18px auto 4px';
-      loadMoreBtn.style.display = (all.length > PAGE_SIZE) ? 'block' : 'none';
-      mainEl.appendChild(loadMoreBtn);
-    } else {
-      loadMoreBtn.style.display = (all.length > PAGE_SIZE && idx < all.length) ? 'block' : 'none';
+    if (cls.includes('page-foods')) {
+      initFoodsPage();
     }
-
-    if(loadMoreBtn){
-      loadMoreBtn.onclick = appendBatch;
+    if (cls.includes('page-gorer-bazar')) {
+      initGorerBazarPage();
+    }
+    if (cls.includes('page-beauty')) {
+      initBeautyPage();
+    }
+    if (cls.includes('page-kids-toys')) {
+      initKidsToysPage();
+    }
+    if (cls.includes('page-contact')) {
+      initContactPage();
     }
   }
 
-  function attachImageSkeletons(){
-    document.querySelectorAll('.card .media img').forEach(img=>{
-      if(img.dataset._attached) return;
-      img.dataset._attached = 1;
-      const wrapper = img.parentNode;
-      const sk = document.createElement('div'); sk.className = 'img-skel';
-      wrapper.insertBefore(sk, img);
-      img.style.opacity = 0;
-      img.addEventListener('load', ()=>{
-        img.style.transition='opacity .35s';
-        img.style.opacity = 1;
-        if(sk && sk.parentNode) sk.parentNode.removeChild(sk);
-        updateAllButtons();
-      });
-      img.addEventListener('error', ()=>{
-        if(sk && sk.parentNode) sk.parentNode.removeChild(sk);
-        updateAllButtons();
-      });
-    });
-  }
-  setTimeout(()=>attachImageSkeletons(), 250);
-  const mut = new MutationObserver(()=>attachImageSkeletons());
-  mut.observe(document.body, { childList:true, subtree:true });
-
-  function updateAllButtons(){
-    qsa('.cat-row').forEach(section=>{
-      if(section._track) updateButtonsVisibility(section);
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', function(){
-    setupHeader();
-
-    // normalize and compare path against SITE_BASE aware roots
-    const path = (location.pathname || '/').replace(/\/$/, '') || '/';
-    const base = SITE_BASE || '';
-    const isHome = (path === '' || path === base || path === base + '/' || path === '/' || path === '');
-    if(isHome) {
-      renderHome();
-      return;
-    }
-
-    // Prefer element with explicit data-src (for category pages we put <main data-src="..."> inside the page content)
-    // If no such element exists, fall back to the first <main> in the layout, then document.body.
-    const pageDataSrcEl = document.querySelector('[data-src]');
-    const mainElCandidate = pageDataSrcEl || qs('main') || document.body;
-
-    // Determine whether to render cards:
-    // - element has data-src OR
-    // - in-memory window.rokomariData exists OR
-    // - FORCE_LOAD_CARDS is true AND JSON_DATA_PATH is set
-    const hasSrc = !!(mainElCandidate && mainElCandidate.dataset && mainElCandidate.dataset.src);
-    const hasInMemory = Array.isArray(window.rokomariData) && window.rokomariData.length;
-    const hasGlobalJson = (typeof window.JSON_DATA_PATH === 'string' && window.JSON_DATA_PATH);
-    const force = !!window.FORCE_LOAD_CARDS;
-
-    if(hasSrc || hasInMemory || (force && hasGlobalJson)){
-      renderStandard(mainElCandidate);
-    } else {
-      // intentionally do nothing — no cards for this page
-    }
+  document.addEventListener('DOMContentLoaded', () => {
+    detectPageAndInit();
   });
-
-  window.triggerRequest = function(searchTerm){
-    const searchInput = qs('#header-search-input');
-    const resultsContainer = qs('#header-search-results');
-    if(resultsContainer) resultsContainer.style.display='none';
-    if(searchInput){
-      searchInput.value='';
-      searchInput.blur();
-    }
-    const requestArea = qs('#request-area') || qs('#footer') || null;
-    const productInput = qs('#product-name');
-    if(requestArea){
-      requestArea.scrollIntoView({behavior:'smooth'});
-      if(productInput){
-        productInput.value = searchTerm;
-        setTimeout(()=>productInput.focus(), 600);
-      }
-    } else {
-      alert('রিকোয়েস্ট ফর্মের জন্য পেজের নিচে যান।');
-    }
-  };
-
 })();
 
-  // --- Scroll to top / bottom buttons ---
-  const scrollUpBtn = document.querySelector('.scroll-btn-up');
-  const scrollDownBtn = document.querySelector('.scroll-btn-down');
+// --- Scroll to top / bottom buttons ---
+const scrollUpBtn = document.querySelector('.scroll-btn-up');
+const scrollDownBtn = document.querySelector('.scroll-btn-down');
 
-  function smoothScrollTo(y) {
-    window.scrollTo({
-      top: y,
-      behavior: 'smooth'
-    });
-  }
+function smoothScrollTo(y) {
+  window.scrollTo({
+    top: y,
+    behavior: 'smooth'
+  });
+}
+
+if (scrollUpBtn) {
+  scrollUpBtn.addEventListener('click', () => {
+    smoothScrollTo(0);
+  });
+}
+
+if (scrollDownBtn) {
+  scrollDownBtn.addEventListener('click', () => {
+    const maxY =
+      document.documentElement.scrollHeight - window.innerHeight;
+    smoothScrollTo(maxY);
+  });
+}
+
+window.addEventListener('scroll', () => {
+  const scrollY =
+    window.scrollY || document.documentElement.scrollTop;
+  const maxY =
+    document.documentElement.scrollHeight - window.innerHeight;
 
   if (scrollUpBtn) {
-    scrollUpBtn.addEventListener('click', () => {
-      smoothScrollTo(0);
-    });
+    scrollUpBtn.classList.toggle('visible', scrollY > 300);
   }
-
   if (scrollDownBtn) {
-    scrollDownBtn.addEventListener('click', () => {
-      const maxY = document.documentElement.scrollHeight - window.innerHeight;
-      smoothScrollTo(maxY);
-    });
+    scrollDownBtn.classList.toggle(
+      'visible',
+      scrollY < maxY - 300
+    );
   }
-
-  window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY || document.documentElement.scrollTop;
-    const maxY = document.documentElement.scrollHeight - window.innerHeight;
-
-    if (scrollUpBtn) {
-      scrollUpBtn.classList.toggle('visible', scrollY > 300);
-    }
-    if (scrollDownBtn) {
-      scrollDownBtn.classList.toggle('visible', scrollY < maxY - 300);
-    }
-  });
-
+});
