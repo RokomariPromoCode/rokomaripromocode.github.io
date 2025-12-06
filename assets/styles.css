@@ -1121,6 +1121,59 @@ ol li {
     font-size: 16px;
   }
 }
+/* List skeleton cards (while JSON loads) */
+.card-skel {
+  pointer-events: none;
+}
+
+.card-skel:hover {
+  transform: none;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
+  border-color: #e5e7eb;
+}
+
+.skel-anim {
+  background: linear-gradient(90deg, #e5e7eb, #f3f4f6, #e5e7eb);
+  background-size: 200% 100%;
+  animation: sh 1.2s linear infinite;
+}
+
+.skel-line {
+  height: 10px;
+  border-radius: 999px;
+  margin-bottom: 6px;
+}
+
+.skel-line-lg {
+  width: 80%;
+}
+
+.skel-line-sm {
+  width: 60%;
+}
+
+.skel-pill {
+  height: 16px;
+  border-radius: 999px;
+  width: 52%;
+}
+
+.skel-pill-sm {
+  width: 30%;
+}
+
+.skel-btn {
+  margin-top: 10px;
+  height: 28px;
+  width: 60%;
+  border-radius: 999px;
+}
+
+/* make skeleton media block a bit taller on cards with image on top (mobile) */
+.card-skel .media {
+  min-height: 120px;
+}
+
 
 @media (max-width: 768px) {
   .main-footer {
