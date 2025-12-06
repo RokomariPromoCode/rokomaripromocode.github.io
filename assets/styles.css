@@ -1295,9 +1295,9 @@ ol li {
 
 .home-hero .hero-text,
 .home-intro p {
-  max-width: 800px;      /* Keeps text readable */
-  margin: 0 auto;        /* Centers the block */
-  text-align: center;    /* Optional: center text */
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 /* If you want hero text centered but intro text left-aligned */
