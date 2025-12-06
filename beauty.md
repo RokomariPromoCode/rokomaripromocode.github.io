@@ -35,33 +35,7 @@ keywords:
   <h2>আজকের Beauty & Personal Care Promo Code</h2>
 
   <!-- Replace with live offers -->
-  <table>
-    <thead>
-      <tr>
-        <th>Promo Code</th>
-        <th>Offer Details</th>
-        <th>Category</th>
-        <th>Minimum Purchase</th>
-        <th>Valid Till</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>BEAUTY10</strong></td>
-        <td>স্কিনকেয়ার ও কসমেটিকসে ১০% OFF</td>
-        <td>Skincare/Makeup</td>
-        <td>৳700</td>
-        <td>Update here</td>
-      </tr>
-      <tr>
-        <td><strong>PERFUME15</strong></td>
-        <td>Selected Perfume এ ১৫% পর্যন্ত ডিসকাউন্ট</td>
-        <td>Perfume</td>
-        <td>৳1200</td>
-        <td>Update here</td>
-      </tr>
-    </tbody>
-  </table>
+
 </section>
 
 <section>
