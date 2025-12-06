@@ -98,6 +98,71 @@ ol li {
     line-height: 1.75;
   }
 }
+.home-hero{
+  padding:32px 0 16px;
+}
+.hero-text{
+  max-width:780px;
+}
+.hero-lead{
+  font-size:15px;
+  line-height:1.7;
+  margin-bottom:16px;
+}
+.btn-primary{
+  display:inline-block;
+  padding:10px 20px;
+  border-radius:999px;
+  background:#1abc9c;
+  color:#fff;
+  text-decoration:none;
+  font-weight:600;
+  font-size:14px;
+}
+
+/* home-deals area around card rows */
+.home-deals{
+  margin-top:16px;
+}
+.home-deals > h2{
+  margin-bottom:8px;
+}
+.section-subtitle{
+  font-size:14px;
+  color:#4b5563;
+  max-width:760px;
+}
+
+/* categories grid */
+.category-link-grid{
+  list-style:none;
+  margin:16px 0 0;
+  padding:0;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.category-link-grid li{
+  background:#ffffff;
+  border-radius:10px;
+  padding:10px 12px;
+  box-shadow:0 4px 14px rgba(15,23,42,0.05);
+  font-size:14px;
+}
+.category-link-grid a{
+  font-weight:600;
+  text-decoration:none;
+}
+@media(max-width:640px){
+  .category-link-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+/* group guide sections a bit */
+.home-guide{
+  margin-top:24px;
+}
 
 /* ============================================================
    HEADER + SEARCH + NAV
@@ -1219,3 +1284,5 @@ ol li {
     padding: 10px 12px;
   }
 }
+
+
