@@ -1137,3 +1137,85 @@ ol li {
     gap: 15px;
   }
 }
+
+/* Hero heading + intro inside <main id="main"> */
+
+#main .page-header {
+  position: relative;
+  padding: 18px 18px 20px;
+  margin: 0 0 18px;
+  border-radius: 18px;
+  border: 1px solid #e5e7eb;
+  background: radial-gradient(circle at top left, #eef2ff, #f9fafb);
+  overflow: hidden;
+}
+
+/* soft gradient bar behind the title */
+#main .page-header::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle at 0 0, rgba(59,130,246,0.10), transparent 55%),
+              radial-gradient(circle at 100% 100%, rgba(34,197,94,0.12), transparent 55%);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* keep inner content above the gradient overlay */
+#main .page-header > * {
+  position: relative;
+  z-index: 1;
+}
+
+#main .page-title {
+  font-size: 28px;
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #0f172a;
+}
+
+/* subtle gradient text accent */
+#main .page-title {
+  background: linear-gradient(120deg, #0f172a, #2563eb, #16a34a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+#main .page-subtitle {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+/* intro paragraph – first paragraph in page content */
+#main .page-header + .page-content > p:first-of-type {
+  margin-top: 14px;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-left: 4px solid #22c55e;
+  font-size: 15px;
+  line-height: 1.8;
+  color: #111827;
+}
+
+/* small responsive tweaks */
+@media (max-width: 640px) {
+  #main .page-header {
+    padding: 14px 12px 16px;
+    border-radius: 14px;
+  }
+
+  #main .page-title {
+    font-size: 22px;
+  }
+
+  #main .page-header + .page-content > p:first-of-type {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+}
