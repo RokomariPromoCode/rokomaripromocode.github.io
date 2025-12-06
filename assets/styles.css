@@ -1285,4 +1285,30 @@ ol li {
   }
 }
 
+/* Fix hero & intro alignment */
+.home-hero,
+.home-intro {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.home-hero .hero-text,
+.home-intro p {
+  max-width: 800px;      /* Keeps text readable */
+  margin: 0 auto;        /* Centers the block */
+  text-align: center;    /* Optional: center text */
+}
+
+/* If you want hero text centered but intro text left-aligned */
+.home-intro p {
+  text-align: left;
+}
+.home-hero .hero-text h1 {
+  text-align: center;
+}
+
+.home-hero .hero-text p {
+  text-align: left;
+}
 
