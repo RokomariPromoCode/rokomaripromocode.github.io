@@ -98,11 +98,13 @@ ol li {
     line-height: 1.75;
   }
 }
+
+/* HERO INTRO / CTA */
 .home-hero{
   padding:32px 0 16px;
 }
 .hero-text{
-  max-width:780px;
+  max-width:100%;    /* full container width (no narrow centered box) */
 }
 .hero-lead{
   font-size:15px;
@@ -1284,31 +1286,3 @@ ol li {
     padding: 10px 12px;
   }
 }
-
-/* Fix hero & intro alignment */
-.home-hero,
-.home-intro {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.home-hero .hero-text,
-.home-intro p {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-/* If you want hero text centered but intro text left-aligned */
-.home-intro p {
-  text-align: left;
-}
-.home-hero .hero-text h1 {
-  text-align: center;
-}
-
-.home-hero .hero-text p {
-  text-align: left;
-}
-
