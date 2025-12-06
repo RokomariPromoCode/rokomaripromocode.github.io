@@ -16,7 +16,7 @@ keywords:
 
 <h1 class="page-title">Rokomari Promo Code – আজকের কুপন ও ডিসকাউন্ট</h1>
 
-<section class="container home-intro" style="padding:24px 0;"></section>
+<section class="container home-intro" style="padding:24px 0;">
   <p>
     <strong>Rokomari promo code</strong> আর খুঁজতে খুঁজতে সময় নষ্ট করতে হবে না। এই একটি হাবেই পাবেন
     বই, ইলেকট্রনিক্স, ফার্নিচার, ফুড, কিডস টয়স, বিউটি সহ প্রায় সব ক্যাটাগরির হালনাগাদ
@@ -27,6 +27,7 @@ keywords:
     বাড়তি সেভ করা যায়। আমরা নিয়মিতভাবে নতুন কুপন, bank offer এবং season-based
     <strong>রকমারি ডিসকাউন্ট</strong> যোগ করি, যাতে কোনো বেস্ট ডিল মিস না হয়।
   </p>
+</section>
 
 <div id="home-cards-anchor"></div>
 
@@ -56,7 +57,7 @@ keywords:
     নতুন বা পুরনো যেই ক্রেতাই হন, সঠিকভাবে কোড ব্যবহার না করলে অনেক সময় ডিসকাউন্ট প্রযোজ্য হয় না।
     নিচের সহজ ধাপগুলো Follow করলেই <strong>Rokomari coupon</strong> সব সময় কাজ করবে:
   </p>
-  <ol>
+  <ol class="ordered-list">
     <li>
       <strong>১. পণ্য সিলেক্ট করুন:</strong>
       <br>প্রথমে রকমারি সাইটে গিয়ে আপনার পছন্দের বই বা পণ্য কার্টে যোগ করুন।
