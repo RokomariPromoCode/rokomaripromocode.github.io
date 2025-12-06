@@ -13,17 +13,15 @@ keywords:
   - rokomari novel discount code
   - rokomari academic book offer
 ---
-
- <main id="main" data-src="/data/books.json" data-cards="true">
-  <h1 class="page-title">Rokomari Promo Code For Books</h1>
-  </main>
+<h1 class="page-title">Rokomari Promo Code For Books</h1>
 <section class="hero-section">
   <p>
     আপনি যদি আজ <strong>Rokomari promo code for books</strong> বা <strong>রকমারি বই কুপন</strong> খুঁজে থাকেন, তাহলে আপনি সঠিক জায়গায় এসেছেন। 
     এখানে আমরা প্রতিদিন চেষ্টা করি সর্বশেষ বইয়ের প্রোমো কোড, ডিসকাউন্ট, ব্যাংক অফার এবং বিশেষ ক্যাম্পেইনগুলো আপডেট রাখতে, যেন আপনি আপনার প্রিয় বই কম দামে কিনতে পারেন।
   </p>
 </section>
-
+ <main id="main" data-src="/data/books.json" data-cards="true">
+  </main>
 <section>
   <h2>আজকের Rokomari Books Promo Code & Offer তালিকা</h2>
   <p>
