@@ -45,44 +45,7 @@ keywords:
     সেই ক্যাটাগরির ডেডিকেটেড পেইজে চলে যাবেন।
   </p>
 
-  <div class="home-sections">
-    <!-- এখানে data-src / data-section-key আপনার json ফাইল অনুযায়ী ঠিক করে নিন -->
-    <div class="book-section"
-         data-src="data/books.json"
-         data-section-title="Books"
-         data-section-key="rokomari-book"></div>
-
-    <div class="book-section"
-         data-src="data/electronics.json"
-         data-section-title="Electronics"
-         data-section-key="rokomari-electronics"></div>
-
-    <div class="book-section"
-         data-src="data/foods.json"
-         data-section-title="Foods"
-         data-section-key="rokomari-foods"></div>
-
-    <div class="book-section"
-         data-src="data/gorer-bazar.json"
-         data-section-title="Gorer Bazar"
-         data-section-key="rokomari-gorer-bazar"></div>
-
-    <div class="book-section"
-         data-src="data/kids-toys.json"
-         data-section-title="Kids Toys"
-         data-section-key="rokomari-kids-toys"></div>
-
-    <div class="book-section"
-         data-src="data/baby-products.json"
-         data-section-title="Baby Products"
-         data-section-key="rokomari-baby-products"></div>
-
-    <div class="book-section"
-         data-src="data/beauty.json"
-         data-section-title="Beauty & Personal Care"
-         data-section-key="rokomari-beauty"></div>
-  </div>
-</section>
+<div id="home-cards-anchor"></div>
 
 <!-- CATEGORY SHORTCUT GRID -->
 <section class="container home-categories" aria-label="Rokomari promo code categories">
