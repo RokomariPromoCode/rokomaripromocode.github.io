@@ -126,7 +126,7 @@
 
     const categories = [
       {key:'best-seller',label:'Best Seller',href:'/rokomari-best-seller/'},
-      {key:'books',label:'Books',href:'/rokomari-book/'},
+      {key:'books',label:'Books',href:'/rokomari-books/'},
       {key:'electronics',label:'Electronics',href:'/rokomari-electronics/'},
       {key:'gorer-bazar',label:'Gorer Bazar',href:'/gorer-bazar/'},
       {key:'foods',label:'Foods',href:'/rokomari-foods/'},
@@ -254,7 +254,7 @@
     const root = document.createElement('div'); root.className = 'home-cats container';
     const cats = [
       { key:'best-seller', name:'Best Seller', file:'/data/best_seller.json', href:'/rokomari-best-seller/' },
-      { key:'books', name:'Books', file:'/data/books.json', href:'/rokomari-book/' },
+      { key:'books', name:'Books', file:'/data/books.json', href:'/rokomari-books/' },
       { key:'electronics', name:'Electronics', file:'/data/electronics.json', href:'/rokomari-electronics/' },
       { key:'gorer-bazar', name:'Gorer Bazar', file:'/data/gorer-bazar.json', href:'/gorer-bazar/' },
       { key:'foods', name:'Foods', file:'/data/foods.json', href:'/rokomari-foods/' },
@@ -368,7 +368,7 @@
     const readable = section.dataset.name || key || 'আরও দেখুন';
     const map = {
       'best-seller': '/rokomari-best-seller/',
-      'books': '/rokomari-book/',
+      'books': '/rokomari-books/',
       'electronics': '/rokomari-electronics/',
       'gorer-bazar': '/gorer-bazar/',
       'foods': '/rokomari-foods/',
