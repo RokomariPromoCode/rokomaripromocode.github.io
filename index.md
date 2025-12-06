@@ -14,14 +14,21 @@ keywords:
   - rokomari offer today
 ---
 
-<h1 class="page-title">Rokomari Promo Code – আজকের কুপন ও ডিসকাউন্ট</h1>
+<!-- HERO + SHORT INTRO -->
+<section class="container home-hero">
+  <div class="hero-text">
+    <h1 class="page-title">Rokomari Promo Code – আজকের কুপন ও ডিসকাউন্ট</h1>
+    <p class="hero-lead">
+      <strong>Rokomari promo code</strong> আর খুঁজতে খুঁজতে সময় নষ্ট করতে হবে না। এখানে পাবেন
+      বই, ইলেকট্রনিক্স, ফার্নিচার, ফুড, কিডস টয়স, বিউটি সহ প্রায় সব ক্যাটাগরির হালনাগাদ
+      <em>Rokomari coupon code</em> ও ডিসকাউন্ট অফার – এক জায়গাতেই।
+    </p>
+    <a href="#today-deals" class="btn-primary">আজকের সব অফার দেখুন</a>
+  </div>
+</section>
 
-<section class="container home-intro" style="padding:24px 0;">
-  <p>
-    <strong>Rokomari promo code</strong> আর খুঁজতে খুঁজতে সময় নষ্ট করতে হবে না। এই একটি হাবেই পাবেন
-    বই, ইলেকট্রনিক্স, ফার্নিচার, ফুড, কিডস টয়স, বিউটি সহ প্রায় সব ক্যাটাগরির হালনাগাদ
-    <em>Rokomari coupon code</em> ও ডিসকাউন্ট অফার।
-  </p>
+<!-- LONGER INTRO / EXPLAINER -->
+<section class="container home-intro">
   <p>
     রকমারিতে অর্ডার করার আগে একবার এই পেইজে এসে আপডেটেড কোড দেখে নিলে অনেক সময় ১০–৫০% পর্যন্ত
     বাড়তি সেভ করা যায়। আমরা নিয়মিতভাবে নতুন কুপন, bank offer এবং season-based
@@ -29,8 +36,55 @@ keywords:
   </p>
 </section>
 
-<div id="home-cards-anchor"></div>
+<!-- JSON-BASED CARD ROWS (HORIZONTAL) -->
+<section id="today-deals" class="container home-deals" aria-label="আজকের Rokomari promo code">
+  <h2>আজকের Rokomari promo code – ক্যাটাগরি অনুযায়ী</h2>
+  <p class="section-subtitle">
+    নিচের সেকশনগুলোতে বই, ইলেকট্রনিক্স, ফুড, কিডস টয়সসহ বিভিন্ন ক্যাটাগরির best deals এক নজরে সাজানো আছে।
+    স্ক্রল বা ড্র্যাগ করে কার্ডগুলো ঘুরে দেখুন, আর শেষের <strong>“আরও দেখুন”</strong> বাটনে ক্লিক করলে
+    সেই ক্যাটাগরির ডেডিকেটেড পেইজে চলে যাবেন।
+  </p>
 
+  <div class="home-sections">
+    <!-- এখানে data-src / data-section-key আপনার json ফাইল অনুযায়ী ঠিক করে নিন -->
+    <div class="book-section"
+         data-src="data/books.json"
+         data-section-title="Books"
+         data-section-key="rokomari-book"></div>
+
+    <div class="book-section"
+         data-src="data/electronics.json"
+         data-section-title="Electronics"
+         data-section-key="rokomari-electronics"></div>
+
+    <div class="book-section"
+         data-src="data/foods.json"
+         data-section-title="Foods"
+         data-section-key="rokomari-foods"></div>
+
+    <div class="book-section"
+         data-src="data/gorer-bazar.json"
+         data-section-title="Gorer Bazar"
+         data-section-key="rokomari-gorer-bazar"></div>
+
+    <div class="book-section"
+         data-src="data/kids-toys.json"
+         data-section-title="Kids Toys"
+         data-section-key="rokomari-kids-toys"></div>
+
+    <div class="book-section"
+         data-src="data/baby-products.json"
+         data-section-title="Baby Products"
+         data-section-key="rokomari-baby-products"></div>
+
+    <div class="book-section"
+         data-src="data/beauty.json"
+         data-section-title="Beauty & Personal Care"
+         data-section-key="rokomari-beauty"></div>
+  </div>
+</section>
+
+<!-- CATEGORY SHORTCUT GRID -->
 <section class="container home-categories" aria-label="Rokomari promo code categories">
   <h2>কোন ক্যাটাগরির Rokomari promo code খুঁজছেন?</h2>
   <p>
@@ -51,7 +105,8 @@ keywords:
   </ul>
 </section>
 
-<section class="container">
+<!-- HOW TO USE PROMO CODE -->
+<section class="container home-guide">
   <h2>কীভাবে Rokomari promo code ব্যবহার করবেন? (Step-by-step)</h2>
   <p>
     নতুন বা পুরনো যেই ক্রেতাই হন, সঠিকভাবে কোড ব্যবহার না করলে অনেক সময় ডিসকাউন্ট প্রযোজ্য হয় না।
@@ -82,7 +137,8 @@ keywords:
   </ol>
 </section>
 
-<section class="container">
+<!-- BANK OFFER & DISCOUNT COMBO -->
+<section class="container home-guide">
   <h2>Bank offer, Cashback ও Rokomari discount একসাথে নেবেন কীভাবে?</h2>
   <p>
     রকমারি প্রায়ই বিভিন্ন ব্যাংক ও মোবাইল ওয়ালেটের সাথে পার্টনার হয়ে আলাদা <strong>bank offer</strong> চালু করে।
@@ -96,7 +152,8 @@ keywords:
   </ul>
 </section>
 
-<section class="container">
+<!-- VALUE PROPOSITION -->
+<section class="container home-guide">
   <h2>আমাদের Rokomari promo code হাব থেকে কী ভ্যালু পাচ্ছেন?</h2>
   <p>
     শুধুই কোড কপি-পেস্ট করার তালিকা নয় – আমরা চেষ্টা করি প্রত্যেক ক্যাটাগরি পেইজকে একটি পূর্ণাঙ্গ
@@ -115,7 +172,8 @@ keywords:
   </p>
 </section>
 
-<section class="container">
+<!-- EXTRA SAVING TIPS -->
+<section class="container home-guide">
   <h2>Rokomari promo code দিয়ে আরও কীভাবে সেভ করবেন?</h2>
   <p>নিচের ছোট ছোট টিপসগুলো Follow করলে একই অর্ডারে আরও কিছু বাড়তি টাকা সেভ করা যায়:</p>
   <ul class="bullet-list">
@@ -125,5 +183,3 @@ keywords:
     <li><strong>Expired code চেক করুন:</strong> কখনও কখনও Rokomari পুরনো কোড আবার রিঅ্যাকটিভ করে; তাই “expired” ট্যাগ দেখলেও আমরা নোট দিয়ে রাখি যদি আবার একটিভ হওয়ার সম্ভাবনা থাকে।</li>
   </ul>
 </section>
-
-<div id="home-cards-anchor"></div>
