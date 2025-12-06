@@ -14,6 +14,9 @@ keywords:
   - rokomari academic book offer
 ---
 
+ <main id="main" data-src="/data/books.json" data-cards="true">
+  <h1 class="page-title">Rokomari Promo Code For Books</h1>
+  </main>
 <section class="hero-section">
   <p>
     আপনি যদি আজ <strong>Rokomari promo code for books</strong> বা <strong>রকমারি বই কুপন</strong> খুঁজে থাকেন, তাহলে আপনি সঠিক জায়গায় এসেছেন। 
@@ -28,9 +31,11 @@ keywords:
     প্রতিটি কোডের নিচে আমরা শর্ত, ক্যাটাগরি, ন্যূনতম অর্ডার এবং মেয়াদ উল্লেখ করার চেষ্টা করি।
   </p>
 
- <main id="main" data-src="/data/books.json" data-cards="true">
-  <h1 class="page-title">Rokomari Promo Code For Books</h1>
-  </main>
+<!--content-->
+<script>
+  window.FORCE_LOAD_CARDS = true;
+</script>
+
   <p>
     মনে রাখবেন, অনেক সময় <strong>Rokomari discount code</strong> শুধুমাত্র নির্দিষ্ট লেখক, সিরিজ বা ক্যাম্পেইনের জন্য প্রযোজ্য থাকে।
     কোড প্রযোজ্য না হলে প্রথমে ক্যাটাগরি ও শর্ত ভালোভাবে পড়ে নিন।
@@ -124,6 +129,4 @@ keywords:
 
 
 
-<script>
-  window.FORCE_LOAD_CARDS = true;
-</script>
+
