@@ -150,22 +150,19 @@
     }
 
     if(hamburger && menuLinks){
-      hamburger.addEventListener('click', (e)=>{
-        e.stopPropagation();
-        menuLinks.classList.toggle('active');
-        const icon = hamburger.querySelector('i');
-        if(menuLinks.classList.contains('active')){ icon.classList.remove('fa-bars'); icon.classList.add('fa-times'); }
-        else { icon.classList.remove('fa-times'); icon.classList.add('fa-bars'); }
-      });
-      document.addEventListener('click', (e)=>{
-        if(menuLinks.classList.contains('active') && !e.target.closest('.menu-links') && !e.target.closest('.hamburger')){
-          menuLinks.classList.remove('active');
-          const icon = hamburger.querySelector('i');
-          if(icon){ icon.classList.remove('fa-times'); icon.classList.add('fa-bars'); }
-        }
-      });
+  hamburger.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    menuLinks.classList.toggle('active');
+    const icon = hamburger.querySelector('i');
+    if(menuLinks.classList.contains('active')){
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+    } else {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
     }
-
+  });
+}
     // --- SEARCH: auto-index all /data/*.json using data/index.json ---
     let localIndex = [];
     (async ()=>{
