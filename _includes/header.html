@@ -19,9 +19,9 @@
     </div>
 
     <nav class="header-menu" aria-label="Primary">
-      <ul class="menu-links">
-        <!-- Static HTML navigation (good for SEO); JS will only enhance if empty -->
+      <ul class="menu-links" id="site-menu">
         <li><a href="{{ '/' | relative_url }}">Home</a></li>
+        <li><a href="{{ '/rokomari-best-seller/' | relative_url }}">Best Seller</a></li>
         <li><a href="{{ '/rokomari-books/' | relative_url }}">Books</a></li>
         <li><a href="{{ '/rokomari-electronics/' | relative_url }}">Electronics</a></li>
         <li><a href="{{ '/rokomari-foods/' | relative_url }}">Foods</a></li>
@@ -30,12 +30,18 @@
         <li><a href="{{ '/rokomari-baby-products/' | relative_url }}">Baby Products</a></li>
         <li><a href="{{ '/rokomari-beauty/' | relative_url }}">Beauty</a></li>
         <li><a href="{{ '/rokomari-others/' | relative_url }}">Others</a></li>
-
       </ul>
 
-      <button class="hamburger" type="button" aria-label="Toggle menu">
+      <button
+        class="hamburger"
+        type="button"
+        aria-label="Toggle menu"
+        aria-controls="site-menu"
+        aria-expanded="false"
+      >
         ☰
       </button>
+
     </nav>
   </div>
 </header>
