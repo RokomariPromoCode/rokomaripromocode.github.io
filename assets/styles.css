@@ -303,11 +303,43 @@ ol li {
 }
 
 .hamburger {
-  display: none;
-  font-size: 22px;
+  border: none;
+  background: #111827;
+  color: #f9fafb;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
   cursor: pointer;
-  color: #333;
-  padding: 8px;
+  font-size: 1.3rem;
+  display: none;          /* shown on mobile */
+}
+
+/* mobile */
+@media (max-width: 880px) {
+  .hamburger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .menu-links {
+    position: fixed;
+    top: 64px;
+    right: -100%;
+    width: 70%;
+    max-width: 260px;
+    height: calc(100vh - 64px);
+    flex-direction: column;
+    padding: 1.2rem 1.1rem;
+    background: #ffffff;
+    box-shadow: -8px 0 24px rgba(15, 23, 42, 0.18);
+    transition: right 0.25s cubic-bezier(0.22, 0.9, 0.35, 1);
+    z-index: 1300;
+  }
+
+  .menu-links.active {
+    right: 0;
+  }
 }
 
 /* ============================================================
@@ -1284,5 +1316,96 @@ ol li {
   #main .page-header + .page-content > p:first-of-type {
     font-size: 14px;
     padding: 10px 12px;
+  }
+}
+
+/* ===== Article / category page text ===== */
+
+main > article,
+main .page-content,
+main .category-content {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.04);
+  margin-top: 12px;
+}
+
+/* H1 (main title) */
+main h1 {
+  font-size: clamp(1.7rem, 3vw, 2.25rem);
+  margin: 0 0 0.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
+/* H2 / H3 */
+main h2 {
+  font-size: clamp(1.25rem, 2.3vw, 1.6rem);
+  margin: 1.7rem 0 0.6rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+main h3 {
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  margin: 1.3rem 0 0.5rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Paragraphs */
+main p {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #374151;
+  margin: 0 0 0.75rem;
+}
+
+/* Lists */
+main ul,
+main ol {
+  font-size: 0.95rem;
+  color: #374151;
+  margin: 0 0 0.8rem 1.2rem;
+}
+
+main li {
+  margin-bottom: 0.35rem;
+}
+
+/* First paragraph under H1 highlight */
+main > article > p:first-of-type {
+  margin-top: 0.5rem;
+  margin-bottom: 0.9rem;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-left: 4px solid #16a34a; /* green */
+}
+/* container */
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px; /* adjust as needed */
+}
+
+/* circle */
+.spinner {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 3px solid #e5e7eb;
+  border-top-color: #16a34a; /* green color */
+  animation: spin 0.7s linear infinite;
+}
+
+/* animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
