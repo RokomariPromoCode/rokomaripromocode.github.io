@@ -1933,3 +1933,10 @@ section strong {
   max-width: 720px;
   margin: 0 auto;
 }
+
+/* Make ONLY the hamburger icon lines darker */
+.hamburger span {
+    background-color: #000000 !important;  /* Pure black lines */
+    opacity: 1 !important;                 /* Remove faded effect */
+    height: 3px;                            /* Slightly thicker for visibility */
+}
