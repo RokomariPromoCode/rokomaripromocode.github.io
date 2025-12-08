@@ -1834,3 +1834,26 @@ section strong {
   font-weight: 600;
 }
 
+/* ============================================================
+   FAQ — HARD CENTER ALIGN OVERRIDE
+   ============================================================ */
+
+/* Center the whole FAQ section contents */
+.faq-section {
+  display: flex;
+  justify-content: center;   /* center children horizontally */
+}
+
+/* The inner container becomes the centered column */
+.faq-section > .container {
+  flex: 0 1 900px;           /* max width */
+  margin: 0 auto !important;
+  padding: 0 16px !important;
+}
+
+/* Make sure the FAQ cards themselves don't stretch weirdly */
+.faq-section .faq-grid {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
