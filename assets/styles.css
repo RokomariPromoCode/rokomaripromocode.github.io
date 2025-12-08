@@ -1574,4 +1574,94 @@ main > article > p:first-of-type {
     border-color: #111827;
   }
 }
+/* ============================================================
+   GLOBAL TYPOGRAPHY FOR CATEGORY PAGES
+   Applies to <main> AND all <section> blocks
+   ============================================================ */
+
+/* Wrapper used by Jekyll for markdown-rendered pages */
+.page-content,
+.post-content,
+main,
+section {
+  max-width: 840px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #0f172a;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+/* Headings */
+.page-content h1,
+.post-content h1,
+main h1 {
+  font-size: 2.1rem;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.page-content h2,
+.post-content h2,
+main h2 {
+  font-size: 1.55rem;
+  line-height: 1.35;
+  font-weight: 600;
+  margin: 2rem 0 0.75rem;
+}
+
+.page-content h3,
+.post-content h3,
+main h3 {
+  font-size: 1.25rem;
+  line-height: 1.4;
+  font-weight: 600;
+  margin: 1.5rem 0 0.5rem;
+}
+
+/* Paragraphs */
+.page-content p,
+.post-content p,
+main p,
+section p {
+  font-size: 1rem;
+  line-height: 1.65;
+  margin-bottom: 1rem;
+  color: #111827;
+}
+
+/* Lists */
+.page-content ul,
+.post-content ul,
+main ul,
+section ul {
+  margin: 0 0 1rem 1.25rem;
+  padding: 0;
+}
+
+.page-content li,
+.post-content li,
+main li,
+section li {
+  margin-bottom: 0.4rem;
+}
+
+/* Links in content */
+.page-content a,
+.post-content a,
+main a,
+section a {
+  color: #0f766e;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Strong text */
+.page-content strong,
+.post-content strong,
+main strong,
+section strong {
+  font-weight: 600;
+}
 
