@@ -390,36 +390,43 @@
   }
 
   function addSeeMoreCard(section){
-    if(!section || !section._track) return;
-    if(section._track.querySelector('.cat-item.see-more')) return;
-    const wrap = document.createElement('div'); 
-    wrap.className = 'cat-item see-more';
+  if(!section || !section._track) return;
+  if(section._track.querySelector('.cat-item.see-more')) return;
 
-    // Map home sections to their real category URLs
-    const key = section.dataset.key || '';
-    const readable = section.dataset.name || key || 'আরও দেখুন';
-    const map = {
-      'best-seller': '/rokomari-best-seller/',
-      'books': '/rokomari-books/',
-      'electronics': '/rokomari-electronics/',
-      'gorer-bazar': '/gorer-bazar/',
-      'foods': '/rokomari-foods/',
-      'kids-toys': '/rokomari-kids-toys/',
-      'baby-products': '/rokomari-baby-products/',
-      'beauty': '/rokomari-beauty/',
-      'others': '/rokomari-others/'
-    };
-    const link = map[key] || ('/' + key + '/');
+  const wrap = document.createElement('div'); 
+  wrap.className = 'cat-item see-more';
 
-    const inner = document.createElement('div');
-    inner.className = 'see-more-card';
-    inner.innerHTML = `
-      <div>আরও দেখুন — ${escapeHtml(readable)}</div>
-      <a href="${resolveUrl(link)}">See all ${escapeHtml(readable)}</a>
-    `;
-    wrap.appendChild(inner);
-    section._track.appendChild(wrap);
-  }
+  const key = section.dataset.key || '';
+  const readable = section.dataset.name || key || 'আরও দেখুন';
+  const map = {
+    'best-seller': '/rokomari-best-seller/',
+    'books': '/rokomari-books/',
+    'electronics': '/rokomari-electronics/',
+    'gorer-bazar': '/gorer-bazar/',
+    'foods': '/rokomari-foods/',
+    'kids-toys': '/rokomari-kids-toys/',
+    'baby-products': '/rokomari-baby-products/',
+    'beauty': '/rokomari-beauty/',
+    'others': '/rokomari-others/'
+  };
+  const link = map[key] || ('/' + key + '/');
+
+  const inner = document.createElement('div');
+  inner.className = 'see-more-card';
+  inner.innerHTML = `
+    <div class="see-more-icon">➜</div>
+    <h4 class="see-more-title">আরও দেখুন</h4>
+    <p class="see-more-subtitle">
+      ${escapeHtml(readable)} ক্যাটাগরির সব অফার একসাথে দেখতে ক্লিক করুন।
+    </p>
+    <a class="btn see-more-btn" href="${resolveUrl(link)}">
+      See all ${escapeHtml(readable)}
+    </a>
+  `;
+
+  wrap.appendChild(inner);
+  section._track.appendChild(wrap);
+}
 
   function onNextClick(section, catDef){
     const items = section._items || [];
