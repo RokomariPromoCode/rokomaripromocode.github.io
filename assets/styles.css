@@ -347,6 +347,52 @@ ol li {
   }
 }
 
+/* Header layout fix: keep hamburger on the right */
+.modern-header .header-container {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  justify-content: space-between;
+}
+
+.modern-header .header-logo {
+  flex: 0 0 auto;
+}
+
+.modern-header .header-search-wrapper {
+  flex: 1 1 auto;
+}
+
+/* 🔹 this line is the key */
+.modern-header .hamburger {
+  margin-left: auto !important;
+}
+
+/* Mobile tweaks */
+@media (max-width: 900px) {
+  .modern-header .header-container {
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modern-header .header-search-wrapper {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+
+  .modern-header .hamburger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    margin-left: auto !important;   /* always far right */
+  }
+}
+
 /* ============================================================
    PAGE TITLE (H1)
    ============================================================ */
