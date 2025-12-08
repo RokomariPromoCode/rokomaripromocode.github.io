@@ -18,6 +18,17 @@
       <div id="header-search-results" class="search-results-dropdown"></div>
     </div>
 
+    <!-- 🔹 MOVE BUTTON HERE (outside nav) -->
+    <button
+      class="hamburger"
+      type="button"
+      aria-label="Toggle menu"
+      aria-controls="site-menu"
+      aria-expanded="false"
+    >
+      ☰
+    </button>
+
     <nav class="header-menu" aria-label="Primary">
       <ul class="menu-links" id="site-menu">
         <li><a href="{{ '/' | relative_url }}">Home</a></li>
@@ -31,17 +42,6 @@
         <li><a href="{{ '/rokomari-beauty/' | relative_url }}">Beauty</a></li>
         <li><a href="{{ '/rokomari-others/' | relative_url }}">Others</a></li>
       </ul>
-
-      <button
-        class="hamburger"
-        type="button"
-        aria-label="Toggle menu"
-        aria-controls="site-menu"
-        aria-expanded="false"
-      >
-        ☰
-      </button>
-
     </nav>
   </div>
 </header>
