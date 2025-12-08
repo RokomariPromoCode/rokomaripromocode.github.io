@@ -537,6 +537,51 @@ ol li {
   transform: translateY(-50%);
 }
 
+/* Home last card: "See more" */
+.cat-item.see-more {
+  display: flex;
+  align-items: stretch;
+}
+
+.see-more-card {
+  flex: 1;
+  border-radius: 14px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+  border: 1px dashed rgba(79, 70, 229, 0.35);
+  box-shadow: 0 10px 35px rgba(15, 23, 42, 0.06);
+}
+
+.see-more-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.see-more-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.see-more-subtitle {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4b5563;
+  margin-bottom: 12px;
+}
+
+.see-more-btn {
+  font-size: 14px;
+  padding-inline: 18px;
+  padding-block: 8px;
+  white-space: nowrap;
+}
+
 /* ============================================================
    GENERIC CARD BASE (used by both home + category)
    ============================================================ */
