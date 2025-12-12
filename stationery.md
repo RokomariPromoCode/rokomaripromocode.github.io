@@ -74,6 +74,6 @@ keywords:
   <ul>
     <li><a href="/rokomari-books/">Academic & Educational Promo Code</a></li>
     <li><a href="/rokomari-books/">Books Promo Code</a></li>
-    <li><a href="/rokomari-kids/">Kids Promo Code</a></li>
+    <li><a href="/rokomari-kids-toys/">Kids Promo Code</a></li>
   </ul>
 </section>
