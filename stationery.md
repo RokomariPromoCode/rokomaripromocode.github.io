@@ -11,7 +11,7 @@ keywords:
   - office stationery discount rokomari
   - rokomari art supplies discount
 ---
-<h1>Rokomari Stationery Promo Code – অফিস & স্টাডি স্টেশনারি ডিসকাউন্ট</h1>
+<h1 class="page-title">Rokomari Stationery Promo Code – অফিস & স্টাডি স্টেশনারি ডিসকাউন্ট</h1>
 <section>
   <p>
     স্কুল, কলেজ, ইউনিভার্সিটি ও অফিসের সকল স্টেশনারি আইটেম কেনার আগে 
