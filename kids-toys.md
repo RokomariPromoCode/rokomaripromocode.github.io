@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Rokomari Kids Products Promo Code – খেলনা & কিডস আইটেম ডিসকাউন্ট"
-permalink: /rokomari-kids/
+permalink: /rokomari-kids-toys/
 description: "Rokomari kids products promo code, শিশুদের বই, টয়, গেম, স্কুল আইটেম এবং কিডস গিফটে আজকের কুপন কোড ও ডিসকাউন্ট অফার দেখুন।"
 keywords:
   - rokomari kids products promo code
