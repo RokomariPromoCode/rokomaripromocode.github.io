@@ -161,7 +161,7 @@ keywords:
   <ul>
     <li><a href="/rokomari-books/">Rokomari Books Promo Code</a></li>
     <li><a href="/rokomari-islamic-books/">Islamic Books Promo Code</a></li>
-    <li><a href="/rokomari-education/">Academic & Educational Promo Code</a></li>
+    <li><a href="/rokomari-books/">Academic & Educational Promo Code</a></li>
     <li><a href="/rokomari-stationery/">Stationery & Study Supplies Promo Code</a></li>
   </ul>
   <p>
