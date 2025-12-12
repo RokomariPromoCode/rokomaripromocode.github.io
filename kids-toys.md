@@ -86,7 +86,7 @@ keywords:
   <ul>
     <li><a href="/rokomari-books/">Books Promo Code</a></li>
     <li><a href="/rokomari-stationery/">Stationery Promo Code</a></li>
-    <li><a href="/rokomari-education/">Academic & Educational Promo Code</a></li>
+    <li><a href="/rokomari-books/">Academic & Educational Promo Code</a></li>
   </ul>
 </section>
 
