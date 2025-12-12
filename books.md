@@ -116,7 +116,7 @@ keywords:
   <ul>
     <li><a href="/rokomari-islamic-books/">Islamic Books Promo Code</a></li>
     <li><a href="/rokomari-electronics/">Electronics Promo Code</a></li>
-    <li><a href="/rokomari-kids/">Kids & Toys Promo Code</a></li>
+    <li><a href="/rokomari-kids-toys/">Kids & Toys Promo Code</a></li>
     <li><a href="/rokomari-stationery/">Stationery & Office Supplies Promo Code</a></li>
   </ul>
   <p>
