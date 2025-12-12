@@ -96,7 +96,7 @@ keywords:
   <h2>আরও Rokomari Promo Code</h2>
   <ul>
     <li><a href="/rokomari-books/">Books Promo Code</a></li>
-    <li><a href="/rokomari-kids/">Kids & Toys Promo Code</a></li>
+    <li><a href="/rokomari-kids-toys/">Kids & Toys Promo Code</a></li>
     <li><a href="/rokomari-stationery/">Stationery Promo Code</a></li>
   </ul>
 </section>
