@@ -12,7 +12,7 @@ keywords:
   - rokomari hadith book promo code
   - rokomari tafsir book discount
 ---
-<h1>Rokomari Islamic Books Promo Code – ইসলামিক বইয়ের কুপন & অফার</h1>
+<h1 class="page-title" >Rokomari Islamic Books Promo Code – ইসলামিক বইয়ের কুপন & অফার</h1>
 
 <section>
   <p>
