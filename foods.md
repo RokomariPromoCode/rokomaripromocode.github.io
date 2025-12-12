@@ -95,6 +95,6 @@ keywords:
   <ul>
     <li><a href="/rokomari-books/">Books Promo Code</a></li>
     <li><a href="/rokomari-beauty/">Beauty & Personal Care Promo Code</a></li>
-    <li><a href="/rokomari-kids/">Kids & Toys Promo Code</a></li>
+    <li><a href="/rokomari-kids-toys/">Kids & Toys Promo Code</a></li>
   </ul>
 </section>
