@@ -72,7 +72,7 @@ keywords:
 <section>
   <h2>Related Promo Code Pages</h2>
   <ul>
-    <li><a href="/rokomari-education/">Academic & Educational Promo Code</a></li>
+    <li><a href="/rokomari-books/">Academic & Educational Promo Code</a></li>
     <li><a href="/rokomari-books/">Books Promo Code</a></li>
     <li><a href="/rokomari-kids/">Kids Promo Code</a></li>
   </ul>
