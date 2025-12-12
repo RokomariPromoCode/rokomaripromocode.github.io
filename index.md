@@ -83,7 +83,7 @@ keywords:
     <li>
       <strong>২. সঠিক ক্যাটাগরি পেইজে আসুন:</strong>
       <br>এখানে আমাদের সাইটে সংশ্লিষ্ট ক্যাটাগরির পেইজ (যেমন 
-      <a href="{{ '/rokomari-book/' | relative_url }}">Rokomari Books promo code</a>) ওপেন করুন।
+      <a href="{{ '/rokomari-books/' | relative_url }}">Rokomari Books promo code</a>) ওপেন করুন।
     </li>
     <li>
       <strong>৩. সর্বশেষ কোড কপি করুন:</strong>
