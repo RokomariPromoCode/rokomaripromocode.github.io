@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "Rokomari Promo Code – আজকের রকমারি কুপন ও ডিসকাউন্ট অফার"
-description: "আজকের হালনাগাদ Rokomari promo code, কুপন কোড ও ডিসকাউন্ট – বই, ইলেকট্রনিক্স, ফার্নিচার, ফুড, কিডস টয়স সহ সব ক্যাটাগরির সর্বশেষ অফার এক জায়গায়। কীভাবে রকমারি প্রোমো কোড ব্যবহার করবেন, bank offer ও সেভিংস টিপস জেনে নিন।"
+title: "Rokomari Promo Codes & Discounts — Updated Coupons for Books, Electronics, Grocery"
+description: "Find the latest Rokomari promo codes and discount offers by category. Save on books, electronics, groceries, and more — updated daily!"
 permalink: /
 is_home: true
 show_faq: true
