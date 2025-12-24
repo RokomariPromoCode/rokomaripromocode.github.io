@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Rokomari Promo Codes & Discounts — Updated Coupons for Books, Electronics, Grocery"
+title: "Rokomari Promo Code"
 description: "Find the latest Rokomari promo codes and discount offers by category. Save on books, electronics, groceries, and more — updated daily!"
 permalink: /
 is_home: true
