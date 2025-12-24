@@ -1,93 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
   <url>
-    <loc>https://www.rokomaripromocode.com/</loc>
-    <lastmod>2025-12-12</lastmod>
-    <changefreq>daily</changefreq>
+    <loc>https://rokomaripromocode.com/</loc>
     <priority>1.00</priority>
   </url>
 
   <url>
-    <loc>https://www.rokomaripromocode.com/rokomari-baby-products/</loc>
-    <lastmod>2025-12-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.80</priority>
-  </url>
-
-  <url>
-    <loc>https://www.rokomaripromocode.com/rokomari-beauty/</loc>
-    <lastmod>2025-12-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.80</priority>
-  </url>
-
-  <url>
-    <loc>https://www.rokomaripromocode.com/rokomari-best-seller/</loc>
-    <lastmod>2025-12-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <url>
-    <loc>https://www.rokomaripromocode.com/rokomari-books/</loc>
-    <lastmod>2025-12-12</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://rokomaripromocode.com/rokomari-best-seller/</loc>
     <priority>0.90</priority>
   </url>
 
   <url>
-    <loc>https://www.rokomaripromocode.com/contact/</loc>
-    <lastmod>2025-12-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.50</priority>
+    <loc>https://rokomaripromocode.com/rokomari-electronics/</loc>
+    <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://www.rokomaripromocode.com/rokomari-electronics/</loc>
-    <lastmod>2025-12-12</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://rokomaripromocode.com/rokomari-foods/</loc>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://rokomaripromocode.com/gorer-bazar/</loc>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://rokomaripromocode.com/rokomari-kids-toys/</loc>
     <priority>0.80</priority>
   </url>
 
   <url>
-    <loc>https://www.rokomaripromocode.com/rokomari-foods/</loc>
-    <lastmod>2025-12-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
+    <loc>https://rokomaripromocode.com/rokomari-baby-products/</loc>
+    <priority>0.80</priority>
   </url>
 
   <url>
-    <loc>https://www.rokomaripromocode.com/gorer-bazar/</loc>
-    <lastmod>2025-12-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.70</priority>
+    <loc>https://rokomaripromocode.com/rokomari-beauty/</loc>
+    <priority>0.80</priority>
   </url>
 
   <url>
-    <loc>https://www.rokomaripromocode.com/rokomari-islamic-books/</loc>
-    <lastmod>2025-12-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.65</priority>
+    <loc>https://rokomaripromocode.com/privacy-policy/</loc>
+    <priority>0.30</priority>
   </url>
 
   <url>
-    <loc>https://www.rokomaripromocode.com/rokomari-kids-toys/</loc>
-    <lastmod>2025-12-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
+    <loc>https://rokomaripromocode.com/contact/</loc>
+    <priority>0.40</priority>
   </url>
 
-  <url>
-    <loc>https://www.rokomaripromocode.com/rokomari-others/</loc>
-    <lastmod>2025-12-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.60</priority>
-  </url>
-
-  <url>
-    <loc>https://www.rokomaripromocode.com/privacy-policy/</loc>
-    <lastmod>2025-12-12</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.20</priority>
-  </url>
 </urlset>
