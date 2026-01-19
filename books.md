@@ -1,8 +1,8 @@
 ---
 layout: default
-title: "Rokomari Promo Code for Books – আজকের বইয়ের ডিসকাউন্ট & কুপন"
+title: "Up to 30% discount in Rokomari books- Rokomari Promo Code"
 permalink: /rokomari-books/
-description: "আজকের হালনাগাদ Rokomari promo code for books – উপন্যাস, ইসলামিক, একাডেমিক ও সব ধরনের বইয়ের কুপন, ডিসকাউন্ট কোড এবং ব্যবহারবিধি এক জায়গায় দেখুন।"
+description: "New Rokomari promo code for books – উপন্যাস, ইসলামিক, একাডেমিক ও সব ধরনের বইয়ে ৩০% পর্যন্ত ডিসকাউন্ট পাবেন।"
 keywords:
   - rokomari promo code for books
   - rokomari book coupon
