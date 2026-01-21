@@ -84,29 +84,24 @@ keywords:
   <ol class="ordered-list">
     <li>
       <strong>১. পণ্য সিলেক্ট করুন:</strong>
-      <br>প্রথমে রকমারি সাইটে গিয়ে আপনার পছন্দের বই বা পণ্য কার্টে যোগ করুন।
+      <br>প্রথমে রকমারি প্রোমো কোড সাইট থেকে আপনার পছন্দের বই বা পণ্য খুজুন। না পেলে উপরে সার্চবারে সার্চ করুন এবং লিংকে গিয়ে পণ্যটি কার্টে যোগ করুন। আপনার পণ্যটি খুজে না পেলে আমাদেরকে মেসেজ দিন।
     </li>
     <li>
-      <strong>২. সঠিক ক্যাটাগরি পেইজে আসুন:</strong>
-      <br>এখানে আমাদের সাইটে সংশ্লিষ্ট ক্যাটাগরির পেইজ (যেমন 
-      <a href="{{ '/rokomari-books/' | relative_url }}">Rokomari Books promo code</a>) ওপেন করুন।
-    </li>
-    <li>
-      <strong>৩. সর্বশেষ কোড কপি করুন:</strong>
+      <strong>২. সর্বশেষ কোড কপি করুন:</strong>
       <br>যে কুপনের শর্ত আপনার অর্ডারের সাথে মিলে যায় তা বেছে নিয়ে “কপি” করুন।
     </li>
     <li>
-      <strong>৪. Checkout পেইজে কোডটি বসান:</strong>
+      <strong>৩. Checkout পেইজে কোডটি বসান:</strong>
       <br>রকমারির Checkout পেইজে <em>“Apply Coupon / Promo Code”</em> বক্সে কপি করা কোড Paste করে Apply দিন।
     </li>
     <li>
-      <strong>৫. ডিসকাউন্ট ঠিকমতো কমেছে কি না দেখুন:</strong>
+      <strong>৪. ডিসকাউন্ট ঠিকমতো কমেছে কি না দেখুন:</strong>
       <br>Order Summary-তে Price কমেছে কি না এবং শর্ত অনুযায়ী Cash back / Free shipping এসেছে কি না মিলিয়ে নিন।
     </li>
   </ol>
 </section>
 
-<!-- BANK OFFER & DISCOUNT COMBO -->
+<!-- BANK OFFER & DISCOUNT COMBO 
 <section class="container home-guide">
   <h2>Bank offer, Cashback ও Rokomari discount একসাথে নেবেন কীভাবে?</h2>
   <p>
@@ -120,7 +115,7 @@ keywords:
     <li><strong>Best practice:</strong> প্রথমে promo code দিয়ে দেখুন; এরপর bank offer Apply করলে কতটা বাড়তি সেভ হচ্ছে তা তুলনা করুন।</li>
   </ul>
 </section>
-
+--> 
 <!-- VALUE PROPOSITION -->
 <section class="container home-guide">
   <h2>আমাদের Rokomari promo code হাব থেকে কী ভ্যালু পাচ্ছেন?</h2>
