@@ -69,10 +69,10 @@ keywords:
     <li><a href="{{ '/rokomari-best-seller/' | relative_url }}">🔥 Best Seller Rokomari promo code</a> – সব ক্যাটাগরির সবচেয়ে বেশি বিক্রি হওয়া পণ্যের বাছাই অফার।</li>
   </ul>
 </section>
-<section id="coupons">
+<!-- <section id="coupons">
   <img src="assets/3_1768061233954.jpeg">
   <p>Last update : January 20, 2026</p>
-</section>
+</section> -->
 
 <!-- HOW TO USE PROMO CODE -->
 <section class="container home-guide" id="how-to-use">
