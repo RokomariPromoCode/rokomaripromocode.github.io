@@ -99,6 +99,7 @@ keywords:
       <br>Order Summary-তে Price কমেছে কি না এবং শর্ত অনুযায়ী Cash back / Free shipping এসেছে কি না মিলিয়ে নিন।
     </li>
   </ol>
+<p><strong>বিঃদ্রঃ আমাদের দেওয়া কুপন কোডগুলো উপরে দেওয়া পণ্যের [Buy Now] বাটনে ক্লিক করার পর পণ্য কিনলে অথবা যেকোনো পণ্যের [Buy Now] বাটনে ক্লিক করার পর রকমারির অন্য যে কোনো পণ্য কিনলে কুপন গুলো ব্যবহার করা যাবে।</strong></p>
 </section>
 
 <!-- BANK OFFER & DISCOUNT COMBO 
