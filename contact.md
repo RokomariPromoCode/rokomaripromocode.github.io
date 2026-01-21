@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: helping_pages
 title: "Contact – Rokomari Promo Code Support"
 show_faq: false
 description: "Rokomari promo code, কুপন বা অফার নিয়ে কোনো প্রশ্ন থাকলে এই কনট্যাক্ট ফর্মের মাধ্যমে আমাদের সাথে যোগাযোগ করুন।"
