@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Rokomari Promo Code"
+title: "Rokomari Promo Code 2026 - up to 30% discount"
 description: "Find the latest Rokomari promo codes and discount offers by category. Save on books, electronics, groceries, and more — updated daily!"
 permalink: /
 is_home: true
