@@ -1,8 +1,8 @@
 ---
 layout: default
-title: "Rokomari Best Seller Promo Codes"
+title: "30% discount in rokomari best selling item-Rokomari Promo"
 permalink: /rokomari-best-seller/
-description: "Rokomari best seller promo code দিয়ে জনপ্রিয় ও বেস্টসেলার বইগুলো কম দামে কিনুন।"
+description: "Rokomari best seller promo code দিয়ে জনপ্রিয় ও বেস্টসেলিং প্রোডাক্ট/বই গুলো কম দামে কিনুন।"
 keywords:
   - rokomari best seller promo code
   - rokomari best seller books
