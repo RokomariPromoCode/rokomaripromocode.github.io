@@ -1,131 +1,236 @@
-<section class="coupon-section" id="coupons">
-  <h2>🎟 Available Coupon Codes</h2>
+<div style="text-align:center; margin-top: 50px;">
+  <button id="openCouponBtn" style="padding: 18px 35px; background: #2563eb; color: #fff; border: none; border-radius: 12px; cursor: pointer; font-size: 20px; font-weight: bold; box-shadow: 0 10px 20px rgba(37,99,235,0.2);">
+    🎟 কুপন ও অফারগুলো দেখুন
+  </button>
+</div>
 
-  <div class="coupon">
-    <div>
-      <h3>CHAMPION26</h3>
-      <p>সকল বইয়ে ৫% এক্সট্রা ডিসকাউন্ট</p>
-    </div>
-    <button onclick="copyCoupon('CHAMPION26')">Copy</button>
-  </div>
+<div id="couponModal" class="m-overlay">
+  <div class="m-container">
+    <button class="m-close" id="closeModal">&times;</button>
+    
+    <div class="m-slider" id="modalSlider">
+      
+      <div class="m-slide" id="step1">
+        <div class="m-header">
+          <h2>🎉 এক্সক্লুসিভ কুপন কালেকশন</h2>
+          <p>যেকোনো একটি কুপন কপি করে অফারটি উপভোগ করুন</p>
+        </div>
+        
+        <div class="m-body">
+          <div class="c-row">
+            <div class="c-info">
+              <span class="c-code">CHAMPION26</span>
+              <p>সকল বইয়ে ৫% এক্সট্রা ডিসকাউন্ট</p>
+            </div>
+            <button class="c-btn" onclick="processCopy('CHAMPION26')">Copy</button>
+          </div>
 
-  <div class="coupon">
-    <div>
-      <h3>CHAMPION2026</h3>
-      <p>সকল পণ্যে ৩% এক্সট্রা ডিসকাউন্ট</p>
-    </div>
-    <button onclick="copyCoupon('CHAMPION2026')">Copy</button>
-  </div>
+          <div class="c-row">
+            <div class="c-info">
+              <span class="c-code">CHAMPION2026</span>
+              <p>সকল পণ্যে ৩% এক্সট্রা ডিসকাউন্ট</p>
+            </div>
+            <button class="c-btn" onclick="processCopy('CHAMPION2026')">Copy</button>
+          </div>
 
-  <div class="coupon">
-    <div>
-      <h3>TOPCUSTOMER26</h3>
-      <p>৩০০০/- টাকা অর্ডারে ১২০৳ ডিসকাউন্ট</p>
-    </div>
-    <button onclick="copyCoupon('TOPCUSTOMER26')">Copy</button>
+          <div class="c-row">
+            <div class="c-info">
+              <span class="c-code">TOPCUSTOMER26</span>
+              <p>৩০০০/- টাকা অর্ডারে ১২০৳ ডিসকাউন্ট</p>
+            </div>
+            <button class="c-btn" onclick="processCopy('TOPCUSTOMER26')">Copy</button>
+          </div>
+
+          <div class="m-note">
+            <strong>⚠️ বি.দ্র:</strong> একটি অর্ডারে শুধুমাত্র একটি কুপন কোড ব্যবহার করা যাবে।
+          </div>
+        </div>
       </div>
-  <div class="coupon">
-    <div>
-      <h3>TOPCUSTOMER2026</h3>
-      <p>৫০০০/- টাকা অর্ডারে ১৮০৳ ডিসকাউন্ট</p>
-    </div>
-    <button onclick="copyCoupon('TOPCUSTOMER2026')">Copy</button>
-  </div>
 
-  <!-- Toast popup -->
-  <div id="toast" class="toast">Copied!</div>
-</section>
+      <div class="m-slide" id="step2">
+        <div class="success-content">
+          <div class="success-icon">✅</div>
+          <h2>কোডটি কপি হয়েছে!</h2>
+          <p>এখন আপনি আপনার কাঙ্খিত পণ্য ক্রয় করতে পারেন।</p>
+          
+          <a href="YOUR_LINK_HERE" class="shop-link">কেনাকাটা চালিয়ে যান →</a>
+          
+          <p class="auto-close-text">এই উইন্ডোটি কিছুক্ষণের মধ্যে বন্ধ হয়ে যাবে...</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <style>
-  .coupon-section{
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 18px;
-    border-radius: 14px;
-    background: #f8f9ff;
-    font-family: Arial, sans-serif;
-    position: relative;
+  .m-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: 'Segoe UI', Arial, sans-serif;
   }
-  .coupon-section h2{
-    margin-bottom: 15px;
-  }
-  .coupon{
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  padding: 12px 14px;
-  background: white;
-  margin-bottom: 12px;
-  border-radius: 12px;
-  border: 1px solid #e0e0e0;
-  box-sizing: border-box;
-}
 
+  .m-container {
+    background: #fff;
+    width: 95%;
+    max-width: 750px; /* অনেক বড় সাইজ */
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden; /* স্লাইড দেখানোর জন্য জরুরি */
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
   }
-  .coupon h3{
-    margin: 0;
+
+  .m-slider {
+    display: flex;
+    width: 200%; /* দুইটা স্লাইডের জন্য ২০০% */
+    transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .m-slide {
+    width: 50%; /* প্রতি স্লাইড অর্ধেক জায়গা নিবে */
+    padding: 40px;
+    box-sizing: border-box;
+  }
+
+  .m-close {
+    position: absolute;
+    top: 20px; right: 25px;
+    font-size: 35px; border: none; background: none; color: #bbb;
+    cursor: pointer; z-index: 10;
+  }
+
+  /* কুপন লিস্ট ডিজাইন */
+  .m-header { text-align: center; margin-bottom: 30px; }
+  .m-header h2 { font-size: 28px; color: #1e293b; margin: 0; }
+  .m-header p { color: #64748b; font-size: 16px; margin-top: 10px; }
+
+  .c-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8faff;
+    padding: 20px 25px;
+    border-radius: 16px;
+    margin-bottom: 15px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .c-code {
+    display: inline-block;
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 5px 12px;
+    font-weight: bold;
+    font-family: monospace;
     font-size: 18px;
-    color: #2b2bff;
-    letter-spacing: 1px;
+    border-radius: 6px;
+    margin-bottom: 5px;
   }
-  .coupon p{
-    margin: 5px 0 0;
-    font-size: 14px;
-    color: #444;
-  }
-  .coupon button{
-    padding: 8px 14px;
-    border: none;
-    border-radius: 10px;
+
+  .c-info p { margin: 0; color: #475569; font-size: 15px; }
+
+  .c-btn {
     background: #16a34a;
     color: white;
-    font-weight: 600;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-weight: bold;
     cursor: pointer;
+    font-size: 15px;
+    transition: 0.3s;
   }
-  .coupon button:hover{
-    opacity: 0.9;
+  .c-btn:hover { background: #15803d; }
+
+  /* সাকসেস স্লাইড ডিজাইন */
+  .success-content {
+    text-align: center;
+    padding: 60px 20px;
+  }
+  .success-icon { font-size: 60px; margin-bottom: 20px; }
+  .success-content h2 { color: #16a34a; font-size: 32px; margin-bottom: 10px; }
+  .success-content p { font-size: 18px; color: #444; }
+
+  .shop-link {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 15px 35px;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.3s;
+  }
+  .shop-link:hover { background: #1e40af; transform: scale(1.05); }
+
+  .m-note {
+    margin-top: 25px;
+    color: #dc2626;
+    font-size: 14px;
+    text-align: center;
+    background: #fff5f5;
+    padding: 10px;
+    border-radius: 8px;
   }
 
-  /* Toast notification */
-  .toast{
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #111;
-    color: #fff;
-    padding: 12px 18px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    opacity: 0;
-    pointer-events: none;
-    transition: 0.3s ease;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  .auto-close-text {
+    margin-top: 30px;
+    font-size: 13px !important;
+    color: #94a3b8 !important;
   }
-  .toast.show{
-    opacity: 1;
-    bottom: 45px;
+
+  /* মোবাইল রেসপন্সিভ */
+  @media (max-width: 600px) {
+    .m-slide { padding: 30px 20px; }
+    .c-row { flex-direction: column; text-align: center; gap: 15px; }
+    .m-header h2 { font-size: 22px; }
+    .m-container { width: 92%; }
   }
 </style>
 
 <script>
-  function copyCoupon(code){
-    navigator.clipboard.writeText(code);
+  const modal = document.getElementById("couponModal");
+  const slider = document.getElementById("modalSlider");
+  const openBtn = document.getElementById("openCouponBtn");
+  const closeBtn = document.getElementById("closeModal");
 
-    showToast(`✅ Copied: ${code}`);
+  // পপআপ ওপেন
+  openBtn.onclick = () => {
+    slider.style.transform = "translateX(0%)"; // রিসেট
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+  };
+
+  // পপআপ ক্লোজ
+  function closePopup() {
+    modal.style.display = "none";
+    document.body.style.overflow = "auto";
   }
 
-  function showToast(message){
-    const toast = document.getElementById("toast");
-    toast.textContent = message;
+  closeBtn.onclick = closePopup;
 
-    toast.classList.add("show");
+  // কপি প্রসেস এবং স্লাইড পরিবর্তন
+  function processCopy(code) {
+    navigator.clipboard.writeText(code).then(() => {
+      // স্লাইড সরিয়ে দ্বিতীয় ধাপ দেখানো
+      slider.style.transform = "translateX(-50%)";
 
-    setTimeout(() => {
-      toast.classList.remove("show");
-    }, 2000);
+      // ৪ সেকেন্ড পর অটোমেটিক পপআপ বন্ধ
+      setTimeout(() => {
+        closePopup();
+      }, 4000);
+    });
   }
+
+  // বাইরে ক্লিক করলে ক্লোজ
+  window.onclick = (e) => {
+    if (e.target == modal) closePopup();
+  };
 </script>
