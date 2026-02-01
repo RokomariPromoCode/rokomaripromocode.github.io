@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "Gorer Bazar Promo Code – Rokomari Gorer Bazar Discount & Offers"
-description: "Find active Gorer Bazar promo code, Rokomari Gorer Bazar promocode and discounts on food, wellness and household products at Rokomari."
+title: "Gorer Bazar coupon Code – Rokomari Gorer Bazar Discount & Offers"
+description: "Get the best gorer bazar coupon code from rokomari promo code for exclusive discount."
 permalink: /gorer-bazar/
 show_faq : false
 
@@ -36,9 +36,9 @@ show_faq : false
     <li>Kitchen & household-use products</li>
   </ul>
 
-  <h2>How to Use a Gorer Bazar Promo Code on Rokomari</h2>
+  <h2>How to Use a Gorer Bazar coupon Code on Rokomari</h2>
   <ol>
-    <li>If a <strong>Gorer Bazar promo code</strong> is available on this page, click to copy it.</li>
+    <li>If a <strong>Gorer Bazar coupon code</strong> is available on this page, click to copy it.</li>
     <li>Scroll through this page to find your desired Gorer Bazar product, or use the search bar to locate it.</li>
     <li>Click the <strong>Buy Now</strong> button on the product card to go directly to Rokomari.</li>
     <li>If the promo code is supported, the discount will auto-apply. If not, paste the copied promo code manually at checkout.</li>
