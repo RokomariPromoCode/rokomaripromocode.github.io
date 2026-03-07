@@ -1787,7 +1787,8 @@ section strong {
 /* Center the whole FAQ section contents */
 .faq-section {
   display: flex;
-  justify-content: center;   /* center children horizontally */
+  justify-content: center; 
+  max-width: 100% !important;/* center children horizontally */
 }
 
 /* The inner container becomes the centered column */
