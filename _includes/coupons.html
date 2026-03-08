@@ -57,14 +57,156 @@
           <h2>কোডটি কপি হয়েছে!</h2>
           <p>এখন আপনি আপনার কাঙ্খিত পণ্য ক্রয় করতে পারেন।</p>
           
-          <a href="#" class="shop-link">কেনাকাটা চালিয়ে যান →</a>
+          <a href="https://www.rokomari.com/?affId=4a6oA6AMi6ai1RI&affs=31009&cma=604800" target="_blank" rel="noopener" class="shop-link" onclick="closePopup()">কেনাকাটা চালিয়ে যান →</a>
           
-          <p style="margin-top:20px; font-size:12px; color:#999;">এই উইন্ডোটি কিছুক্ষণ পর বন্ধ হয়ে যাবে...</p>
+          <p style="margin-top:20px; font-size:12px; color:#999;">আপনাকে রকমারিতে নিয়ে যাওয়া হচ্ছে...</p>
         </div>
       </div>
 
     </div>
   </div>
+</div>
+
+<style>
+  .m-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(26, 34, 56, 0.85); backdrop-filter: blur(4px);
+    display: flex; /* Always flex, but hidden by default */
+    justify-content: center; align-items: center;
+    z-index: 99999; padding: 16px; box-sizing: border-box; font-family: "Poppins", sans-serif;
+    
+    /* Smooth Fade Animation */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .m-overlay.show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .m-container {
+    background: #fff; width: 100%; max-width: 540px; 
+    border-radius: 16px; position: relative; overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.4); border: 1px solid #e2e8f0;
+    
+    /* Smooth Popup Pop-in Animation */
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .m-overlay.show .m-container {
+    transform: scale(1) translateY(0);
+  }
+
+  .m-slider {
+    display: flex; width: 200%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .m-slide { width: 50%; padding: 35px 25px; box-sizing: border-box; }
+
+  .m-close {
+    position: absolute; top: 12px; right: 16px; font-size: 28px; border: none; 
+    background: #F4F7F6; color: #555F76; width: 36px; height: 36px; border-radius: 50%; 
+    display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10;
+    transition: 0.3s ease;
+  }
+  .m-close:hover { background: #E11D48; color: #fff; }
+
+  .m-header { text-align: center; margin-bottom: 24px; }
+  .m-header h2 { font-size: 24px; color: #1A2238; margin: 0; font-weight: 700; }
+  .m-header p { color: #555F76; font-size: 14px; margin-top: 8px; }
+
+  .c-row {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #F4F7F6; padding: 16px; border-radius: 12px; margin-bottom: 12px;
+    border: 1px dashed #F26522; transition: 0.3s ease;
+  }
+  .c-row:hover { background: #FFF1EB; }
+
+  .c-code {
+    display: inline-block; background: #F26522; color: #fff;
+    padding: 6px 12px; font-weight: 700; font-size: 16px; border-radius: 6px; font-family: monospace; letter-spacing: 1px;
+  }
+  .c-info p { margin: 6px 0 0; color: #555F76; font-size: 14px; }
+
+  .c-btn {
+    background: #1D9B42; color: white; border: none; padding: 10px 20px;
+    border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: 0.3s;
+  }
+  .c-btn:hover { background: #157E33; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(29, 155, 66, 0.3); }
+
+  .success-content { text-align: center; padding: 30px 10px; }
+  .success-icon { font-size: 60px; margin-bottom: 15px; }
+  .success-content h2 { color: #1D9B42; font-size: 26px; margin-bottom: 10px; font-weight: 700; }
+  .success-content p { font-size: 16px; color: #1A2238; line-height: 1.5; }
+
+  .shop-link {
+    display: inline-block; margin-top: 24px; padding: 12px 28px; background: #F26522;
+    color: white; text-decoration: none; border-radius: 99px; font-weight: 600; font-size: 16px; transition: 0.3s;
+  }
+  .shop-link:hover { background: #D95516; transform: translateY(-2px); box-shadow: 0 8px 16px rgba(242, 101, 34, 0.3); }
+
+  .m-note { margin-top: 20px; color: #E11D48; font-size: 13px; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 16px; font-weight: 600; }
+
+  @media (max-width: 480px) {
+    .m-slide { padding: 30px 16px; }
+    .c-row { flex-direction: column; text-align: center; gap: 12px; padding: 16px; }
+    .m-header h2 { font-size: 20px; }
+    .success-content h2 { font-size: 22px; }
+    .c-btn { width: 100%; } 
+  }
+</style>
+
+<script>
+  const modal = document.getElementById("couponModal");
+  const slider = document.getElementById("modalSlider");
+  const openBtn = document.getElementById("openCouponBtn");
+  const closeBtn = document.getElementById("closeModal");
+  
+  // Your Affiliate Link
+  const affiliateLink = "https://www.rokomari.com/?affId=4a6oA6AMi6ai1RI&affs=31009&cma=604800";
+
+  function openPopup() {
+    slider.style.transform = "translateX(0%)"; 
+    modal.classList.add("show"); // Trigger CSS animation
+    document.body.style.overflow = "hidden"; 
+  }
+
+  if(openBtn) openBtn.onclick = openPopup;
+
+  document.querySelectorAll('a[href="#coupons"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault(); 
+      openPopup();
+    });
+  });
+
+  function closePopup() {
+    modal.classList.remove("show"); // Trigger CSS close animation
+    document.body.style.overflow = "auto";
+  }
+
+  if(closeBtn) closeBtn.onclick = closePopup;
+
+  // Copy Process & Auto Redirect
+  function processCopy(code) {
+    navigator.clipboard.writeText(code).then(() => {
+      // 1. Slide to the Success Screen
+      slider.style.transform = "translateX(-50%)";
+      
+      // 2. Wait 1.5 seconds so they see the success message, then redirect
+      setTimeout(() => {
+        window.location.href = affiliateLink;
+      }, 1500);
+    });
+  }
+  
+  // Close when clicking outside the box
+  window.onclick = (e) => {
+    if (e.target == modal) closePopup();
+  };
+</script>  </div>
 </div>
 
 <style>
