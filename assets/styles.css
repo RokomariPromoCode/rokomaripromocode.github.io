@@ -71,6 +71,7 @@ a:hover { color: var(--primary-hover); }
 .btn:hover, .cards-load-more:hover { background: var(--secondary-hover); transform: translateY(-2px); box-shadow: 0 8px 16px rgba(29, 155, 66, 0.25); color: #fff; }
 
 /* STRICT Override for the middle "Coupons" Button -> Green */
+/* STRICT Override for the middle "Coupons" Button -> Green */
 a[href="#coupons"].btn-primary {
   background: var(--secondary) !important;
   color: #fff !important;
