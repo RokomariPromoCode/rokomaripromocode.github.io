@@ -81,6 +81,23 @@
     transition: opacity 0.3s ease, visibility 0.3s ease;
   }
 
+  </div>
+</div>
+
+<style>
+  .m-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(26, 34, 56, 0.85); backdrop-filter: blur(4px);
+    display: flex; /* Always flex, but hidden by default */
+    justify-content: center; align-items: center;
+    z-index: 99999; padding: 16px; box-sizing: border-box; font-family: "Poppins", sans-serif;
+    
+    /* Smooth Fade Animation */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
   .m-overlay.show {
     opacity: 1;
     visibility: visible;
