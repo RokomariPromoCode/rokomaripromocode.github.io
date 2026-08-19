@@ -102,21 +102,7 @@ keywords:
 <p style="color:red:"><strong>বিঃদ্রঃ আমাদের দেওয়া কুপন কোডগুলো উপরে দেওয়া পণ্যের [Buy Now] বাটনে ক্লিক করার পর পণ্য কিনলে অথবা যেকোনো পণ্যের [Buy Now] বাটনে ক্লিক করার পর রকমারির অন্য যে কোনো পণ্য কিনলে কুপন গুলো ব্যবহার করা যাবে।</strong></p>
 </section>
 
-<!-- BANK OFFER & DISCOUNT COMBO 
-<section class="container home-guide">
-  <h2>Bank offer, Cashback ও Rokomari discount একসাথে নেবেন কীভাবে?</h2>
-  <p>
-    রকমারি প্রায়ই বিভিন্ন ব্যাংক ও মোবাইল ওয়ালেটের সাথে পার্টনার হয়ে আলাদা <strong>bank offer</strong> চালু করে।
-    একই সময়ে আবার আলাদা <em>Rokomari discount code</em> থাকে – ফলে অনেকেই বুঝতে পারেন না কোনটি নিলে বেশি লাভ।
-  </p>
-  <ul class="bullet-list">
-    <li><strong>Bank offer সাধারণত নির্দিষ্ট কার্ডের জন্য:</strong> যেমন X ব্যাংকের Visa / Mastercard-এ ১০–১৫% ডিসকাউন্ট।</li>
-    <li><strong>Promo code বেশিরভাগই সবার জন্য ওপেন:</strong> শুধু শর্ত (মিনিমাম অর্ডার, ক্যাটাগরি) পূরণ হলেই প্রযোজ্য।</li>
-    <li><strong>একই অর্ডারে দুই ধরনের ডিসকাউন্ট সব সময় কাজ নাও করতে পারে:</strong> Checkout পেইজেই রকমারি দেখিয়ে দেয় কোন কম্বিনেশন সম্ভব।</li>
-    <li><strong>Best practice:</strong> প্রথমে promo code দিয়ে দেখুন; এরপর bank offer Apply করলে কতটা বাড়তি সেভ হচ্ছে তা তুলনা করুন।</li>
-  </ul>
-</section>
---> 
+
 <!-- VALUE PROPOSITION -->
 <section class="container home-guide">
   <h2>আমাদের Rokomari promo code হাব থেকে কী ভ্যালু পাচ্ছেন?</h2>
